@@ -51,19 +51,18 @@ public class Mysql implements IDatabase {
 	}
 
 	@Override
-	public ArrayList<ArrayList<Object>> Select(String p_request,String params, 
+	public ArrayList<ArrayList<Object>> Select(String p_request,String[] params, 
 			String... p_parameters) {
 		try {
 			ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
 			//Statement st = conn.createStatement();
 			PreparedStatement prepStmt = conn.prepareStatement(p_request);
-			if(!params.contains(" "))
-				params += " ";
-			String[] splittedParams = params.split(" ");
-			for(int i = 0; i < splittedParams.length; i++){
-				prepStmt.setString(i+1, splittedParams[i]);
+			
+			for(int i = 0; i < params.length; i++){
+				prepStmt.setString(i+1, params[i]);
 			}
+			
 			ResultSet rs = prepStmt.executeQuery();
 
 			while (rs.next()) {
