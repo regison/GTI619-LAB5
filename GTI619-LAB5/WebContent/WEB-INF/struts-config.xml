@@ -7,18 +7,18 @@
 <struts-config>
 
     <form-beans>
-        <form-bean name="LoginForm" type="novuTech.struts.general.forms.LoginForm"/>
-        <form-bean name="ContactUsForm" type="novuTech.struts.general.forms.ContactUsForm"/>
-        <form-bean name="SubscribeForm" type="novuTech.struts.general.forms.SubscribeForm"/>
-        <form-bean name="AbstractForm" type="novuTech.struts.AbstractForm"/>
-        <form-bean name="AddMailUserForm" type="novuTech.struts.admin.AddMailUserForm"/>
+        <form-bean name="LoginForm" type="log619lab5.struts.general.forms.LoginForm"/>
+        <form-bean name="ContactUsForm" type="log619lab5.struts.general.forms.ContactUsForm"/>
+        <form-bean name="SubscribeForm" type="log619lab5.struts.general.forms.SubscribeForm"/>
+        <form-bean name="AbstractForm" type="log619lab5.struts.AbstractForm"/>
+        <form-bean name="AddMailUserForm" type="log619lab5.struts.admin.AddMailUserForm"/>
     </form-beans>
     
    <global-exceptions>
 	    <exception
 	      key="error.global.mesage"
 	      type="java.io.IOException"
-	      handler="novuTech.struts.GeneralException"
+	      handler="log619lab5.struts.GeneralException"
 	      path="/WEB-INF/jsp/general/welcome.jsp" />
 	</global-exceptions>
 
@@ -38,72 +38,72 @@
     </global-forwards>
 
     <action-mappings>        
-        <action path="/Welcome" type="novuTech.struts.general.actions.WelcomeAction" name="AbstractForm" scope="session">
+        <action path="/Welcome" type="log619lab5.struts.general.actions.WelcomeAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
         </action>
         
-        <action path="/Login" type="novuTech.struts.general.actions.LoginAction" name="AbstractForm" scope="session">
+        <action path="/Login" type="log619lab5.struts.general.actions.LoginAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/login.jsp" />
         </action>
         
-        <action path="/ExecuteLogin" type="novuTech.struts.general.actions.ExecuteLoginAction" name="LoginForm" scope="session">
+        <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" name="LoginForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
         	<forward name="failure" path="/WEB-INF/jsp/general/login.jsp" />
         </action>
         
-        <action path="/Logout" type="novuTech.struts.general.actions.ExecuteLogoutAction" name="AbstractForm" scope="session">
+        <action path="/Logout" type="log619lab5.struts.general.actions.ExecuteLogoutAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
         </action>
         
-        <action path="/ContactUs" type="novuTech.struts.general.actions.ContactUsAction" name="AbstractForm" scope="session">
+        <action path="/ContactUs" type="log619lab5.struts.general.actions.ContactUsAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/contactUs.jsp" />
         </action>
         
-        <action path="/MemberSection" type="novuTech.struts.member.MemberSectionAction" name="AbstractForm" scope="session">
+        <action path="/MemberSection" type="log619lab5.struts.member.MemberSectionAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/member/memberSection.jsp" />
         </action>
         
-        <action path="/SendMail" type="novuTech.struts.general.actions.SendMailAction" name="ContactUsForm" scope="session">
+        <action path="/SendMail" type="log619lab5.struts.general.actions.SendMailAction" name="ContactUsForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/contactUs.jsp" />
         	<forward name="failure" path="/WEB-INF/jsp/general/contactUs.jsp" />
         </action>
         
-        <action path="/Subscribe" type="novuTech.struts.general.actions.SubscribeAction" name="SubscribeForm" scope="session">
+        <action path="/Subscribe" type="log619lab5.struts.general.actions.SubscribeAction" name="SubscribeForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/subscribe.jsp" />
         </action>
         
-        <action path="/English" type="novuTech.struts.general.actions.EnglishLanguageAction" name="AbstractForm" scope="session">
+        <action path="/English" type="log619lab5.struts.general.actions.EnglishLanguageAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
         </action>
-        <action path="/French" type="novuTech.struts.general.actions.FrenchLanguageAction" name="AbstractForm" scope="session">
+        <action path="/French" type="log619lab5.struts.general.actions.FrenchLanguageAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
         </action>
         
-        <action path="/Promotion" type="novuTech.struts.general.actions.PromotionAction" name="AbstractForm" scope="session">
+        <action path="/Promotion" type="log619lab5.struts.general.actions.PromotionAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/promotion.jsp" />
         </action>
         
-        <action path="/PriceList" type="novuTech.struts.general.actions.PriceListAction" name="AbstractForm" scope="session">
+        <action path="/PriceList" type="log619lab5.struts.general.actions.PriceListAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/priceList.jsp" />
         </action>
         
-        <action path="/WebsitePlan" type="novuTech.struts.general.actions.WebsitePlanAction" name="AbstractForm" scope="session">
+        <action path="/WebsitePlan" type="log619lab5.struts.general.actions.WebsitePlanAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/websitePlan.jsp" />
         </action>
         
-        <action path="/LegalMention" type="novuTech.struts.general.actions.LegalMentionAction" name="AbstractForm" scope="session">
+        <action path="/LegalMention" type="log619lab5.struts.general.actions.LegalMentionAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/legalMention.jsp" />
         </action>
         
-        <action path="/AccessDenied" type="novuTech.struts.general.actions.AccessDeniedAction" name="AbstractForm" scope="session">
+        <action path="/AccessDenied" type="log619lab5.struts.general.actions.AccessDeniedAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/accessDenied.jsp" />
         </action>
         
-        <action path="/Service" type="novuTech.struts.general.actions.ServiceAction" name="AbstractForm" scope="session">
+        <action path="/Service" type="log619lab5.struts.general.actions.ServiceAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/service.jsp" />
         </action>
         
-        <action path="/AddMailUser" type="novuTech.struts.admin.AddMailUserAction" name="AddMailUserForm" scope="session">
+        <action path="/AddMailUser" type="log619lab5.struts.admin.AddMailUserAction" name="AddMailUserForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/member/memberSection.jsp" />
         	<forward name="failure" path="/WEB-INF/jsp/member/memberSection.jsp" />
         </action>

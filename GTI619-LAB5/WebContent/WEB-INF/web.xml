@@ -3,7 +3,7 @@
 xmlns="http://java.sun.com/xml/ns/javaee" 
 xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
  xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>NovuTech</display-name>
+  <display-name>Log619Lab5</display-name>
   
  <session-config>
      <tracking-mode>COOKIE</tracking-mode>

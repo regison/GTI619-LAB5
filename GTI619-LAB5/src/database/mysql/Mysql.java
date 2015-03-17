@@ -17,7 +17,18 @@ public class Mysql implements IDatabase {
 	private String username;
 	private String password;
 
-	public Mysql(String p_url, String p_username, String p_password) {
+	public static final short MYSQL_TABLE_LOG619LAB5 = 0;
+	
+	public Mysql(short mysql_table_type){
+		if(mysql_table_type == MYSQL_TABLE_LOG619LAB5)
+			this.url = "jdbc:mysql://log619.no-ip.org:3306/log619lab5";
+		else
+			this.url = "jdbc:mysql://log619.no-ip.org:3306/log619lab5"; //default
+		this.username = "mysqllog619lab5";
+		this.password = "fsid$ofuosidf7s7fd987f!@";
+	}
+	
+	private Mysql(String p_url, String p_username, String p_password) {
 		this.url = p_url;
 		this.username = p_username;
 		this.password = p_password;
