@@ -21,9 +21,9 @@ public class Mysql implements IDatabase {
 	
 	public Mysql(short mysql_table_type){
 		if(mysql_table_type == MYSQL_TABLE_LOG619LAB5)
-			this.url = "jdbc:mysql://log619.no-ip.org:3306/log619lab5";
+			this.url = "jdbc:mysql://log619lab5.no-ip.org:3306/log619lab5";
 		else
-			this.url = "jdbc:mysql://log619.no-ip.org:3306/log619lab5"; //default
+			this.url = "jdbc:mysql://log619lab5.no-ip.org:3306/log619lab5"; //default
 		this.username = "mysqllog619lab5";
 		this.password = "fsid$ofuosidf7s7fd987f!@";
 	}
