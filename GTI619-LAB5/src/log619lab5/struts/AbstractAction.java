@@ -110,4 +110,9 @@ public class AbstractAction extends Action {
 	        }
 	    }  
 	}
+	
+	public int generateHiddenNumber(){
+		//TODO
+		return 0;
+	}
 }
