@@ -15,6 +15,7 @@
   		<h1>Connexion</h1>
      	<p>Veuillez vous identifier pour vous connecter au sysème.</p>
     </div>
+    
 	<form method="post" action="ExecuteLogin.do">
                 <fieldset>
                     <legend>Informations de l'utilisateur</legend>
@@ -27,8 +28,9 @@
                     <input type="password" id="motdepasse" name="motdepasse" value="" size="20" maxlength="20" />
                     <br />
                 </fieldset>
+                <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
                 <input type="submit" value="Valider"  />
-                <input type="hidden" value=<% request.getAttribute("hidden");%>>
+                
      </form>
 </body>
 

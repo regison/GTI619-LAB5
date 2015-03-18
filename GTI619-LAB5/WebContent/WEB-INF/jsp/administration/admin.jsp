@@ -15,9 +15,12 @@
 		</tr>
 	
 	</table>
-	
+	 <br />
+    <br />
 	<a href="Navigate.do?navigation=cercle">Cercle</a><br/>
 	<a href="Navigate.do?navigation=carre">Carre</a>
+	 <br />
+    <br />
 	
 	
 	<form method="post" action="SaveConfiguration.do">
@@ -59,12 +62,13 @@
                     <br />
                     <br/>
                     
-                     <label>Mots de passe doivent contenir :</label><br/>
+                    <label>Mots de passe doivent contenir :</label><br/>
                     <input type="checkbox" name="politique" value="Majuscules" />Majuscules <br />
                     <input type="checkbox" name="politique" value="Speciaux" />Caracteres Speciaux <br />
                     <input type="checkbox" name="politique" value="Chiffre" />Chiffres <br />
                     <br />
                 </fieldset>
+                <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
                 <input type="submit" value="Valider"  />
      </form>
 </body>
