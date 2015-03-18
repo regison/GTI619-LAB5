@@ -46,9 +46,21 @@
         	<forward name="success" path="/WEB-INF/jsp/general/login.jsp" />
         </action>
         
-        <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" name="LoginForm" scope="session">
-        	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
+        <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">
+        	<forward name="admin" path="/WEB-INF/jsp/administration/admin.jsp" />
+        	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
+        	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
         	<forward name="failure" path="/WEB-INF/jsp/general/login.jsp" />
+        </action>
+        
+        <action path="/Navigate" type="log619lab5.struts.administration.actions.NavigateAction" scope="session">
+        	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
+        	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/general/login.jsp" />
+        </action>
+        
+        <action path="/SaveConfiguration" type="log619lab5.struts.administration.actions.SaveConfigurationAction" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/general/admin.jsp" />
         </action>
         
         <action path="/Logout" type="log619lab5.struts.general.actions.ExecuteLogoutAction" name="AbstractForm" scope="session">
@@ -56,7 +68,10 @@
         </action>
         
         <action path="/ContactUs" type="log619lab5.struts.general.actions.ContactUsAction" name="AbstractForm" scope="session">
-        	<forward name="success" path="/WEB-INF/jsp/general/contactUs.jsp" />
+        	<forward name="admin" path="/WEB-INF/jsp/administration/admin.jsp" />
+        	<forward name="cercle" path="/WEB-INF/jsp/forme/carre.jsp" />
+        	<forward name="carre" path="/WEB-INF/jsp/forme/cercle.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/general/login.jsp" />
         </action>
         
         <action path="/MemberSection" type="log619lab5.struts.member.MemberSectionAction" name="AbstractForm" scope="session">
