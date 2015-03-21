@@ -17,10 +17,10 @@ public class Mysql implements IDatabase {
 	private String username;
 	private String password;
 
-	public static final short MYSQL_TABLE_LOG619LAB5 = 0;
+	public static final short MYSQL_DATABASE_LOG619LAB5 = 0;
 	
 	public Mysql(short mysql_table_type){
-		if(mysql_table_type == MYSQL_TABLE_LOG619LAB5)
+		if(mysql_table_type == MYSQL_DATABASE_LOG619LAB5)
 			this.url = "jdbc:mysql://log619lab5.no-ip.org:3306/log619lab5";
 		else
 			this.url = "jdbc:mysql://log619lab5.no-ip.org:3306/log619lab5"; //default
@@ -76,7 +76,10 @@ public class Mysql implements IDatabase {
 			}
 			
 			ResultSet rs = prepStmt.executeQuery();
-
+			
+			//Tests: TODO remove!
+			System.out.println(prepStmt.toString());
+			
 			while (rs.next()) {
 				ArrayList<Object> row = new ArrayList<Object>();
 

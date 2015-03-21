@@ -42,6 +42,10 @@
         	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
         </action>
         
+        <action path="/AccessDenied" type="log619lab5.struts.general.actions.AccessDeniedAction" name="AbstractForm" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/AccessDenied.jsp" />
+        </action>
+        
         <action path="/Login" type="log619lab5.struts.general.actions.LoginAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/login.jsp" />
         </action>
@@ -50,13 +54,13 @@
         	<forward name="admin" path="/WEB-INF/jsp/administration/admin.jsp" />
         	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
         	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
-        	<forward name="failure" path="/WEB-INF/jsp/general/login.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/AccessDenied.jsp" />
         </action>
         
         <action path="/Navigate" type="log619lab5.struts.administration.actions.NavigateAction" scope="session">
         	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
         	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
-        	<forward name="failure" path="/WEB-INF/jsp/general/login.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/AccessDenied.jsp" />
         </action>
         
         <action path="/SaveConfiguration" type="log619lab5.struts.administration.actions.SaveConfigurationAction" scope="session">

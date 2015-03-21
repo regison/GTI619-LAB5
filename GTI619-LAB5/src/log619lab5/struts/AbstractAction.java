@@ -20,6 +20,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
+
 public class AbstractAction extends Action {
 	protected static final String SUCCESS = "success";
 	protected static final String FAILURE = "failure";
@@ -64,22 +66,22 @@ public class AbstractAction extends Action {
 		HttpSession session = request.getSession(true);
     	
 		if (pageSection != null) {
-			if (pageSection.equals(Section.LOGIN) 
-					&& session.getAttribute("Username") != null
-					&& session.getAttribute("Role") != null) {
-				redirectPage(request, response, "Welcome.do");
-			} else {
-				if (pageSection.equals(Section.MEMBER)
-						&& !(session.getAttribute("Role").equals("Admin") 
-								|| session.getAttribute("Role").equals("Member"))) {
-					redirectPage(request, response, "AccessDenied.do");
-				} else if (pageSection.equals(Section.ADMIN) 
-						&& !session.getAttribute("Role").equals("Admin")){
-					redirectPage(request, response, "AccessDenied.do");
-				}
-			}
+//			if (pageSection.equals(Section.LOGIN) 
+//					&& session.getAttribute("Username") != null
+//					&& session.getAttribute("Role") != null) {
+//				redirectPage(request, response, "Login.do");
+//			} else {
+//				if (pageSection.equals(Section.CARRE)
+//						&& !(session.getAttribute("Role").equals("Admin") 
+//								|| session.getAttribute("Role").equals("Member"))) {
+//					redirectPage(request, response, "AccessDenied.do");
+//				} else if (pageSection.equals(Section.ADMIN) 
+//						&& !session.getAttribute("Role").equals("Admin")){
+//					redirectPage(request, response, "AccessDenied.do");
+//				}
+//			}
 		} else {
-			redirectPage(request, response, "Welcome.do");
+			redirectPage(request, response, "Login.do");
 		}
 	}
 	
@@ -111,8 +113,8 @@ public class AbstractAction extends Action {
 	    }  
 	}
 	
-	public int generateHiddenNumber(){
-		//TODO
-		return 0;
+	public String generateHiddenNumber(){
+		HiddenStringGenerator hiddenGenerator = new HiddenStringGenerator();
+		return hiddenGenerator.generateRandomString();
 	}
 }

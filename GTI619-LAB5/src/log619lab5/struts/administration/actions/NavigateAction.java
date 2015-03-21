@@ -19,12 +19,23 @@ public class NavigateAction extends AbstractAction {
 
 	private final String PAGE = "Login";
 	
-@Override
-public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	String nav = (String) request.getParameter("navigation");
-	request.setAttribute("Page", PAGE);
-	request.setAttribute("hidden", generateHiddenNumber());
-	pageSection = Section.GENERAL;	
-	return mapping.findForward(nav);
-    }
+	@Override
+	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		String nav = (String) request.getParameter("navigation");
+		if(nav.equals("carre")){
+			request.setAttribute("Page", "Carre");
+			pageSection = Section.CARRE;
+			return mapping.findForward("carre");
+		}
+		else if(nav.equals("cercle")){
+			request.setAttribute("Page", "Cercle");
+			pageSection = Section.CERCLE;
+			return mapping.findForward("cercle");
+		}
+		else{
+			request.setAttribute("Page", "AccessDenied");
+			pageSection = Section.GENERAL;
+			return mapping.findForward("failure");
+		}
+	}
 }

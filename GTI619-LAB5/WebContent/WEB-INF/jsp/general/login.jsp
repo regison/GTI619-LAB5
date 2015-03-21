@@ -24,8 +24,8 @@
                     <input type="text" id="username" name="username" value="" size="60" maxlength="60" />
                     <br />
                     
-                    <label for="motdepasse">Mot de passe <span class="requis">*</span></label>
-                    <input type="password" id="motdepasse" name="motdepasse" value="" size="20" maxlength="20" />
+                    <label for="password">Mot de passe <span class="requis">*</span></label>
+                    <input type="password" id="password" name="password" value="" size="20" maxlength="20" />
                     <br />
                 </fieldset>
                 <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">

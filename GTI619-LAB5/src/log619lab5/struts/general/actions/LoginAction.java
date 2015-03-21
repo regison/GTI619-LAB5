@@ -2,6 +2,7 @@ package log619lab5.struts.general.actions;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
@@ -22,7 +23,10 @@ public class LoginAction extends AbstractAction {
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	request.setAttribute("Page", PAGE);
-	request.setAttribute("hidden", generateHiddenNumber());
+	String randomString = generateHiddenNumber();
+	request.setAttribute("hidden", randomString);
+	HttpSession session = request.getSession();
+	session.setAttribute("loginHiddenString", randomString);
 	pageSection = Section.GENERAL;	
 	return mapping.findForward(SUCCESS);
     }
