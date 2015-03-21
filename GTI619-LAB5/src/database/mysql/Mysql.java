@@ -69,9 +69,10 @@ public class Mysql implements IDatabase {
 
 			//Statement st = conn.createStatement();
 			PreparedStatement prepStmt = conn.prepareStatement(p_request);
-			
-			for(int i = 0; i < params.length; i++){
-				prepStmt.setString(i+1, params[i]);
+			if (params != null){
+				for(int i = 0; i < params.length; i++){
+					prepStmt.setString(i+1, params[i]);
+				}
 			}
 			
 			ResultSet rs = prepStmt.executeQuery();
@@ -82,10 +83,8 @@ public class Mysql implements IDatabase {
 				for (int i = 0; i != p_parameters.length; ++i) {
 					row.add(rs.getObject(p_parameters[i]));
 				}
-
 				data.add(row);
 			}
-
 			prepStmt.close();
 			return data;
 		} catch (Exception e) {
