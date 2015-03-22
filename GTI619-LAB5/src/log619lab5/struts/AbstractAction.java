@@ -20,6 +20,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import communication.DataObjects.Objects;
+
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 
 public class AbstractAction extends Action {
@@ -66,20 +68,24 @@ public class AbstractAction extends Action {
 		HttpSession session = request.getSession(true);
     	
 		if (pageSection != null) {
-//			if (pageSection.equals(Section.LOGIN) 
-//					&& session.getAttribute("Username") != null
-//					&& session.getAttribute("Role") != null) {
-//				redirectPage(request, response, "Login.do");
-//			} else {
-//				if (pageSection.equals(Section.CARRE)
-//						&& !(session.getAttribute("Role").equals("Admin") 
-//								|| session.getAttribute("Role").equals("Member"))) {
-//					redirectPage(request, response, "AccessDenied.do");
-//				} else if (pageSection.equals(Section.ADMIN) 
-//						&& !session.getAttribute("Role").equals("Admin")){
-//					redirectPage(request, response, "AccessDenied.do");
-//				}
-//			}
+			if (pageSection.equals(Section.LOGIN) 
+					&& session.getAttribute("Username") != null
+					&& session.getAttribute("Role") != null) {
+				redirectPage(request, response, "Login.do");
+			} else {
+				if (pageSection.equals(Section.CARRE)
+						&& !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
+								|| session.getAttribute("Role").equals(Objects.Role.SquareRoleName))) {
+					redirectPage(request, response, "AccessDenied.do");
+				} else if (pageSection.equals(Section.CERCLE)
+						&& !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
+								|| session.getAttribute("Role").equals(Objects.Role.CercleRoleName))){
+					redirectPage(request, response, "AccessDenied.do");
+				} else if (pageSection.equals(Section.ADMIN) 
+						&& !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName)){
+					redirectPage(request, response, "AccessDenied.do");
+				}
+			}
 		} else {
 			redirectPage(request, response, "Login.do");
 		}

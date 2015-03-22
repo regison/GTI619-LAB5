@@ -8,6 +8,7 @@ import communication.DataObjects.Objects.Role;
 import communication.DataObjects.Objects.RoleLevel;
 import communication.DataObjects.Objects.User;
 import securityLayer.securityModule.Comm.SecurityLayerDataBaseCommunication;
+import securityLayer.securityModule.bruteforceProtection.BruteForceProtection;
 import securityLayer.securityModule.verifyUserValidity.VerifyUserValidity;
 
 public class SecurityModuleCore {
@@ -50,6 +51,7 @@ public class SecurityModuleCore {
 	
 	public void updateSuccessfullLoginTime(){
 		try {
+			session.setAttribute("failedLoginCount", "0");
 			dbComm.UpdateUserInfo(false, true, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -69,15 +71,8 @@ public class SecurityModuleCore {
 	public void manageUnsuccessfullLogin(){
 		if(user != null){
 			incrementUnsuccessfullLogin();
-			if(dbComm.UserFailedTriesCount() > 3){
-				try {
-					Thread.sleep((long) (1000 * (Math.pow((dbComm.UserFailedTriesCount() / 3), 2))));
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
 		}
-//		if(session.getAttribute(""))
+		BruteForceProtection bruteProtect = new BruteForceProtection();
+		bruteProtect.manageLoginBruteForce(user, session, dbComm == null ? 0 : dbComm.UserFailedTriesCount());
 	}
 }

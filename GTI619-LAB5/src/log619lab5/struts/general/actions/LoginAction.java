@@ -27,6 +27,8 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 	request.setAttribute("hidden", randomString);
 	HttpSession session = request.getSession();
 	session.setAttribute("loginHiddenString", randomString);
+	session.setAttribute("Username", "");
+	session.setAttribute("Role", "");
 	pageSection = Section.GENERAL;	
 	return mapping.findForward(SUCCESS);
     }

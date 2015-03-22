@@ -11,7 +11,7 @@ public class Objects {
 	    public String name;
 	    public int roleId;
 	    public String saltPassword;
-	    public int ndCryptIteration;
+	    public int nbCryptIteration;
 	    public SimpleDateFormat ModifiedDate;
 	    public String ModifiedBy;
 	    public SimpleDateFormat CreateDate;

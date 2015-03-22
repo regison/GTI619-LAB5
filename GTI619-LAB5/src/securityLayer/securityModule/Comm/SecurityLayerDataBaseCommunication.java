@@ -67,7 +67,7 @@ public class SecurityLayerDataBaseCommunication {
 		if(userID > -1){ //Update
 			cnx.Open();
 			try {
-				cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? this.userFailedTriesCount + 1 : this.userFailedTriesCount) + "") + 
+				cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? this.userFailedTriesCount + 1 : (loggedIn ? 0 : this.userFailedTriesCount)) + "") + 
 						"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + userID + "';");
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block

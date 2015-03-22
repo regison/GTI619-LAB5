@@ -29,7 +29,7 @@ public class DataMapping implements IDataMapping {
 				toAdd.name = user.get(1).toString();
 				toAdd.roleId = Integer.parseInt(user.get(2).toString());
 				toAdd.saltPassword = user.get(3).toString();
-				toAdd.ndCryptIteration = Integer.parseInt(user.get(4).toString());
+				toAdd.nbCryptIteration = Integer.parseInt(user.get(4).toString());
 				toAdd.ModifiedDate = new SimpleDateFormat(user.get(5).toString());
 				toAdd.ModifiedBy = user.get(6).toString();
 				toAdd.CreateDate = new SimpleDateFormat(user.get(7).toString());

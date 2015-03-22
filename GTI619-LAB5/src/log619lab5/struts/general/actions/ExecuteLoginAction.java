@@ -36,6 +36,9 @@ public class ExecuteLoginAction extends AbstractAction {
 		String password = request.getParameter("password").toString();
 		HttpSession session = request.getSession();
 		
+		session.setAttribute("Username", "");
+		session.setAttribute("Role", "");
+		
 		securityModule = new SecurityModuleCore(null, session);
 		
 		if(userName.equals("") || password.equals("")){
@@ -71,15 +74,15 @@ public class ExecuteLoginAction extends AbstractAction {
 				return mapping.findForward("failure");
 			}
 			
-			user.ndCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
+			user.nbCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
 			user.salt = result.get(0).get(1).toString();
 			user.saltCounter = Integer.parseInt(result.get(0).get(2).toString());
-			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
+			user.idUser = Integer.parseInt(result.get(0).get(3).toString());
 			
 			securityModule.setUser(user);
 			
 			String query = "SELECT * FROM log619lab5.User where name= ? and saltPassword=SHA2(";
-			for(int i = 1; i < user.ndCryptIteration; i++){
+			for(int i = 1; i < user.nbCryptIteration; i++){
 				query += "SHA2(";
 			}
 			query += "'";
@@ -91,7 +94,7 @@ public class ExecuteLoginAction extends AbstractAction {
 				query += user.salt;
 			}
 			query += "'";
-			for(int i = 1; i < user.ndCryptIteration; i++){
+			for(int i = 1; i < user.nbCryptIteration; i++){
 				query += ", 512)";
 			}
 			query += ", 512);";
@@ -140,16 +143,19 @@ public class ExecuteLoginAction extends AbstractAction {
 		securityModule.setUser(user);
 		securityModule.updateSuccessfullLoginTime();
 		
+		session.setAttribute("Username", user.name);
+		session.setAttribute("Role", user.role.roleName);
+		
 		if(user.role.roleName.equals(Objects.Role.AdministratorRoleName)){
-			pageSection = Section.LOGIN;	
+			pageSection = Section.ADMIN;	
 			return mapping.findForward("admin");
 		}
 		else if(user.role.roleName.equals(Objects.Role.CercleRoleName)){
-			pageSection = Section.LOGIN;	
+			pageSection = Section.CERCLE;	
 			return mapping.findForward("cercle");
 		}
 		else if(user.role.roleName.equals(Objects.Role.SquareRoleName)){
-			pageSection = Section.LOGIN;	
+			pageSection = Section.CARRE;	
 			return mapping.findForward("carre");
 		}
 		else{
