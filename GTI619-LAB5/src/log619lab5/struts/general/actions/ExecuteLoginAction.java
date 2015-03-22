@@ -147,6 +147,9 @@ public class ExecuteLoginAction extends AbstractAction {
 		session.setAttribute("Role", user.role.roleName);
 		
 		if(user.role.roleName.equals(Objects.Role.AdministratorRoleName)){
+			String randomString = generateHiddenRandomString();
+			request.setAttribute("hidden", randomString);
+			session.setAttribute("adminHiddenString", randomString);
 			pageSection = Section.ADMIN;	
 			return mapping.findForward("admin");
 		}
