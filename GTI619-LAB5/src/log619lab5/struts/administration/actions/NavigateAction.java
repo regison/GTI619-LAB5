@@ -33,7 +33,7 @@ public class NavigateAction extends AbstractAction {
 			return mapping.findForward("cercle");
 		}
 		else{
-			request.setAttribute("Page", "AccessDenied");
+			request.setAttribute("Page", "404");
 			pageSection = Section.GENERAL;
 			return mapping.findForward("failure");
 		}

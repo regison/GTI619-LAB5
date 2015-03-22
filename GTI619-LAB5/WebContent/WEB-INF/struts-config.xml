@@ -60,7 +60,7 @@
         <action path="/Navigate" type="log619lab5.struts.administration.actions.NavigateAction" scope="session">
         	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
         	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
-        	<forward name="failure" path="/WEB-INF/jsp/AccessDenied.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />
         </action>
         
         <action path="/SaveConfiguration" type="log619lab5.struts.administration.actions.SaveConfigurationAction" scope="session">

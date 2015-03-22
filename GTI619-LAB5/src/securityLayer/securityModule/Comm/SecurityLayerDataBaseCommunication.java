@@ -26,11 +26,13 @@ public class SecurityLayerDataBaseCommunication {
 		cnx.Open();
 		try {
 			ArrayList<ArrayList<Object>> result = cnx.Select("SELECT * FROM log619lab5.LoginLogs WHERE idUser= ? ;", new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
+			if(result.size() < 1)
+				return;
 			userNeedToLogout = Boolean.parseBoolean(result.get(0).get(4).toString());
 			userIsLoggedIn = Boolean.parseBoolean(result.get(0).get(3).toString());
 			userFailedTriesCount = Long.parseLong(result.get(0).get(2).toString());
 			userLastLoginTime = java.sql.Timestamp.valueOf(result.get(0).get(1).toString());
-			userID = Integer.parseInt(result.get(0).toString());
+			this.userID = Integer.parseInt(result.get(0).get(0).toString());
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
