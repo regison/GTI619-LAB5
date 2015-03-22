@@ -27,6 +27,10 @@ public class Objects {
 	    public String roleName;
 	    public Time timeConnexion;
 	    public RoleLevel roleLevel;
+	    
+	    public static final String AdministratorRoleName = "Administrateur";
+	    public static final String CercleRoleName = "Administrateur";
+	    public static final String SquareRoleName = "Administrateur";
 	}
 	
 	public class RoleLevel {

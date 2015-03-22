@@ -78,7 +78,7 @@ public class Mysql implements IDatabase {
 			ResultSet rs = prepStmt.executeQuery();
 			
 			//Tests: TODO remove!
-			System.out.println(prepStmt.toString());
+//			System.out.println(prepStmt.toString());
 			
 			while (rs.next()) {
 				ArrayList<Object> row = new ArrayList<Object>();

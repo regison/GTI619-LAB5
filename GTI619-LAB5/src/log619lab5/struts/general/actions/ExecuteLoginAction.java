@@ -46,14 +46,15 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 	//Temporaire!
 	Mysql connexion = new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5);
 	connexion.Open();
+	Objects obj = new Objects();
+	User user = obj.new User();
 	try {
 		ArrayList<ArrayList<Object>> result = connexion.Select("Select * from log619lab5.User where name=?;", new String[] {userName}, "ndMd5Iteration", "saltNumber", "saltCounter");
 		if(result.size() > 1){
+			loginFailedLogic();
 			pageSection = Section.LOGIN;	
 			return mapping.findForward("failure");
 		}
-		Objects obj = new Objects();
-		User user = obj.new User();
 		 
 		user.ndCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
 		user.salt = result.get(0).get(1).toString();
@@ -79,6 +80,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		System.out.println(query);
 		result = connexion.Select(query, new String[] {userName, password}, "idUser", "name", "roleId", "enabled");
 		if(result.size() < 1){
+			loginFailedLogic();
 			pageSection = Section.LOGIN;	
 			return mapping.findForward("failure");
 		}
@@ -87,6 +89,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		user.roleId = Integer.parseInt(result.get(0).get(2).toString());
 		user.enabled = Boolean.parseBoolean(result.get(0).get(3).toString());
 		if(!user.enabled){
+			loginFailedLogic();
 			pageSection = Section.LOGIN;	
 			return mapping.findForward("failure");
 		}
@@ -115,9 +118,26 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 	connexion.Close();
 	//
 	
-	
-	
-	pageSection = Section.LOGIN;	
-	return mapping.findForward(userName);
+		if(user.role.roleName == Objects.Role.AdministratorRoleName){
+			pageSection = Section.LOGIN;	
+			return mapping.findForward("admin");
+		}
+		else if(user.role.roleName == Objects.Role.CercleRoleName){
+			pageSection = Section.LOGIN;	
+			return mapping.findForward("cercle");
+		}
+		else if(user.role.roleName == Objects.Role.SquareRoleName){
+			pageSection = Section.LOGIN;	
+			return mapping.findForward("carre");
+		}
+		else{
+			loginFailedLogic();
+			pageSection = Section.LOGIN;	
+			return mapping.findForward("failure");
+		}
     }
+
+	private void loginFailedLogic(){
+		
+	}
 }
