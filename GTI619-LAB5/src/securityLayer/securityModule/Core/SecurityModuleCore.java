@@ -78,5 +78,6 @@ public class SecurityModuleCore {
 				}
 			}
 		}
+//		if(session.getAttribute(""))
 	}
 }

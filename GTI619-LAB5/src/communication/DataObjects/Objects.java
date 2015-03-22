@@ -29,8 +29,8 @@ public class Objects {
 	    public RoleLevel roleLevel;
 	    
 	    public static final String AdministratorRoleName = "Administrateur";
-	    public static final String CercleRoleName = "Administrateur";
-	    public static final String SquareRoleName = "Administrateur";
+	    public static final String CercleRoleName = "Préposé au cercle";
+	    public static final String SquareRoleName = "Préposé au carré";
 	}
 	
 	public class RoleLevel {

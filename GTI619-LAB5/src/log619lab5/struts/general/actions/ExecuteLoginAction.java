@@ -60,17 +60,20 @@ public class ExecuteLoginAction extends AbstractAction {
 		Objects obj = new Objects();
 		User user = obj.new User();
 		try {
-			ArrayList<ArrayList<Object>> result = connexion.Select("Select * from log619lab5.User where name=?;", new String[] {userName}, "ndMd5Iteration", "saltNumber", "saltCounter");
+			ArrayList<ArrayList<Object>> result = connexion.Select("Select * from log619lab5.User where name=?;", new String[] {userName}, "ndMd5Iteration", "saltNumber", "saltCounter", "idUser");
 			if(result.size() != 1){
 				loginFailedLogic();
 				pageSection = Section.LOGIN;
 				connexion.Close();
 				return mapping.findForward("failure");
 			}
-			 
+			
 			user.ndCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
 			user.salt = result.get(0).get(1).toString();
 			user.saltCounter = Integer.parseInt(result.get(0).get(2).toString());
+			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
+			
+			securityModule.setUser(user);
 			
 			String query = "SELECT * FROM log619lab5.User where name= ? and saltPassword=SHA2(";
 			for(int i = 1; i < user.ndCryptIteration; i++){
