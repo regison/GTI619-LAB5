@@ -1,6 +1,6 @@
 package communication.DataObjects;
 
-public class Queries {
+public class QueryFactory {
 
 	//SELECT SECTION
 	public static final String SELECT_ALL_USERS = "SELECT * FROM User";

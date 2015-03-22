@@ -1,6 +1,7 @@
 package log619lab5.struts.general.actions;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ import org.apache.struts.action.ActionMapping;
 import securityLayer.securityModule.Core.SecurityModuleCore;
 import database.IDatabase;
 import database.mysql.Mysql;
+import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 
@@ -26,6 +28,7 @@ public class ExecuteLoginAction extends AbstractAction {
 
 	private final String PAGE = "ExecuteLogin";
 	SecurityModuleCore securityModule;
+	DataProvider dtP = new DataProvider();
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -115,7 +118,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			user.role.idRole = Integer.parseInt(result.get(0).get(0).toString());
 			user.role.roleLevelId = Integer.parseInt(result.get(0).get(1).toString());
 			user.role.roleName = result.get(0).get(2).toString();
-			user.role.timeConnexion = Time.valueOf(result.get(0).get(3).toString());
+			user.role.timeConnexion = new SimpleDateFormat(result.get(0).get(3).toString());
 			
 			result = connexion.Select("Select * from log619lab5.RoleLevel where idRoleLevel= ? ;", new String[] {user.role.roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
 						"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");

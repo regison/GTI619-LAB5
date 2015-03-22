@@ -1,6 +1,7 @@
 package communication.DataObjects;
 
 import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Objects {
@@ -11,9 +12,9 @@ public class Objects {
 	    public int roleId;
 	    public String saltPassword;
 	    public int ndCryptIteration;
-	    public Date ModifiedDate;
+	    public SimpleDateFormat ModifiedDate;
 	    public String ModifiedBy;
-	    public Date CreateDate;
+	    public SimpleDateFormat CreateDate;
 	    public String CreateBy;
 	    public String salt;
 	    public int saltCounter;
@@ -25,7 +26,7 @@ public class Objects {
 		public int idRole;
 	    public int roleLevelId;
 	    public String roleName;
-	    public Time timeConnexion;
+	    public SimpleDateFormat timeConnexion;
 	    public RoleLevel roleLevel;
 	    
 	    public static final String AdministratorRoleName = "Administrateur";
@@ -47,7 +48,7 @@ public class Objects {
 		public int logId;
 		public String logName;
 		public int userLogId;
-		public Date logDate;
+		public SimpleDateFormat logDate;
 	}
 
 	public Objects() {
