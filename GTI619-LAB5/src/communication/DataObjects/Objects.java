@@ -10,13 +10,15 @@ public class Objects {
 	    public String name;
 	    public int roleId;
 	    public String saltPassword;
-	    public int ndMd5Iteration;
+	    public int ndCryptIteration;
 	    public Date ModifiedDate;
 	    public String ModifiedBy;
 	    public Date CreateDate;
 	    public String CreateBy;
-	    public int saltNumber;
+	    public String salt;
 	    public int saltCounter;
+	    public boolean enabled;
+	    public Role role;
 	}
 	
 	public class Role {
@@ -24,6 +26,7 @@ public class Objects {
 	    public int roleLevelId;
 	    public String roleName;
 	    public Time timeConnexion;
+	    public RoleLevel roleLebel;
 	}
 	
 	public class RoleLevel {

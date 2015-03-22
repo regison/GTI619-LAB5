@@ -113,7 +113,7 @@ public class AbstractAction extends Action {
 	    }  
 	}
 	
-	public String generateHiddenNumber(){
+	public String generateHiddenRandomString(){
 		HiddenStringGenerator hiddenGenerator = new HiddenStringGenerator();
 		return hiddenGenerator.generateRandomString();
 	}

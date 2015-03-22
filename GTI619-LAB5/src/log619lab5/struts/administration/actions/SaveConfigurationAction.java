@@ -22,7 +22,7 @@ public class SaveConfigurationAction extends AbstractAction {
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	request.setAttribute("Page", PAGE);
-	request.setAttribute("hidden", generateHiddenNumber());
+	request.setAttribute("hidden", generateHiddenRandomString());
 	pageSection = Section.GENERAL;	
 	return mapping.findForward(SUCCESS);
     }
