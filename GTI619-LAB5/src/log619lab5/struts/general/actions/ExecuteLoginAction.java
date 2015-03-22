@@ -1,5 +1,6 @@
 package log619lab5.struts.general.actions;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 import javax.servlet.http.HttpServletRequest;
@@ -89,7 +90,24 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			pageSection = Section.LOGIN;	
 			return mapping.findForward("failure");
 		}
+		result = connexion.Select("Select * from log619lab5.Role where idRole= ? ;", new String[] {user.roleId + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
+		user.role = obj.new Role();
+		user.role.idRole = Integer.parseInt(result.get(0).get(0).toString());
+		user.role.roleLevelId = Integer.parseInt(result.get(0).get(1).toString());
+		user.role.roleName = result.get(0).get(2).toString();
+		user.role.timeConnexion = Time.valueOf(result.get(0).get(3).toString());
 		
+		result = connexion.Select("Select * from log619lab5.RoleLevel where idRoleLevel= ? ;", new String[] {user.role.roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
+					"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");
+		user.role.roleLevel = obj.new RoleLevel();
+		user.role.roleLevel.idRoleLevel = Integer.parseInt(result.get(0).get(0).toString());
+		user.role.roleLevel.caneEditOwnAccount = Boolean.parseBoolean(result.get(0).get(1).toString());
+		user.role.roleLevel.canChangeMdp = Boolean.parseBoolean(result.get(0).get(2).toString());
+		user.role.roleLevel.canEditAll = Boolean.parseBoolean(result.get(0).get(3).toString());
+		user.role.roleLevel.canModifyDelay = Boolean.parseBoolean(result.get(0).get(4).toString());
+		user.role.roleLevel.canModifynbTentative = Boolean.parseBoolean(result.get(0).get(5).toString());
+		user.role.roleLevel.canModifyBlocage = Boolean.parseBoolean(result.get(0).get(6).toString());
+		user.role.roleLevel.canModifyComplexiteMdp = Boolean.parseBoolean(result.get(0).get(7).toString());
 	} catch (Exception e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

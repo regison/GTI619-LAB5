@@ -26,7 +26,7 @@ public class Objects {
 	    public int roleLevelId;
 	    public String roleName;
 	    public Time timeConnexion;
-	    public RoleLevel roleLebel;
+	    public RoleLevel roleLevel;
 	}
 	
 	public class RoleLevel {
