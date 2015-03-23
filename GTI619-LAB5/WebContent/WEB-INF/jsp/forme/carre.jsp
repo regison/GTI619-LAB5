@@ -11,7 +11,7 @@
 	
     <table class=common>
 		<tr>
-			<td class=name>Bonjour Bob</td>
+			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
 			<td width="100">Log out</td>
 		</tr>
 	

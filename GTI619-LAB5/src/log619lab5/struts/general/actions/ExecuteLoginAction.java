@@ -1,8 +1,10 @@
 package log619lab5.struts.general.actions;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +35,7 @@ public class ExecuteLoginAction extends AbstractAction {
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String userName = (String) request.getParameter("username");
-		String password = request.getParameter("password").toString();
+		String password = (String) request.getParameter("password");
 		HttpSession session = request.getSession();
 		
 		session.setAttribute("Username", "");
@@ -41,7 +43,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		securityModule = new SecurityModuleCore(null, session);
 		
-		if(userName.equals("") || password.equals("")){
+		if(userName == null || password == null || userName.equals("") || password.equals("")){
 			loginFailedLogic();
 			pageSection = Section.LOGIN;	
 			return mapping.findForward("failure");
@@ -145,6 +147,8 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		session.setAttribute("Username", user.name);
 		session.setAttribute("Role", user.role.roleName);
+		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
+		session.setAttribute("idUser", user.idUser);
 		
 		if(user.role.roleName.equals(Objects.Role.AdministratorRoleName)){
 			String randomString = generateHiddenRandomString();

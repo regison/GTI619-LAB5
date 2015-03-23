@@ -10,7 +10,7 @@
 <body class="homepage">
 	    <table class=common>
 		<tr>
-			<td class=name>Bonjour Bob</td>
+			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
 			<td width="100">Log out</td>
 		</tr>
 	
@@ -66,6 +66,12 @@
                     <input type="checkbox" name="politique" value="Majuscules" />Majuscules <br />
                     <input type="checkbox" name="politique" value="Speciaux" />Caracteres Speciaux <br />
                     <input type="checkbox" name="politique" value="Chiffre" />Chiffres <br />
+                    <br />
+                    <label>Forcer un changement de mot de passe à la prochaine connexion?</label><br/>
+                    <input type="checkbox" name="changePassConnect" value="changePassConnect" />Majuscules <br />
+                    <br />
+                    <label>Forcer un changement de mot de passe au prochain accès à une page?</label><br/>
+                    <input type="checkbox" name="changePassPage" value="changePassPage" />Majuscules <br />
                     <br />
                 </fieldset>
                 <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">

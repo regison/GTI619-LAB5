@@ -58,6 +58,7 @@
         </action>
         
         <action path="/Navigate" type="log619lab5.struts.administration.actions.NavigateAction" scope="session">
+        	<forward name="admin" path="/WEB-INF/jsp/administration/admin.jsp" />
         	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
         	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
         	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />

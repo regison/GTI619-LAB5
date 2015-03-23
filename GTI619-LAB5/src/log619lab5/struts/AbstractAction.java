@@ -74,15 +74,15 @@ public class AbstractAction extends Action {
 				redirectPage(request, response, "Login.do");
 			} else {
 				if (pageSection.equals(Section.CARRE)
-						&& !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
-								|| session.getAttribute("Role").equals(Objects.Role.SquareRoleName))) {
+						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
+								|| session.getAttribute("Role").equals(Objects.Role.SquareRoleName)))) {
 					redirectPage(request, response, "AccessDenied.do");
 				} else if (pageSection.equals(Section.CERCLE)
-						&& !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
-								|| session.getAttribute("Role").equals(Objects.Role.CercleRoleName))){
+						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
+								|| session.getAttribute("Role").equals(Objects.Role.CercleRoleName)))){
 					redirectPage(request, response, "AccessDenied.do");
 				} else if (pageSection.equals(Section.ADMIN) 
-						&& !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName)){
+						&& (session.getAttribute("Role") == null || !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName))){
 					redirectPage(request, response, "AccessDenied.do");
 				}
 			}

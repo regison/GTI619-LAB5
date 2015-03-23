@@ -22,7 +22,12 @@ public class NavigateAction extends AbstractAction {
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String nav = (String) request.getParameter("navigation");
-		if(nav.equals("carre")){
+		if(nav.equals("admin")){
+			request.setAttribute("Page", "Admin");
+			pageSection = Section.ADMIN;
+			return mapping.findForward("admin");
+		}
+		else if(nav.equals("carre")){
 			request.setAttribute("Page", "Carre");
 			pageSection = Section.CARRE;
 			return mapping.findForward("carre");
