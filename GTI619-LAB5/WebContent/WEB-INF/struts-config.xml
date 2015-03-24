@@ -6,14 +6,6 @@
 
 <struts-config>
 
-    <form-beans>
-<!--         <form-bean name="LoginForm" type="log619lab5.struts.general.forms.LoginForm"/> -->
-<!--         <form-bean name="ContactUsForm" type="log619lab5.struts.general.forms.ContactUsForm"/> -->
-<!--         <form-bean name="SubscribeForm" type="log619lab5.struts.general.forms.SubscribeForm"/> -->
-        <form-bean name="AbstractForm" type="log619lab5.struts.AbstractForm"/>
-<!--         <form-bean name="AddMailUserForm" type="log619lab5.struts.admin.AddMailUserForm"/> -->
-    </form-beans>
-    
    <global-exceptions>
 	    <exception
 	      key="error.global.mesage"
@@ -24,17 +16,11 @@
 
 	<global-forwards>
 		<forward name="Login" path="/Login.do"/>
+		<forward name="carre" path="/Carre.do" redirect="true" />
+		<forward name="cercle" path="/Cercle.do" redirect="true" />
+		<forward name="admin" path="/AdminPage.do" redirect="true"/>
 <!-- 		<forward name="Logout" path="/Logout.do"/> -->
-        <forward name="Welcome" path="/Welcome.do"/>
-<!--         <forward name="ContactUs" path="/ContactUs.do"/> -->
-<!--         <forward name="Subscribe" path="/Subscribe.do"/> -->
-<!--         <forward name="Promotion" path="/Promotion.do"/> -->
-<!--         <forward name="PriceList" path="/PriceList.do"/> -->
-<!--         <forward name="WebsitePlan" path="/WebsitePlan.do"/> -->
-<!--         <forward name="LegalMention" path="/LegalMention.do"/> -->
         <forward name="AccessDenied" path="/AccessDenied.do"/>
-<!--         <forward name="Service" path="/Service.do"/> -->
-<!--         <forward name= "MemberSection" path= "/MemberSection.do"/> -->
     </global-forwards>
 
     <action-mappings>        
@@ -46,15 +32,12 @@
         	<forward name="success" path="/WEB-INF/jsp/AccessDenied.jsp" />
         </action>
         
-        <action path="/Login" type="log619lab5.struts.general.actions.LoginAction" name="AbstractForm" scope="session">
+        <action path="/Login" type="log619lab5.struts.general.actions.LoginAction" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/login.jsp" />
         </action>
         
         <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">
-        	<forward name="admin" path="/WEB-INF/jsp/administration/admin.jsp" />
-        	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
-        	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
-        	<forward name="failure" path="/WEB-INF/jsp/AccessDenied.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/loginFailed.jsp" />
         </action>
         
         <action path="/Navigate" type="log619lab5.struts.administration.actions.NavigateAction" scope="session">
@@ -64,8 +47,27 @@
         	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />
         </action>
         
+        <action path="/Carre" type="log619lab5.struts.general.actions.CarreAction" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/forme/carre.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />
+        </action>
+        
+        <action path="/Cercle" type="log619lab5.struts.general.actions.CercleAction" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/forme/cercle.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />
+        </action>
+        
+        <action path="/AdminPage" type="log619lab5.struts.administration.actions.AdminPageAction" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/administration/admin.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />
+        </action>
+        
         <action path="/SaveConfiguration" type="log619lab5.struts.administration.actions.SaveConfigurationAction" scope="session">
-        	<forward name="success" path="/WEB-INF/jsp/general/admin.jsp" />
+        	<forward name="success" path="/WEB-INF/jsp/administration/admin.jsp" />
+        </action>
+        
+        <action path="/ChangePassword" type="log619lab5.struts.general.actions.ChangePasswordAction" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/general/changePassword.jsp" />
         </action>
         
     </action-mappings>

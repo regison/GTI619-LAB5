@@ -3,15 +3,16 @@
 <head>
 
 <title>Carre!</title>
-<link href="<c:url value="/resources/css/style.css" />" rel="stylesheet">
+<link href="WEB-INF/css/style.css" rel="stylesheet">
 
 </head>
 
 <body class="homepage">
 	
-    <table class=common>
+	    <table class=common>
 		<tr>
 			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
+			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
 			<td width="100">Log out</td>
 		</tr>
 	

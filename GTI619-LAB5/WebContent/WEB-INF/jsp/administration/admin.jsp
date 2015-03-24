@@ -8,17 +8,18 @@
 </head>
 
 <body class="homepage">
-	    <table class=common>
+	<table class=common>
 		<tr>
 			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
+			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
 			<td width="100">Log out</td>
 		</tr>
 	
 	</table>
 	 <br />
     <br />
-	<a href="Navigate.do?navigation=cercle">Cercle</a><br/>
-	<a href="Navigate.do?navigation=carre">Carre</a>
+	<a href="Cercle.do">Cercle</a><br/>
+	<a href="Carre.do">Carre</a>
 	 <br />
     <br />
 	

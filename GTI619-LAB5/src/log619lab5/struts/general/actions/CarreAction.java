@@ -15,14 +15,16 @@ import database.IDatabase;
 import database.mysql.Mysql;
 
 
-public class WelcomeAction extends AbstractAction {
+public class CarreAction extends AbstractAction {
 
-	private final String PAGE = "Welcome";
+	private final String PAGE = "Login";
 	
-@Override
-public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	request.setAttribute("Page", PAGE); 
-	pageSection = Section.GENERAL;	
-	return mapping.findForward(SUCCESS);
-    }
+	@Override
+	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		request.setAttribute("Page", "Carre");
+		pageSection = Section.CARRE;
+		request.getSession().setAttribute("from", "Carre");
+		return mapping.findForward("success");
+	}
 }
