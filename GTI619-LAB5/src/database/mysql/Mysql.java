@@ -68,6 +68,8 @@ public class Mysql implements IDatabase {
 			ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
 			//Statement st = conn.createStatement();
+			
+			//Empeche SQL INJECTION *** IMPORTANT**
 			PreparedStatement prepStmt = conn.prepareStatement(p_request);
 			if (params != null){
 				for(int i = 0; i < params.length; i++){

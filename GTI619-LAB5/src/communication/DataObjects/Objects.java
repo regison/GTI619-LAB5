@@ -12,6 +12,7 @@ public class Objects {
 	    public int roleId;
 	    public String saltPassword;
 	    public int nbCryptIteration;
+
 	    public SimpleDateFormat ModifiedDate;
 	    public String ModifiedBy;
 	    public SimpleDateFormat CreateDate;
@@ -20,6 +21,10 @@ public class Objects {
 	    public int saltCounter;
 	    public boolean enabled;
 	    public Role role;
+	    
+	    public User(){
+	    	role = new Role();
+	    }
 	}
 	
 	public class Role {
@@ -28,6 +33,10 @@ public class Objects {
 	    public String roleName;
 	    public SimpleDateFormat timeConnexion;
 	    public RoleLevel roleLevel;
+	    
+	    public Role(){
+	    	roleLevel = new RoleLevel();
+	    }
 	    
 	    public static final String AdministratorRoleName = "Administrateur";
 	    public static final String CercleRoleName = "Préposé au cercle";
@@ -51,6 +60,9 @@ public class Objects {
 		public SimpleDateFormat logDate;
 	}
 
+	public class LoginLog{
+		
+	}
 	public Objects() {
 		// TODO Auto-generated constructor stub
 	}

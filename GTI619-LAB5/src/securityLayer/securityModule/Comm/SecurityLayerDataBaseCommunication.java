@@ -3,6 +3,8 @@ package securityLayer.securityModule.Comm;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import communication.DataMapping.DataProvider;
+
 import database.mysql.Mysql;
 
 public class SecurityLayerDataBaseCommunication {
@@ -16,8 +18,11 @@ public class SecurityLayerDataBaseCommunication {
 	private int userID = -1;
 	private int originalUserID = -1;
 	private boolean initialised = false;
+	
+	private DataProvider dtp;
 	public SecurityLayerDataBaseCommunication(){
 		cnx= new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 	}
 	
 	public void initialise(int userID){
@@ -25,6 +30,7 @@ public class SecurityLayerDataBaseCommunication {
 		initialised = true;
 		cnx.Open();
 		try {
+			
 			ArrayList<ArrayList<Object>> result = cnx.Select("SELECT * FROM log619lab5.LoginLogs WHERE idUser= ? ;", new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
 			if(result.size() < 1)
 				return;

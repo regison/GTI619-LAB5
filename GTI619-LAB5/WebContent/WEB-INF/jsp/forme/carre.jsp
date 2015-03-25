@@ -12,7 +12,10 @@
 	    <table class=common>
 		<tr>
 			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
+<<<<<<< HEAD
+=======
 			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
+>>>>>>> branch 'master' of https://github.com/regison/GTI619-LAB5.git
 			<td width="100">Log out</td>
 		</tr>
 	

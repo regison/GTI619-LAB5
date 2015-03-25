@@ -6,15 +6,15 @@ import java.util.ArrayList;
 
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
+
 import communication.DataObjects.QueryFactory;
 import database.mysql.Mysql;
 
 public class DataMapping implements IDataMapping {
 
 	private Mysql cnx;
-	public DataMapping() {		
-		cnx= new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5);
-		cnx.Open();
+	public DataMapping(short database) {		
+		cnx= new Mysql(database);
 	}
 
 	public ArrayList<User> Users() {
@@ -39,9 +39,10 @@ public class DataMapping implements IDataMapping {
 				toAdd.enabled = Boolean.valueOf(user.get(11).toString());
 				
 				usersToShow.add(toAdd);
+
 			}
 		}
-		cnx.Close();
+			cnx.Close();
 		
 		return usersToShow;
 	}
@@ -104,6 +105,7 @@ public class DataMapping implements IDataMapping {
 															"canEditAll", "canModifyDelay","canModifynbTentative",
 															"canModifyBlocage","canModifyComplexiteMdp");
 		ArrayList<RoleLevel> rightLevels = new ArrayList<RoleLevel>();
+
 		
 		if (rightsMapping.size() > 0 || rightsMapping != null){
 			for (ArrayList<Object> rights : rightsMapping){
@@ -130,27 +132,47 @@ public class DataMapping implements IDataMapping {
 	 */
 	@Override
 	public Role GetUserRole(int roleid) {
-		if (roleid != 0){
-			for(Role r : Roles()){
-				if (r.idRole == roleid)
-					return r;
-			}
-		}
-		return null;
-	}
 
-
-	@Override
-	public RoleLevel GetRoleLevel(int roleid, int userid) {
+		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.Role where idRole= ? ;", new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
+		if (result.size() == 1){
+			User user = new Objects().new User();
+			user.role.idRole = Integer.parseInt(result.get(0).get(0).toString());
+			user.role.roleLevelId = Integer.parseInt(result.get(0).get(1).toString());
+			user.role.roleName = result.get(0).get(2).toString();
+			user.role.timeConnexion = new SimpleDateFormat(result.get(0).get(3).toString());
 		
-		if (roleid != 0 && userid != 0){
-			for(RoleLevel rl : RoleLevels()){
-				if(rl.idRoleLevel == roleid)
-					return rl;
-			}
+			return user.role;
 		}
 		return null;
 	}
+
+
+	/***
+	 *  Get a rolelevel from his role ID
+	 * */
+	@Override
+	public RoleLevel GetRoleLevel(int roleLevelId) {
+
+		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.RoleLevel where idRoleLevel= ? ;", new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
+				"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");
+
+		if (result.size() == 1){
+			User user = new Objects().new User();
+		
+			user.role.roleLevel.idRoleLevel = Integer.parseInt(result.get(0).get(0).toString());
+			user.role.roleLevel.caneEditOwnAccount = Integer.parseInt(result.get(0).get(1).toString()) == 1 ? true : false;
+			user.role.roleLevel.canChangeMdp = Integer.parseInt(result.get(0).get(2).toString()) == 1 ? true : false;
+			user.role.roleLevel.canEditAll = Integer.parseInt(result.get(0).get(3).toString()) == 1 ? true : false;
+			user.role.roleLevel.canModifyDelay = Integer.parseInt(result.get(0).get(4).toString()) == 1 ? true : false;
+			user.role.roleLevel.canModifynbTentative = Integer.parseInt(result.get(0).get(5).toString()) == 1 ? true : false;
+			user.role.roleLevel.canModifyBlocage = Integer.parseInt(result.get(0).get(6).toString()) == 1 ? true : false;
+			user.role.roleLevel.canModifyComplexiteMdp = Integer.parseInt(result.get(0).get(7).toString()) == 1 ? true : false;
+			
+			return user.role.roleLevel;
+		}
+		return null;
+	}
+
 	
 	@Override
 	public User GetUser(int userid) {
@@ -180,10 +202,10 @@ public class DataMapping implements IDataMapping {
 		
 	}
 
-
 		
 	public static void main (String [] args){
-		DataProvider m = new DataProvider();
+		DataProvider m = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+
 		ArrayList<User> users = m.Users();
 		
 		for (User u : users){
@@ -198,4 +220,63 @@ public class DataMapping implements IDataMapping {
 		return false;
 	}
 
+	@Override
+	public User GetUserByUserName(String uname) {
+		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.User where name=?;", new String[] {uname}, "ndMd5Iteration", "saltNumber", "saltCounter", "idUser");
+		User user = new Objects().new User();
+		
+		if (result !=null){
+			user.nbCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
+			user.salt = result.get(0).get(1).toString();
+			user.saltCounter = Integer.parseInt(result.get(0).get(2).toString());
+			user.idUser = Integer.parseInt(result.get(0).get(3).toString());
+			
+			return  user;
+		}
+		return null;
+	}
+
+	@Override
+	public User GetUserByUNameSaltPwd(User user, String uname, String pwd) {
+		// TODO Auto-generated method stub
+		String query = "SELECT * FROM log619lab5.User where name= ? and saltPassword=SHA2(";
+		for(int i = 1; i < user.nbCryptIteration; i++){
+			query += "SHA2(";
+		}
+		query += "'";
+		for(int i = 0; i < user.saltCounter; i++){
+			query += user.salt;
+		}
+		query += "'?'";
+		for(int j = 0; j < user.saltCounter; j++){
+			query += user.salt;
+		}
+		query += "'";
+		for(int i = 1; i < user.nbCryptIteration; i++){
+			query += ", 512)";
+		}
+		query += ", 512);";
+		System.out.println(query);
+		
+		ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
+		
+		if (result.size() == 1){
+			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
+			user.name = result.get(0).get(1).toString();
+			user.roleId = Integer.parseInt(result.get(0).get(2).toString());
+			user.enabled = Boolean.parseBoolean(result.get(0).get(3).toString());
+			
+			return user;
+		}
+			
+		return null;
+	}
+
+	@Override
+	public LoginLog GetLoginLogsByUserId(int user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 }

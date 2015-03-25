@@ -1,15 +1,19 @@
 package communication.DataMapping;
 
-import java.util.ArrayList;
-
 import communication.DataObjects.Objects.*;
-import database.IDatabase;
 
 public interface IDataMapping{	
 	//Lists	
 	User GetUser(int userid);	
+
+	User GetUserByUserName(String uname);
+	User GetUserByUNameSaltPwd(User user,String uname, String pwd);
+	
 	Role GetUserRole(int roleid);
-	RoleLevel GetRoleLevel (int roleid, int userid);
+	RoleLevel GetRoleLevel (int roleid);
+	LoginLog GetLoginLogsByUserId(int user);
+
+
 	
 	boolean CreateLog(Log event);
 	boolean UpdateUser(User user);
