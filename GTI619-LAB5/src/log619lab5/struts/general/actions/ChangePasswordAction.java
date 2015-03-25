@@ -37,7 +37,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			String hidden = request.getParameter("hidden");
 			SecurityModulePassword sPass = new SecurityModulePassword();
 			
-			if(!hidden.equals(session.getAttribute("updatePWHiddenString")))
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("updatePWHiddenString")))
 			{
 				return mapping.findForward("carre");
 			}

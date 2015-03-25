@@ -12,6 +12,7 @@
 		<tr>
 			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
 			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
+			<td><a href="GestionUtilisateur.do">Gestion Utilisateurs</a></td>
 			<td width="100">Log out</td>
 		</tr>
 	

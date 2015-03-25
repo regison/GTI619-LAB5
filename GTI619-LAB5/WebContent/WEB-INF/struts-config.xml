@@ -70,6 +70,10 @@
         	<forward name="success" path="/WEB-INF/jsp/general/changePassword.jsp" />
         </action>
         
+        <action path="/GestionUtilisateur" type="log619lab5.struts.administration.actions.GestionUtilisateursAction" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/administration/gestionUtilisateurs.jsp" />
+        </action>
+        
     </action-mappings>
 
 </struts-config>

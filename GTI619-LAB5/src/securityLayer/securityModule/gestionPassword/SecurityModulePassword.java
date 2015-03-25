@@ -2,7 +2,7 @@ package securityLayer.securityModule.gestionPassword;
 
 public class SecurityModulePassword {
 
-	private boolean validatePassword(String password){
+	public boolean validatePassword(String password){
 		//TODO
 		return true;
 	}
