@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import com.sun.org.apache.bcel.internal.generic.DMUL;
 
+import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects.Role;
 import communication.DataObjects.Objects.RoleLevel;
 import communication.DataObjects.Objects.User;
@@ -16,6 +17,7 @@ public class SecurityModuleCore {
 	private User user;
 	private HttpSession session;
 	private SecurityLayerDataBaseCommunication dbComm;
+	private DataProvider dtp;
 	
 	public SecurityModuleCore(User user, HttpSession session){
 		this.user = user;
