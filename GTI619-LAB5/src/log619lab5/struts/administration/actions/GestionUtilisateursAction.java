@@ -60,7 +60,6 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 	
 	String randomString = generateHiddenRandomString();
 	request.setAttribute("hidden", randomString);
-	request.setAttribute("hidden", randomString);
 	session.setAttribute("gestionUtilisateuriddenString", randomString);
 	return mapping.findForward(SUCCESS);
     }
