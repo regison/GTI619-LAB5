@@ -22,7 +22,7 @@ public class SecurityLayerDataBaseCommunication {
 	private DataProvider dtp;
 	public SecurityLayerDataBaseCommunication(){
 		cnx= new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5);
-		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtp = new DataProvider();
 	}
 	
 	public void initialise(int userID){

@@ -15,11 +15,11 @@ import communication.DataObjects.Objects.*;
  *
  */
 
-public class DataProvider implements IDataProvider {
+public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu pense avoir de multiples dataprovider et un accesseur généralisé qui pourait avoir une liste de DataProvider
 
 	private DataMapping data;
-	public DataProvider(short database){
-		data = new DataMapping(database);
+	public DataProvider(){
+		data = new DataMapping();
 	}
 	
 	//Select users from db
@@ -52,43 +52,43 @@ public class DataProvider implements IDataProvider {
 		return null;
 	}
 
-	@Override
+	
 	public User GetUserByUNameSaltPwd(User user, String uname, String pwd) {
 		// TODO Auto-generated method stub
 		return data.GetUserByUNameSaltPwd(user, uname, pwd);
 	}
 
-	@Override
+	
 	public Role GetUserRole(int roleid) {
 		// TODO Auto-generated method stub
 		return data.GetUserRole(roleid);
 	}
 
-	@Override
+	
 	public RoleLevel GetRoleLevel(int roleid) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public LoginLog GetLoginLogsByUserId(int user) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+	
 	public boolean CreateLog(Log event) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	
 	public boolean UpdateUser(User user) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	
 	public boolean UpdateUserRoleRights(int userid, int roleLevelId,
 			int... rights) {
 		// TODO Auto-generated method stub

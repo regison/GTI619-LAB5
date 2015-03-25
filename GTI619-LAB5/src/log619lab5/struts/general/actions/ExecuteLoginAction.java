@@ -68,7 +68,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		// TODO enlever cette section
 		//Temporaire!
-		dtP = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtP = new DataProvider();
 		
 		Objects obj = new Objects();
 		User _currentUser = obj.new User();
