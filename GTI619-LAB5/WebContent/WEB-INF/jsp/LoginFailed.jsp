@@ -9,5 +9,7 @@
 <body>
 	<h1>Oups! Connexion impossible!</h1>
 	<h2>Veuillez vérifier vos information de connexion!</h2>
+	<br />
+	<a href="Login.do">Se connecter</a>
 </body>
 </html>

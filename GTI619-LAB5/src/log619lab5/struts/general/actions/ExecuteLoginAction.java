@@ -50,7 +50,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		if(userName == null || password == null || userName.equals("") || password.equals("")){
 			loginFailedLogic();
-			pageSection = Section.LOGIN;	
+			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 		
@@ -62,7 +62,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		if(hidden.equals("") || !hidden.equals(random)){
 			loginFailedLogic();
-			pageSection = Section.LOGIN;	
+			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 		
@@ -76,7 +76,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			 
 			if(_currentUser == null){
 				loginFailedLogic();
-				pageSection = Section.LOGIN;
+				pageSection = Section.GENERAL;
 				dtP.Dispose();
 				return mapping.findForward("failure");
 			}
@@ -90,7 +90,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			
 			if( tempUser == null ){
 				loginFailedLogic();
-				pageSection = Section.LOGIN;	
+				pageSection = Section.GENERAL;	
 				dtP.Dispose();
 				return mapping.findForward("failure");
 			}
@@ -102,7 +102,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			
 			if(!_currentUser.enabled){
 				loginFailedLogic();
-				pageSection = Section.LOGIN;
+				pageSection = Section.GENERAL;
 				dtP.Dispose();
 				return mapping.findForward("failure");
 			}
@@ -147,7 +147,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		}
 		else{
 			loginFailedLogic();
-			pageSection = Section.LOGIN;	
+			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 	}
