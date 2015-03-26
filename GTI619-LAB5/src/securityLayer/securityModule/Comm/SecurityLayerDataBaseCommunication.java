@@ -73,8 +73,9 @@ public class SecurityLayerDataBaseCommunication {
 		if(userID > -1){ //Update
 			cnx.Open();
 			try {
-				cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? this.userFailedTriesCount + 1 : (loggedIn ? 0 : this.userFailedTriesCount)) + "") + 
-						"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + userID + "';");
+				cnx.update("UPDATE log619lab5.LoginLogs SET FailedTriesCount=? , LoggedIn=? , LogoutNeeded=? WHERE idUser=? ;", 
+						new String[] {((incrementFailedLoginTriesCount ? this.userFailedTriesCount + 1 : (loggedIn ? 0 : this.userFailedTriesCount)) + ""), 
+							(loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0"), userID + ""});
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -84,8 +85,8 @@ public class SecurityLayerDataBaseCommunication {
 		else{ //Insert
 			cnx.Open();
 			try {
-				cnx.insert("INSERT INTO `log619lab5`.`LoginLogs` (`idUser`, `FailedTriesCount`, `LoggedIn`, `LogoutNeeded`) VALUES ('" + originalUserID + "', '" + 
-						(incrementFailedLoginTriesCount ? "1" : "0") + "', '" + (loggedIn ? "1" : "0") + "', '" + (LogoutNeeded ? "1" : "0") + "');");
+				cnx.insert("INSERT INTO log619lab5.LoginLogs (idUser, FailedTriesCount, LoggedIn, LogoutNeeded) VALUES ( ? , ? , ? , ? );", 
+						new String[] {originalUserID + "", (incrementFailedLoginTriesCount ? "1" : "0"), (loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0") });
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -99,7 +100,7 @@ public class SecurityLayerDataBaseCommunication {
 			return;
 		cnx.Open();
 		try {
-			cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `idUser`='" + userID + "' WHERE `userID`='" + userID + "';");
+			cnx.update("UPDATE log619lab5.LoginLogs SET idUser= ? WHERE userID= ? ;", new String[]{userID + "", userID + ""});
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

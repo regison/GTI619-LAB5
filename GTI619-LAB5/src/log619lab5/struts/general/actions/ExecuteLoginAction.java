@@ -66,8 +66,6 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		// TODO enlever cette section
-		//Temporaire!
 		dtP = new DataProvider();
 		
 		Objects obj = new Objects();

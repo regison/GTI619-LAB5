@@ -18,11 +18,12 @@ public class DataMapping implements IDataMapping {
 	}
 
 	public ArrayList<User> Users() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> usersMapping =  cnx.Select(QueryFactory.SELECT_ALL_USERS, null, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy",																						"saltNumber", "saltCounter","enabled");
 		ArrayList<User> usersToShow = new ArrayList<User>();
 		
-		if (usersMapping.size() > 0){		
+		if (usersMapping != null && usersMapping.size() > 0){		
 			for ( ArrayList<Object> user : usersMapping ){				
 				User toAdd = new Objects().new User();
 				toAdd.idUser = Integer.parseInt(user.get(0).toString());
@@ -52,10 +53,11 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<Log> Logs() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_ALL_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Log> systemLogs = new ArrayList<Log>();
 		
-		if (systemLogMappingObject.size() > 0 || systemLogMappingObject != null){
+		if (systemLogMappingObject != null && systemLogMappingObject.size() > 0){
 			for (ArrayList<Object> log : systemLogMappingObject){
 				Log logToAdd = new Objects().new Log();
 				logToAdd.logId = Integer.parseInt(log.get(0).toString());
@@ -76,10 +78,11 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<Role> Roles() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Role> roles = new ArrayList<Role>();
 		
-		if (rolesMapping.size() > 0 || rolesMapping != null){
+		if (rolesMapping != null && rolesMapping.size() > 0){
 			for (ArrayList<Object> role : rolesMapping){
 				Role roleToAdd = new Objects().new Role();
 				roleToAdd.idRole = Integer.parseInt(role.get(0).toString());
@@ -100,6 +103,7 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<RoleLevel> RoleLevels() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> rightsMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLE_RIGHTS, null, 
 															"idRoleLevel", "canEditOwnAccount", "canChangeMdp", 
 															"canEditAll", "canModifyDelay","canModifynbTentative",
@@ -107,7 +111,7 @@ public class DataMapping implements IDataMapping {
 		ArrayList<RoleLevel> rightLevels = new ArrayList<RoleLevel>();
 
 		
-		if (rightsMapping.size() > 0 || rightsMapping != null){
+		if (rightsMapping != null && rightsMapping.size() > 0){
 			for (ArrayList<Object> rights : rightsMapping){
 				RoleLevel rightToAdd = new Objects().new RoleLevel();
 				rightToAdd.idRoleLevel = Integer.parseInt(rights.get(0).toString());
@@ -132,9 +136,10 @@ public class DataMapping implements IDataMapping {
 	 */
 	@Override
 	public Role GetUserRole(int roleid) {
-
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.Role where idRole= ? ;", new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
-		if (result.size() == 1){
+		cnx.Close();
+		if (result != null && result.size() == 1){
 			User user = new Objects().new User();
 			user.role.idRole = Integer.parseInt(result.get(0).get(0).toString());
 			user.role.roleLevelId = Integer.parseInt(result.get(0).get(1).toString());
@@ -153,10 +158,12 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public RoleLevel GetRoleLevel(int roleLevelId) {
 
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.RoleLevel where idRoleLevel= ? ;", new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
 				"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");
+		cnx.Close();
 
-		if (result.size() == 1){
+		if (result != null && result.size() == 1){
 			User user = new Objects().new User();
 		
 			user.role.roleLevel.idRoleLevel = Integer.parseInt(result.get(0).get(0).toString());
@@ -222,10 +229,12 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public User GetUserByUserName(String uname) {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.User where name=?;", new String[] {uname}, "ndMd5Iteration", "saltNumber", "saltCounter", "idUser");
+		cnx.Close();
 		User user = new Objects().new User();
 		
-		if (result !=null){
+		if (result !=null && result.size() > 0){
 			user.nbCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
 			user.salt = result.get(0).get(1).toString();
 			user.saltCounter = Integer.parseInt(result.get(0).get(2).toString());
@@ -257,10 +266,12 @@ public class DataMapping implements IDataMapping {
 		}
 		query += ", 512);";
 		System.out.println(query);
-		
+
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
+		cnx.Close();
 		
-		if (result.size() == 1){
+		if (result != null && result.size() == 1){
 			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
 			user.name = result.get(0).get(1).toString();
 			user.roleId = Integer.parseInt(result.get(0).get(2).toString());

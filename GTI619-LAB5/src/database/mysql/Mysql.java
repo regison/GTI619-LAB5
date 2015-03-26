@@ -98,11 +98,16 @@ public class Mysql implements IDatabase {
 		return null;
 	}
 	
-	private int executeUpdate(String p_request) {
+	private int executeUpdate(String p_request,String[] params) {
 		try {
-			Statement st = conn.createStatement();
-			int row = st.executeUpdate(p_request);
-			st.close();
+			PreparedStatement prepStmt = conn.prepareStatement(p_request);
+			if (params != null){
+				for(int i = 0; i < params.length; i++){
+					prepStmt.setString(i+1, params[i]);
+				}
+			}
+			int row = prepStmt.executeUpdate();
+			prepStmt.close();
 			return row;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -111,17 +116,17 @@ public class Mysql implements IDatabase {
 	}
 
 	@Override
-	public int insert(String p_request) {
-		return executeUpdate(p_request);
+	public int insert(String p_request,String[] params) {
+		return executeUpdate(p_request, params);
 	}
 
 	@Override
-	public int update(String p_request) {
-		return executeUpdate(p_request);
+	public int update(String p_request,String[] params) {
+		return executeUpdate(p_request, params);
 	}
 
 	@Override
-	public int delete(String p_request) {
-		return executeUpdate(p_request);
+	public int delete(String p_request,String[] params) {
+		return executeUpdate(p_request, params);
 	}
 }

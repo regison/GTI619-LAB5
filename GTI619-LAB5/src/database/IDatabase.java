@@ -8,7 +8,7 @@ public interface IDatabase {
 	
 	ArrayList<ArrayList<Object>> Select(String p_request, String[] params, String... p_parameters);
 	
-	int insert(String p_request);
-	int update(String p_request);
-	int delete(String p_request);
+	int insert(String p_request,String[] params);
+	int update(String p_request,String[] params);
+	int delete(String p_request,String[] params);
 }
