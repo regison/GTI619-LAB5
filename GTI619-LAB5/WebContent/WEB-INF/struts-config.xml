@@ -11,7 +11,7 @@
 	      key="error.global.mesage"
 	      type="java.io.IOException"
 	      handler="log619lab5.struts.GeneralException"
-	      path="/WEB-INF/jsp/general/welcome.jsp" />
+	      path="/WEB-INF/jsp/404.jsp" />
 	</global-exceptions>
 
 	<global-forwards>
@@ -24,10 +24,6 @@
     </global-forwards>
 
     <action-mappings>        
-        <action path="/Welcome" type="log619lab5.struts.general.actions.WelcomeAction" name="AbstractForm" scope="session">
-        	<forward name="success" path="/WEB-INF/jsp/general/welcome.jsp" />
-        </action>
-        
         <action path="/AccessDenied" type="log619lab5.struts.general.actions.AccessDeniedAction" name="AbstractForm" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/AccessDenied.jsp" />
         </action>
@@ -39,14 +35,7 @@
         <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">
         	<forward name="failure" path="/WEB-INF/jsp/LoginFailed.jsp" />
         </action>
-        
-        <action path="/Navigate" type="log619lab5.struts.administration.actions.NavigateAction" scope="session">
-        	<forward name="admin" path="/WEB-INF/jsp/administration/admin.jsp" />
-        	<forward name="carre" path="/WEB-INF/jsp/forme/carre.jsp" />
-        	<forward name="cercle" path="/WEB-INF/jsp/forme/cercle.jsp" />
-        	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />
-        </action>
-        
+               
         <action path="/Carre" type="log619lab5.struts.general.actions.CarreAction" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/forme/carre.jsp" />
         	<forward name="failure" path="/WEB-INF/jsp/404.jsp" />

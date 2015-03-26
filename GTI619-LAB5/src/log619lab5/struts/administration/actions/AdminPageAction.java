@@ -23,6 +23,9 @@ public class AdminPageAction extends AbstractAction {
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute("Page", "Admin");
 		pageSection = Section.ADMIN;
+		String randomString = generateHiddenRandomString();
+		request.setAttribute("hidden", randomString);
+		request.getSession().setAttribute("adminHiddenString", randomString);
 		request.getSession().setAttribute("from", "AdminPage");
 		return mapping.findForward("success");
 	}

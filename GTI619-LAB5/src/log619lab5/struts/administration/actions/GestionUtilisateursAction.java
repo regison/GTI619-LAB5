@@ -56,6 +56,11 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			String username = request.getParameter("user");		
 			request.setAttribute("suppMessage", "Operation réuisse");	
 		}
+		if(submit.equals("Valider")){
+			String username = request.getParameter("user");
+			String type = request.getParameter("privilege");	
+			request.setAttribute("privMessage", "Operation réuisse");	
+		}
 	}
 	
 	String randomString = generateHiddenRandomString();

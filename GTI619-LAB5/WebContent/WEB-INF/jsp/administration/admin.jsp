@@ -76,6 +76,7 @@
                     <input type="checkbox" name="changePassPage" value="changePassPage" />Majuscules <br />
                     <br />
                 </fieldset>
+                <% if(request.getAttribute("message")!=null){ out.print(request.getAttribute("message"));} %>
                 <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
                 <input type="submit" value="Valider"  />
      </form>
