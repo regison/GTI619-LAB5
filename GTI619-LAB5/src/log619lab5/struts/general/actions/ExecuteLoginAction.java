@@ -72,7 +72,8 @@ public class ExecuteLoginAction extends AbstractAction {
 		User _currentUser = obj.new User();
 		
 		try {
-			_currentUser = dtP.GetUserByUserName(userName);			
+			//User _currentUsertest = dtP.G
+			_currentUser = dtP.Authenticate(userName, password);			
 			 
 			if(_currentUser == null){
 				loginFailedLogic();
@@ -81,24 +82,7 @@ public class ExecuteLoginAction extends AbstractAction {
 				return mapping.findForward("failure");
 			}
 	
-			securityModule.setUser(_currentUser);
-			
-
-			//Will get an tempuser with the currentUser to check if 
-			//the salt is correct
-			User tempUser = dtP.GetUserByUNameSaltPwd(_currentUser, userName, password);
-			
-			if( tempUser == null ){
-				loginFailedLogic();
-				pageSection = Section.GENERAL;	
-				dtP.Dispose();
-				return mapping.findForward("failure");
-			}
-			
-			_currentUser.idUser = tempUser.idUser;
-			_currentUser.name = tempUser.name;
-			_currentUser.roleId = tempUser.roleId;
-			_currentUser.enabled = tempUser.enabled;
+			securityModule.setUser(_currentUser);		
 			
 			if(!_currentUser.enabled){
 				loginFailedLogic();
@@ -107,7 +91,7 @@ public class ExecuteLoginAction extends AbstractAction {
 				return mapping.findForward("failure");
 			}
 
-			_currentUser.role = dtP.GetUserRole(_currentUser.roleId);			
+			_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 			_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);	
 
 		} catch (Exception e) {

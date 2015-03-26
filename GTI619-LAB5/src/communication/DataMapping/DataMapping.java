@@ -17,15 +17,18 @@ public class DataMapping implements IDataMapping {
 		cnx= new Mysql(database);
 		cnx.Open();
 	}
-
+	/**
+	 * Return all users
+	 * @return
+	 */
 	public ArrayList<User> Users() {
 		ArrayList<ArrayList<Object>> usersMapping =  cnx.Select(QueryFactory.SELECT_ALL_USERS, null, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
-																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy",																						"saltNumber", "saltCounter","enabled");
+																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
 		ArrayList<User> usersToShow = new ArrayList<User>();
-		
-		if (usersMapping.size() > 0){		
+		User toAdd = null;
+		if (usersMapping.size() > 0){				
 			for ( ArrayList<Object> user : usersMapping ){				
-				User toAdd = new Objects().new User();
+				toAdd = new Objects().new User();
 				toAdd.idUser = Integer.parseInt(user.get(0).toString());
 				toAdd.name = user.get(1).toString();
 				toAdd.roleId = Integer.parseInt(user.get(2).toString());
@@ -38,13 +41,13 @@ public class DataMapping implements IDataMapping {
 				toAdd.salt = user.get(9).toString();
 				toAdd.saltCounter = Integer.parseInt(user.get(10).toString());
 				toAdd.enabled = Boolean.valueOf(user.get(11).toString());
+				toAdd.isAuthenticated =  Boolean.valueOf(user.get(12).toString());
+				toAdd.isLogOutNeeded =  Boolean.valueOf(user.get(13).toString());
 				
-				usersToShow.add(toAdd);
-
+				
 			}
-		}
 			cnx.Close();
-		
+		}		
 		return usersToShow;
 	}
 
@@ -54,9 +57,11 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<Log> Logs() {
 		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_ALL_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
-		ArrayList<Log> systemLogs = new ArrayList<Log>();
+		ArrayList<Log> systemLogs = null;
 		
 		if (systemLogMappingObject.size() > 0 || systemLogMappingObject != null){
+			systemLogs = new ArrayList<Log>();
+			
 			for (ArrayList<Object> log : systemLogMappingObject){
 				Log logToAdd = new Objects().new Log();
 				logToAdd.logId = Integer.parseInt(log.get(0).toString());
@@ -65,11 +70,10 @@ public class DataMapping implements IDataMapping {
 				logToAdd.userLogId = Integer.parseInt(log.get(3).toString());
 				
 				systemLogs.add(logToAdd);
-			}
+			}		
 			cnx.Close();
 		}
-		
-		return systemLogs;
+		return systemLogs;		
 	}
 
 	/**
@@ -78,9 +82,10 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<Role> Roles() {
 		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idog", "LogAction", "LogDate", "LogUserId");
-		ArrayList<Role> roles = new ArrayList<Role>();
+		ArrayList<Role> roles = null;
 		
 		if (rolesMapping.size() > 0 || rolesMapping != null){
+			roles = new ArrayList<Role>();
 			for (ArrayList<Object> role : rolesMapping){
 				Role roleToAdd = new Objects().new Role();
 				roleToAdd.idRole = Integer.parseInt(role.get(0).toString());
@@ -89,10 +94,9 @@ public class DataMapping implements IDataMapping {
 				roleToAdd.timeConnexion = new SimpleDateFormat(role.get(3).toString());
 				
 				roles.add(roleToAdd);
-			}
-			cnx.Close();
-		}
-		
+			}		
+		}	
+		cnx.Close();
 		return roles;
 	}
 
@@ -101,15 +105,15 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<RoleLevel> RoleLevels() {
-		ArrayList<ArrayList<Object>> rightsMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLE_RIGHTS, null, 
+		ArrayList<ArrayList<Object>> result =  cnx.Select(QueryFactory.SELECT_ALL_ROLELEVEL, null, 
 															"idRoleLevel", "canEditOwnAccount", "canChangeMdp", 
 															"canEditAll", "canModifyDelay","canModifynbTentative",
 															"canModifyBlocage","canModifyComplexiteMdp");
-		ArrayList<RoleLevel> rightLevels = new ArrayList<RoleLevel>();
-
+		ArrayList<RoleLevel> rightLevels = null;
 		
-		if (rightsMapping.size() > 0 || rightsMapping != null){
-			for (ArrayList<Object> rights : rightsMapping){
+		if (result.size() > 0 || result != null){
+			rightLevels = new ArrayList<RoleLevel>();
+			for (ArrayList<Object> rights : result){
 				RoleLevel rightToAdd = new Objects().new RoleLevel();
 				rightToAdd.idRoleLevel = Integer.parseInt(rights.get(0).toString());
 				rightToAdd.caneEditOwnAccount  = Boolean.parseBoolean(rights.get(1).toString());
@@ -121,10 +125,10 @@ public class DataMapping implements IDataMapping {
 				rightToAdd.canModifyComplexiteMdp =Boolean.parseBoolean(rights.get(8).toString());
 				
 				rightLevels.add(rightToAdd);
-			}
-			cnx.Close();
-		}
+			}			
+		}		
 		
+		cnx.Close();		
 		return rightLevels;
 	}
 
@@ -132,19 +136,19 @@ public class DataMapping implements IDataMapping {
 	 *  Get a role from his role ID
 	 */
 	@Override
-	public Role GetUserRole(int roleid) {
-
-		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.Role where idRole= ? ;", new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
-		if (result.size() == 1){
-			User user = new Objects().new User();
-			user.role.idRole = Integer.parseInt(result.get(0).get(0).toString());
-			user.role.roleLevelId = Integer.parseInt(result.get(0).get(1).toString());
-			user.role.roleName = result.get(0).get(2).toString();
-			user.role.timeConnexion = new SimpleDateFormat(result.get(0).get(3).toString());
+	public Role GetRole(int roleid) {
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_ROLE, new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
+		Role role = null;
 		
-			return user.role;
+		if (result.size() == 1 && result != null){
+			role = new Objects().new Role();
+			role.idRole = Integer.parseInt(result.get(0).get(0).toString());
+			role.roleLevelId = Integer.parseInt(result.get(0).get(1).toString());
+			role.roleName = result.get(0).get(2).toString();
+			role.timeConnexion = new SimpleDateFormat(result.get(0).get(3).toString());
 		}
-		return null;
+		cnx.Close();
+		return role;
 	}
 
 
@@ -154,36 +158,51 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public RoleLevel GetRoleLevel(int roleLevelId) {
 
-		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.RoleLevel where idRoleLevel= ? ;", new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_ROLELEVEL, new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
 				"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");
 
+		RoleLevel userRL = null;
 		if (result.size() == 1){
-			User user = new Objects().new User();
+			userRL = new Objects().new RoleLevel();
 		
-			user.role.roleLevel.idRoleLevel = Integer.parseInt(result.get(0).get(0).toString());
-			user.role.roleLevel.caneEditOwnAccount = Integer.parseInt(result.get(0).get(1).toString()) == 1 ? true : false;
-			user.role.roleLevel.canChangeMdp = Integer.parseInt(result.get(0).get(2).toString()) == 1 ? true : false;
-			user.role.roleLevel.canEditAll = Integer.parseInt(result.get(0).get(3).toString()) == 1 ? true : false;
-			user.role.roleLevel.canModifyDelay = Integer.parseInt(result.get(0).get(4).toString()) == 1 ? true : false;
-			user.role.roleLevel.canModifynbTentative = Integer.parseInt(result.get(0).get(5).toString()) == 1 ? true : false;
-			user.role.roleLevel.canModifyBlocage = Integer.parseInt(result.get(0).get(6).toString()) == 1 ? true : false;
-			user.role.roleLevel.canModifyComplexiteMdp = Integer.parseInt(result.get(0).get(7).toString()) == 1 ? true : false;
-			
-			return user.role.roleLevel;
+			userRL.idRoleLevel = Integer.parseInt(result.get(0).get(0).toString());
+			userRL.caneEditOwnAccount = Integer.parseInt(result.get(0).get(1).toString()) == 1 ? true : false;
+			userRL.canChangeMdp = Integer.parseInt(result.get(0).get(2).toString()) == 1 ? true : false;
+			userRL.canEditAll = Integer.parseInt(result.get(0).get(3).toString()) == 1 ? true : false;
+			userRL.canModifyDelay = Integer.parseInt(result.get(0).get(4).toString()) == 1 ? true : false;
+			userRL.canModifynbTentative = Integer.parseInt(result.get(0).get(5).toString()) == 1 ? true : false;
+			userRL.canModifyBlocage = Integer.parseInt(result.get(0).get(6).toString()) == 1 ? true : false;
+			userRL.canModifyComplexiteMdp = Integer.parseInt(result.get(0).get(7).toString()) == 1 ? true : false;
 		}
-		return null;
+		cnx.Close();
+		return userRL;
 	}
 
 	
 	@Override
-	public User GetUser(int userid) {
-		if(userid != 0){
-			for(User u : Users()){
-				if (u.idUser == userid)
-					return u;
-				}
+	public User GetUserByID(int userid) {
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BYID, new String[] {userid + ""}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
+		 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
+		User user = null;
+		if (result.size() == 1){
+			user = new Objects().new User();
+			user.idUser = Integer.parseInt(result.get(0).toString());
+			user.name = result.get(1).toString();
+			user.roleId = Integer.parseInt(result.get(2).toString());
+			user.saltPassword = result.get(3).toString();
+			user.nbCryptIteration = Integer.parseInt(result.get(4).toString());
+			user.ModifiedDate = new SimpleDateFormat(result.get(5).toString());
+			user.ModifiedBy = result.get(6).toString();
+			user.CreateDate = new SimpleDateFormat(result.get(7).toString());
+			user.CreateBy = result.get(8).toString();
+			user.salt = result.get(9).toString();
+			user.saltCounter = Integer.parseInt(result.get(10).toString());
+			user.enabled = Boolean.valueOf(result.get(11).toString());	
+			user.isAuthenticated =  Boolean.valueOf(result.get(12).toString());
+			user.isLogOutNeeded =  Boolean.valueOf(result.get(13).toString());
 		}
-		return null;
+		cnx.Close();
+		return user;
 	}
 
 
@@ -200,7 +219,7 @@ public class DataMapping implements IDataMapping {
 		return false;
 	}
 	public void Close(){
-		
+		cnx.Close();
 	}
 
 		
@@ -223,85 +242,105 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public User GetUserByUserName(String uname) {
-		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.User where name=?;", new String[] {uname}, "ndMd5Iteration", "saltNumber", "saltCounter", "idUser");
-		User user = new Objects().new User();
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
+																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
+		User user = null;
 		
-		if (result !=null){
-			user.nbCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
-			user.salt = result.get(0).get(1).toString();
-			user.saltCounter = Integer.parseInt(result.get(0).get(2).toString());
-			user.idUser = Integer.parseInt(result.get(0).get(3).toString());
+		if (result.size() == 1 && result != null){
+			user = new Objects().new User();
 			
-			return  user;
-		}
-		return null;
-	}
-
-	@Override
-	public User GetUserByUNameSaltPwd(User user, String uname, String pwd) {
-		// TODO Auto-generated method stub
-		String query = "SELECT * FROM log619lab5.User where name= ? and saltPassword=SHA2(";
-		for(int i = 1; i < user.nbCryptIteration; i++){
-			query += "SHA2(";
-		}
-		query += "'";
-		for(int i = 0; i < user.saltCounter; i++){
-			query += user.salt;
-		}
-		query += "'?'";
-		for(int j = 0; j < user.saltCounter; j++){
-			query += user.salt;
-		}
-		query += "'";
-		for(int i = 1; i < user.nbCryptIteration; i++){
-			query += ", 512)";
-		}
-		query += ", 512);";
-		System.out.println(query);
-		
-		ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
-		
-		if (result.size() == 1){
 			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
 			user.name = result.get(0).get(1).toString();
 			user.roleId = Integer.parseInt(result.get(0).get(2).toString());
-			user.enabled = Boolean.parseBoolean(result.get(0).get(3).toString());
+			user.saltPassword = result.get(0).get(3).toString();
+			user.nbCryptIteration = Integer.parseInt(result.get(0).get(4).toString());
+			user.ModifiedDate = new SimpleDateFormat(result.get(0).get(5).toString());
+			user.ModifiedBy = result.get(0).get(6).toString();
+			user.CreateDate = new SimpleDateFormat(result.get(0).get(7).toString());
+			user.CreateBy = result.get(0).get(8).toString();
+			user.salt = result.get(0).get(9).toString();
+			user.saltCounter = Integer.parseInt(result.get(0).get(10).toString());
+			user.enabled = Boolean.valueOf(result.get(0).get(11).toString());
+			user.isAuthenticated =  Boolean.valueOf(result.get(0).get(12).toString());
+			user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
 			
-			return user;
 		}
-			
-		return null;
+
+		return user;
 	}
 
 	@Override
+	public User AuthenticateUser(String uname, String pwd) {
+		// TODO Auto-generated method stub
+		User user = GetUserByUserName(uname);
+		
+		if (user != null){
+			String query = QueryFactory.SELECT_USER_BY_UNAME_PWD;
+			for(int i = 1; i < user.nbCryptIteration; i++){
+				query += "SHA2(";
+			}
+			query += "'";
+			for(int i = 0; i < user.saltCounter; i++){
+				query += user.salt;
+			}
+			query += "'?'";
+			for(int j = 0; j < user.saltCounter; j++){
+				query += user.salt;
+			}
+			query += "'";
+			for(int i = 1; i < user.nbCryptIteration; i++){
+				query += ", 512)";
+			}
+			query += ", 512);";
+		
+			
+			ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
+			
+			if (result.size() == 1 && result != null){
+				cnx.Close();	
+			}			
+		}
+		
+		return user;
+	
+		
+	}	
+
+	@Override
 	public LoginLog GetLoginLogsByUserId(int userID) {
-		ArrayList<ArrayList<Object>> result = cnx.Select("SELECT * FROM log619lab5.LoginLogs WHERE idUser= ? ;", new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
-		LoginLog loginLog = new Objects().new LoginLog();
-		if (result.size() == 1){
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_LOGINLOGS_BY_USERID, new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
+		LoginLog loginLog = null;
+		if (result.size() == 1 && result != null){
+			loginLog = new Objects().new LoginLog();
+			
 			 loginLog.logoutNeeded = Boolean.parseBoolean(result.get(0).get(4).toString());
 			 loginLog.loggedIn = Boolean.parseBoolean(result.get(0).get(3).toString());
 			 loginLog.failedTriesCount = Long.parseLong(result.get(0).get(2).toString());
 			 loginLog.lastloginTime = java.sql.Timestamp.valueOf(result.get(0).get(1).toString());
 			 loginLog.userId = Integer.parseInt(result.get(0).get(0).toString());
 			 
-			 return loginLog;
 		 }
-		return null;
+		cnx.Close();
+		return loginLog;
 	}
 
 	@Override
-	public void UpdateUserInfos(boolean incrementFailedLoginTriesCount,
-			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int user) {
+	public int UpdateUserInfos(boolean incrementFailedLoginTriesCount,
+			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int userID) {
 		// TODO Auto-generated method stub
 		/*cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + "") + 
-				"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + user + "';");*/
+				"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + user + "';","");*/
+		
+		return cnx.update(QueryFactory.UPDATE_LOGING_lOG, 
+				new String[] {((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + ""), 
+					(loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0"), userID + ""});
 	}
 
 	@Override
-	public boolean CreateLoginLog(LoginLog llog) {
+	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog) {
 		// TODO Auto-generated method stub
-	/*	int success = cnx.insert("INSERT INTO `log619lab5`.`LoginLogs` (`idUser`, `FailedTriesCount`, `LoggedIn`, `LogoutNeeded`) VALUES ('" + llog.userId + "', '" + 
-				((incrementFailedLoginTriesCount ? llog.failedTriesCount + 1 : (llog.loggedIn ? 0 :  llog.failedTriesCount))  + "', '" + (llog.loggedIn ? "1" : "0") + "', '" + (llog.logoutNeeded ? "1" : "0") + "');");*/
+			cnx.insert(QueryFactory.INSERT_LOGINLOG, 
+		new String[] {llog.userId + "", (incrementFailedLoginTriesCount ? "1" : "0"), (llog.loggedIn ? "1" : "0"), (llog.logoutNeeded ? "1" : "0") });
 		return true;
 	}
 

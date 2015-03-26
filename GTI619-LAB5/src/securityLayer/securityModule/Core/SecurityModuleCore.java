@@ -1,13 +1,18 @@
 package securityLayer.securityModule.Core;
 
+import java.text.SimpleDateFormat;
+
 import javax.servlet.http.HttpSession;
 
 import com.sun.org.apache.bcel.internal.generic.DMUL;
 
 import communication.DataMapping.DataProvider;
+import communication.DataObjects.Objects;
+import communication.DataObjects.Objects.Log;
 import communication.DataObjects.Objects.Role;
 import communication.DataObjects.Objects.RoleLevel;
 import communication.DataObjects.Objects.User;
+import database.mysql.Mysql;
 import securityLayer.securityModule.Comm.SecurityLayerDataBaseCommunication;
 import securityLayer.securityModule.bruteforceProtection.BruteForceProtection;
 import securityLayer.securityModule.verifyUserValidity.VerifyUserValidity;
@@ -52,7 +57,16 @@ public class SecurityModuleCore {
 	}
 	
 	public void updateSuccessfullLoginTime(){
+		
+		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 		try {
+			Log event = new Objects().new Log();
+			event.logDate = new SimpleDateFormat();
+			event.logName = "Full Login Time succeed";
+			event.userLogId = user.idUser;
+			
+			dtp.CreateLog(event);
+			
 			session.setAttribute("failedLoginCount", "0");
 			dbComm.UpdateUserInfo(false, true, false);
 		} catch (Exception e) {

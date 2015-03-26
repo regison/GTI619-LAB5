@@ -30,18 +30,21 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	public ArrayList<Log> getLogs(){
 	  return data.Logs();
 	}
+	
 	public User GetUser(int userid){
-		return data.GetUser(userid);
+		return data.GetUserByID(userid);
 	}
 	
 	public Role GetRole(int roleid){
-		return data.GetUserRole(roleid);
+		return data.GetRole(roleid);
 	}
 
 	public void Dispose(){
 	  if (data != null){
 		  data.Close();
 	  }
+	}
+	public void Open(){		
 	}
 
 	public User GetUserByUserName(String userName) {
@@ -53,39 +56,37 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	}
 
 	
-	public User GetUserByUNameSaltPwd(User user, String uname, String pwd) {
+	/*public User GetUserByUNameSaltPwd(User user, String uname, String pwd) {
 		// TODO Auto-generated method stub
 		return data.GetUserByUNameSaltPwd(user, uname, pwd);
+	}*/
+	public User Authenticate(String uname, String pwd) {
+		// TODO Auto-generated method stub
+		return data.AuthenticateUser(uname, pwd);
 	}
 
 	
-	public Role GetUserRole(int roleid) {
+	public RoleLevel GetRoleLevel(int roleLevelId) {
 		// TODO Auto-generated method stub
-		return data.GetUserRole(roleid);
+		return data.GetRoleLevel(roleLevelId);
 	}
 
 	
-	public RoleLevel GetRoleLevel(int roleid) {
+	public LoginLog GetLoginLogsByUserId(int userID) {
 		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
-	public LoginLog GetLoginLogsByUserId(int user) {
-		// TODO Auto-generated method stub
-		return null;
+		return data.GetLoginLogsByUserId(userID);
 	}
 
 	
 	public boolean CreateLog(Log event) {
 		// TODO Auto-generated method stub
-		return false;
+		return data.CreateLog(event);
 	}
 
 	
 	public boolean UpdateUser(User user) {
 		// TODO Auto-generated method stub
-		return false;
+		return data.UpdateUser(user);
 	}
 
 	
@@ -93,6 +94,14 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 			int... rights) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public int UpdateLoginLogsByUserId(boolean incrementFailedLoginTriesCount, boolean loggedIn, long userFailedTriesCount,boolean LogoutNeeded, int user){
+		return data.UpdateUserInfos(incrementFailedLoginTriesCount, loggedIn, userFailedTriesCount, LogoutNeeded, user);
+	}
+	
+	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog){
+		return data.CreateLoginLog(incrementFailedLoginTriesCount, llog);
 	}
   
 }
