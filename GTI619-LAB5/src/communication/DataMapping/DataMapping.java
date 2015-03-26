@@ -15,13 +15,13 @@ public class DataMapping implements IDataMapping {
 	private Mysql cnx;
 	public DataMapping(short database) {		
 		cnx= new Mysql(database);
-		cnx.Open();
 	}
 	/**
 	 * Return all users
 	 * @return
 	 */
 	public ArrayList<User> Users() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> usersMapping =  cnx.Select(QueryFactory.SELECT_ALL_USERS, null, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
 		ArrayList<User> usersToShow = new ArrayList<User>();
@@ -44,6 +44,7 @@ public class DataMapping implements IDataMapping {
 				toAdd.isAuthenticated =  Boolean.valueOf(user.get(12).toString());
 				toAdd.isLogOutNeeded =  Boolean.valueOf(user.get(13).toString());				
 				
+				usersToShow.add(toAdd);
 			}
 		
 			cnx.Close();
@@ -56,6 +57,7 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<Log> Logs() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_ALL_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Log> systemLogs = null;
 		
@@ -81,6 +83,7 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<Role> Roles() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Role> roles = null;
 		
@@ -105,6 +108,7 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<RoleLevel> RoleLevels() {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result =  cnx.Select(QueryFactory.SELECT_ALL_ROLELEVEL, null, 
 															"idRoleLevel", "canEditOwnAccount", "canChangeMdp", 
 															"canEditAll", "canModifyDelay","canModifynbTentative",
@@ -128,7 +132,7 @@ public class DataMapping implements IDataMapping {
 			}			
 		}		
 		
-		cnx.Close();		
+	//	cnx.Close();		
 		return rightLevels;
 	}
 
@@ -137,6 +141,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	@Override
 	public Role GetRole(int roleid) {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_ROLE, new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
 		Role role = null;
 		
@@ -147,7 +152,7 @@ public class DataMapping implements IDataMapping {
 			role.roleName = result.get(0).get(2).toString();
 			role.timeConnexion = new SimpleDateFormat(result.get(0).get(3).toString());
 		}
-		cnx.Close();
+		//cnx.Close();
 		return role;
 	}
 
@@ -157,6 +162,7 @@ public class DataMapping implements IDataMapping {
 	 * */
 	@Override
 	public RoleLevel GetRoleLevel(int roleLevelId) {
+		cnx.Open();
 
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_ROLELEVEL, new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
 				"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");
@@ -174,13 +180,14 @@ public class DataMapping implements IDataMapping {
 			userRL.canModifyBlocage = Integer.parseInt(result.get(0).get(6).toString()) == 1 ? true : false;
 			userRL.canModifyComplexiteMdp = Integer.parseInt(result.get(0).get(7).toString()) == 1 ? true : false;
 		}
-		cnx.Close();
+		//cnx.Close();
 		return userRL;
 	}
 
 	
 	@Override
 	public User GetUserByID(int userid) {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BYID, new String[] {userid + ""}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 		 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
 		User user = null;
@@ -201,7 +208,7 @@ public class DataMapping implements IDataMapping {
 			user.isAuthenticated =  Boolean.valueOf(result.get(12).toString());
 			user.isLogOutNeeded =  Boolean.valueOf(result.get(13).toString());
 		}
-		cnx.Close();
+	//	cnx.Close();
 		return user;
 	}
 
@@ -215,6 +222,7 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public boolean UpdateUser(User user) {
+		cnx.Open();
 		
 		Log event = new Objects().new Log();
 		event.logDate = new SimpleDateFormat();
@@ -278,6 +286,7 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public User AuthenticateUser(String uname, String pwd) {
+		cnx.Open();
 		// TODO Auto-generated method stub
 		User user = GetUserByUserName(uname);
 		
@@ -304,7 +313,7 @@ public class DataMapping implements IDataMapping {
 			ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
 			
 			if (result.size() == 1 && result != null){
-				cnx.Close();	
+			//	cnx.Close();	
 			}			
 		}
 		
@@ -315,6 +324,7 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public LoginLog GetLoginLogsByUserId(int userID) {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_LOGINLOGS_BY_USERID, new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
 		LoginLog loginLog = null;
 		if (result.size() == 1 && result != null){
@@ -334,6 +344,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public int UpdateUserInfos(boolean incrementFailedLoginTriesCount,
 			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int userID) {
+		cnx.Open();
 		
 		return cnx.update(QueryFactory.UPDATE_LOGING_lOG, 
 				new String[] {((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + ""), 
@@ -342,7 +353,7 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog) {
-
+		cnx.Open();
 			int value = cnx.insert(QueryFactory.INSERT_LOGINLOG, 
 							new String[] {llog.userId + "", (incrementFailedLoginTriesCount ? "1" : "0"), 
 															(llog.loggedIn ? "1" : "0"), (llog.logoutNeeded ? "1" : "0") });

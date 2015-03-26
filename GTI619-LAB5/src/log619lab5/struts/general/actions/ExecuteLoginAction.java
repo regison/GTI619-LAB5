@@ -100,8 +100,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Close the connection to DB
-		dtP.Dispose();
+		
 		
 		securityModule.setUser(_currentUser);
 		securityModule.updateSuccessfullLoginTime();	
@@ -110,6 +109,8 @@ public class ExecuteLoginAction extends AbstractAction {
 		session.setAttribute("Role", _currentUser.role.roleName);
 		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
 		session.setAttribute("idUser", _currentUser.idUser);
+		//Close the connection to DB
+		dtP.Dispose();
 		
 		if(_currentUser.role.roleName.equals(Objects.Role.AdministratorRoleName)){
 			pageSection = Section.ADMIN;	
