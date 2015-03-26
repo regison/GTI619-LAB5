@@ -37,7 +37,7 @@
         </action>
         
         <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">
-        	<forward name="failure" path="/WEB-INF/jsp/loginFailed.jsp" />
+        	<forward name="failure" path="/WEB-INF/jsp/LoginFailed.jsp" />
         </action>
         
         <action path="/Navigate" type="log619lab5.struts.administration.actions.NavigateAction" scope="session">
