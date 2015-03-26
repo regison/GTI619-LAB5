@@ -16,8 +16,10 @@ public interface IDataMapping{
 
 	
 	boolean CreateLog(Log event);
+	boolean CreateLoginLog(LoginLog llog);
 	boolean UpdateUser(User user);
 	boolean UpdateUserRoleRights(int userid, int roleLevelId, int... rights);
+	void UpdateUserInfos(boolean incrementFailedLoginTriesCount, boolean loggedIn, long userFailedTriesCount,boolean LogoutNeeded, int user);
 	//boolean Update
 	
 	
