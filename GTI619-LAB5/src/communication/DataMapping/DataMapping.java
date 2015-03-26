@@ -6,24 +6,24 @@ import java.util.ArrayList;
 
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
-
+import communication.DataObjects.Objects.LoginLog;
 import communication.DataObjects.QueryFactory;
 import database.mysql.Mysql;
 
 public class DataMapping implements IDataMapping {
 
 	private Mysql cnx;
-	public DataMapping() {		
-		cnx= new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5);
+	public DataMapping(short database) {		
+		cnx= new Mysql(database);
+		cnx.Open();
 	}
 
 	public ArrayList<User> Users() {
-		cnx.Open();
 		ArrayList<ArrayList<Object>> usersMapping =  cnx.Select(QueryFactory.SELECT_ALL_USERS, null, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy",																						"saltNumber", "saltCounter","enabled");
 		ArrayList<User> usersToShow = new ArrayList<User>();
 		
-		if (usersMapping != null && usersMapping.size() > 0){		
+		if (usersMapping.size() > 0){		
 			for ( ArrayList<Object> user : usersMapping ){				
 				User toAdd = new Objects().new User();
 				toAdd.idUser = Integer.parseInt(user.get(0).toString());
@@ -53,11 +53,10 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<Log> Logs() {
-		cnx.Open();
 		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_ALL_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Log> systemLogs = new ArrayList<Log>();
 		
-		if (systemLogMappingObject != null && systemLogMappingObject.size() > 0){
+		if (systemLogMappingObject.size() > 0 || systemLogMappingObject != null){
 			for (ArrayList<Object> log : systemLogMappingObject){
 				Log logToAdd = new Objects().new Log();
 				logToAdd.logId = Integer.parseInt(log.get(0).toString());
@@ -78,11 +77,10 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<Role> Roles() {
-		cnx.Open();
 		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Role> roles = new ArrayList<Role>();
 		
-		if (rolesMapping != null && rolesMapping.size() > 0){
+		if (rolesMapping.size() > 0 || rolesMapping != null){
 			for (ArrayList<Object> role : rolesMapping){
 				Role roleToAdd = new Objects().new Role();
 				roleToAdd.idRole = Integer.parseInt(role.get(0).toString());
@@ -103,7 +101,6 @@ public class DataMapping implements IDataMapping {
 	 * @return
 	 */
 	public ArrayList<RoleLevel> RoleLevels() {
-		cnx.Open();
 		ArrayList<ArrayList<Object>> rightsMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLE_RIGHTS, null, 
 															"idRoleLevel", "canEditOwnAccount", "canChangeMdp", 
 															"canEditAll", "canModifyDelay","canModifynbTentative",
@@ -111,7 +108,7 @@ public class DataMapping implements IDataMapping {
 		ArrayList<RoleLevel> rightLevels = new ArrayList<RoleLevel>();
 
 		
-		if (rightsMapping != null && rightsMapping.size() > 0){
+		if (rightsMapping.size() > 0 || rightsMapping != null){
 			for (ArrayList<Object> rights : rightsMapping){
 				RoleLevel rightToAdd = new Objects().new RoleLevel();
 				rightToAdd.idRoleLevel = Integer.parseInt(rights.get(0).toString());
@@ -136,10 +133,9 @@ public class DataMapping implements IDataMapping {
 	 */
 	@Override
 	public Role GetUserRole(int roleid) {
-		cnx.Open();
+
 		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.Role where idRole= ? ;", new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
-		cnx.Close();
-		if (result != null && result.size() == 1){
+		if (result.size() == 1){
 			User user = new Objects().new User();
 			user.role.idRole = Integer.parseInt(result.get(0).get(0).toString());
 			user.role.roleLevelId = Integer.parseInt(result.get(0).get(1).toString());
@@ -158,12 +154,10 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public RoleLevel GetRoleLevel(int roleLevelId) {
 
-		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.RoleLevel where idRoleLevel= ? ;", new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
 				"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");
-		cnx.Close();
 
-		if (result != null && result.size() == 1){
+		if (result.size() == 1){
 			User user = new Objects().new User();
 		
 			user.role.roleLevel.idRoleLevel = Integer.parseInt(result.get(0).get(0).toString());
@@ -211,7 +205,7 @@ public class DataMapping implements IDataMapping {
 
 		
 	public static void main (String [] args){
-		DataProvider m = new DataProvider();
+		DataProvider m = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 
 		ArrayList<User> users = m.Users();
 		
@@ -229,12 +223,10 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public User GetUserByUserName(String uname) {
-		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select("Select * from log619lab5.User where name=?;", new String[] {uname}, "ndMd5Iteration", "saltNumber", "saltCounter", "idUser");
-		cnx.Close();
 		User user = new Objects().new User();
 		
-		if (result !=null && result.size() > 0){
+		if (result !=null){
 			user.nbCryptIteration = Integer.parseInt(result.get(0).get(0).toString());
 			user.salt = result.get(0).get(1).toString();
 			user.saltCounter = Integer.parseInt(result.get(0).get(2).toString());
@@ -266,12 +258,10 @@ public class DataMapping implements IDataMapping {
 		}
 		query += ", 512);";
 		System.out.println(query);
-
-		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
-		cnx.Close();
 		
-		if (result != null && result.size() == 1){
+		ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
+		
+		if (result.size() == 1){
 			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
 			user.name = result.get(0).get(1).toString();
 			user.roleId = Integer.parseInt(result.get(0).get(2).toString());
@@ -284,9 +274,35 @@ public class DataMapping implements IDataMapping {
 	}
 
 	@Override
-	public LoginLog GetLoginLogsByUserId(int user) {
-		// TODO Auto-generated method stub
+	public LoginLog GetLoginLogsByUserId(int userID) {
+		ArrayList<ArrayList<Object>> result = cnx.Select("SELECT * FROM log619lab5.LoginLogs WHERE idUser= ? ;", new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
+		LoginLog loginLog = new Objects().new LoginLog();
+		if (result.size() == 1){
+			 loginLog.logoutNeeded = Boolean.parseBoolean(result.get(0).get(4).toString());
+			 loginLog.loggedIn = Boolean.parseBoolean(result.get(0).get(3).toString());
+			 loginLog.failedTriesCount = Long.parseLong(result.get(0).get(2).toString());
+			 loginLog.lastloginTime = java.sql.Timestamp.valueOf(result.get(0).get(1).toString());
+			 loginLog.userId = Integer.parseInt(result.get(0).get(0).toString());
+			 
+			 return loginLog;
+		 }
 		return null;
+	}
+
+	@Override
+	public void UpdateUserInfos(boolean incrementFailedLoginTriesCount,
+			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int user) {
+		// TODO Auto-generated method stub
+		cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + "") + 
+				"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + user + "';");
+	}
+
+	@Override
+	public boolean CreateLoginLog(LoginLog llog) {
+		// TODO Auto-generated method stub
+	/*	int success = cnx.insert("INSERT INTO `log619lab5`.`LoginLogs` (`idUser`, `FailedTriesCount`, `LoggedIn`, `LogoutNeeded`) VALUES ('" + llog.userId + "', '" + 
+				((incrementFailedLoginTriesCount ? llog.failedTriesCount + 1 : (llog.loggedIn ? 0 :  llog.failedTriesCount))  + "', '" + (llog.loggedIn ? "1" : "0") + "', '" + (llog.logoutNeeded ? "1" : "0") + "');");*/
+		return true;
 	}
 
 	
