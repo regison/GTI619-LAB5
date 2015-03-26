@@ -30,6 +30,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 	session.setAttribute("Username", "");
 	session.setAttribute("Role", "");
 	session.setAttribute("LastLoggedInActionTime", "");
+	request.getSession().setAttribute("from", "Login");
 	pageSection = Section.GENERAL;	
 	return mapping.findForward(SUCCESS);
     }

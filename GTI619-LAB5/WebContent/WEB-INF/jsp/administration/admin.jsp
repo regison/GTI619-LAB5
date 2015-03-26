@@ -65,6 +65,7 @@
                     <br/>
                     
                     <label>Mots de passe doivent contenir :</label><br/>
+                    <input type="checkbox" name="politique" value="Minuscules" />Minuscules <br />
                     <input type="checkbox" name="politique" value="Majuscules" />Majuscules <br />
                     <input type="checkbox" name="politique" value="Speciaux" />Caracteres Speciaux <br />
                     <input type="checkbox" name="politique" value="Chiffre" />Chiffres <br />

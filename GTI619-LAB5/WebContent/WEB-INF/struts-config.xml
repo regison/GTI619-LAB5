@@ -20,7 +20,7 @@
 		<forward name="cercle" path="/Cercle.do" redirect="true" />
 		<forward name="admin" path="/AdminPage.do" redirect="true"/>
 <!-- 		<forward name="Logout" path="/Logout.do"/> -->
-        <forward name="AccessDenied" path="/AccessDenied.do"/>
+        <forward name="AccessDenied" path="/WEB-INF/jsp/AccessDenied.jsp"/>
     </global-forwards>
 
     <action-mappings>        
@@ -30,6 +30,7 @@
         
         <action path="/Login" type="log619lab5.struts.general.actions.LoginAction" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/login.jsp" />
+        	<forward name="changepw" path="/ChangePassword.do" />
         </action>
         
         <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">

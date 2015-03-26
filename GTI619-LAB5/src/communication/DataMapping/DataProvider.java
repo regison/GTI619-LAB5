@@ -37,6 +37,12 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	public Role GetRole(int roleid){
 		return data.GetUserRole(roleid);
 	}
+	
+	public PasswordPolitic getPasswordPolitic(){
+		return data.getPasswordPolitic();
+	}
+	
+	
 
 	public void Dispose(){
 	  if (data != null){

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
-
+import communication.DataObjects.Objects.PasswordPolitic;
 import communication.DataObjects.QueryFactory;
 import database.mysql.Mysql;
 
@@ -287,6 +287,12 @@ public class DataMapping implements IDataMapping {
 	public LoginLog GetLoginLogsByUserId(int user) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public PasswordPolitic getPasswordPolitic() {
+		// TODO Auto-generated method stub
+		PasswordPolitic pwp =  new Objects().new PasswordPolitic();
+		return pwp;
 	}
 
 	

@@ -59,6 +59,16 @@ public class Objects {
 		public int userLogId;
 		public SimpleDateFormat logDate;
 	}
+	
+	public class PasswordPolitic{
+		public int complexity;
+		public int max;
+		public int min;
+	}
+	
+	public class LoginPolitic{
+		
+	}
 
 	public class LoginLog{
 		
