@@ -1,6 +1,7 @@
 package communication.DataObjects;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -61,6 +62,12 @@ public class Objects {
 	}
 
 	public class LoginLog{
+		public int loginlogId;
+		public int userId;
+		public Timestamp lastloginTime;
+		public long failedTriesCount;
+		public boolean loggedIn;
+		public boolean logoutNeeded;
 		
 	}
 	public Objects() {

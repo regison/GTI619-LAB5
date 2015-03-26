@@ -18,8 +18,8 @@ import communication.DataObjects.Objects.*;
 public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu pense avoir de multiples dataprovider et un accesseur généralisé qui pourait avoir une liste de DataProvider
 
 	private DataMapping data;
-	public DataProvider(){
-		data = new DataMapping();
+	public DataProvider(short database){
+		data = new DataMapping(database);
 	}
 	
 	//Select users from db

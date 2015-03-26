@@ -293,8 +293,8 @@ public class DataMapping implements IDataMapping {
 	public void UpdateUserInfos(boolean incrementFailedLoginTriesCount,
 			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int user) {
 		// TODO Auto-generated method stub
-		cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + "") + 
-				"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + user + "';");
+		/*cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + "") + 
+				"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + user + "';");*/
 	}
 
 	@Override

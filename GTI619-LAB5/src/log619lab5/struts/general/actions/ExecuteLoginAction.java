@@ -66,7 +66,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		dtP = new DataProvider();
+		dtP = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 		
 		Objects obj = new Objects();
 		User _currentUser = obj.new User();
