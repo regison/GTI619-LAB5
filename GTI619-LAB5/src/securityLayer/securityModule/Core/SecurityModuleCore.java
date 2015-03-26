@@ -59,6 +59,7 @@ public class SecurityModuleCore {
 	public void updateSuccessfullLoginTime(){
 		
 		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		
 		try {
 			Log event = new Objects().new Log();
 			event.logDate = new SimpleDateFormat();
@@ -76,7 +77,16 @@ public class SecurityModuleCore {
 	}
 	
 	private void incrementUnsuccessfullLogin(){
+		
+		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		
 		try {
+			Log event = new Objects().new Log();
+			event.logDate = new SimpleDateFormat();
+			event.logName = "Full Login Time failed";
+			event.userLogId = user.idUser;
+			
+			dtp.CreateLog(event);
 			dbComm.UpdateUserInfo(true, false, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

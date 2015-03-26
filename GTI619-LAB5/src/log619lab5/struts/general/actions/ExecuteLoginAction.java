@@ -75,13 +75,15 @@ public class ExecuteLoginAction extends AbstractAction {
 			//User _currentUsertest = dtP.G
 			_currentUser = dtP.Authenticate(userName, password);			
 			 
+			
+			
 			if(_currentUser == null){
 				loginFailedLogic();
 				pageSection = Section.GENERAL;
 				dtP.Dispose();
 				return mapping.findForward("failure");
-			}
-	
+			}			
+			
 			securityModule.setUser(_currentUser);		
 			
 			if(!_currentUser.enabled){
@@ -104,7 +106,6 @@ public class ExecuteLoginAction extends AbstractAction {
 		securityModule.setUser(_currentUser);
 		securityModule.updateSuccessfullLoginTime();	
 
-
 		session.setAttribute("Username", _currentUser.name);
 		session.setAttribute("Role", _currentUser.role.roleName);
 		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
@@ -114,7 +115,6 @@ public class ExecuteLoginAction extends AbstractAction {
 			pageSection = Section.ADMIN;	
 			return mapping.findForward("admin");
 		}
-
 
 		else if(_currentUser.role.roleName.equals(Objects.Role.CercleRoleName)){
 			pageSection = Section.CERCLE;	

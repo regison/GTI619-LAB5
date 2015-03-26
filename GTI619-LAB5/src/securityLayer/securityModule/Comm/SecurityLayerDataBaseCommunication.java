@@ -2,10 +2,9 @@ package securityLayer.securityModule.Comm;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
+
 import java.util.Date;
 
-import antlr.collections.impl.LList;
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.Log;
@@ -76,9 +75,7 @@ public class SecurityLayerDataBaseCommunication {
 		llog.userId = userID;
 		llog.lastloginTime =  new Timestamp(new Date().getTime());
 		
-		if(userID > -1){ //Update
-			
-			
+		if(userID > -1){ //Update			
 			try {
 				int value = dtp.UpdateLoginLogsByUserId(incrementFailedLoginTriesCount, loggedIn, userFailedTriesCount, LogoutNeeded, userID);
 				if (value == 1){
@@ -94,8 +91,7 @@ public class SecurityLayerDataBaseCommunication {
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-			
+			}			
 		}
 		else{ //Insert
 			
@@ -109,13 +105,11 @@ public class SecurityLayerDataBaseCommunication {
 				event.userLogId = userID;
 				
 				dtp.CreateLog(event);
-			/*	cnx.insert("INSERT INTO log619lab5.LoginLogs (idUser, FailedTriesCount, LoggedIn, LogoutNeeded) VALUES ( ? , ? , ? , ? );", 
-						new String[] {originalUserID + "", (incrementFailedLoginTriesCount ? "1" : "0"), (loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0") });*/
+			
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-		
+			}		
 		}
 	}
 	

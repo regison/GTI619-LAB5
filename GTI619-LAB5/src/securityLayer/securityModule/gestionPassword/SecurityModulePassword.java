@@ -3,6 +3,8 @@ package securityLayer.securityModule.gestionPassword;
 import java.text.SimpleDateFormat;
 
 import communication.DataMapping.DataProvider;
+import communication.DataObjects.Objects;
+import communication.DataObjects.Objects.Log;
 import communication.DataObjects.Objects.User;
 import database.mysql.Mysql;
 
@@ -28,7 +30,7 @@ public class SecurityModulePassword {
 		u.saltPassword = newPassword;
 		
 		u.ModifiedBy = currenUserName;
-		u.ModifiedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+		u.ModifiedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");		
 		
 		return dp.UpdateUser(u);
 		//TODO

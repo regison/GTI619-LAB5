@@ -42,10 +42,10 @@ public class DataMapping implements IDataMapping {
 				toAdd.saltCounter = Integer.parseInt(user.get(10).toString());
 				toAdd.enabled = Boolean.valueOf(user.get(11).toString());
 				toAdd.isAuthenticated =  Boolean.valueOf(user.get(12).toString());
-				toAdd.isLogOutNeeded =  Boolean.valueOf(user.get(13).toString());
-				
+				toAdd.isLogOutNeeded =  Boolean.valueOf(user.get(13).toString());				
 				
 			}
+		
 			cnx.Close();
 		}		
 		return usersToShow;
@@ -215,7 +215,14 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public boolean UpdateUser(User user) {
-		// TODO Auto-generated method stub
+		
+		Log event = new Objects().new Log();
+		event.logDate = new SimpleDateFormat();
+		event.logName = "Update User password";
+		event.userLogId = user.idUser;
+		
+		CreateLog(event);
+		
 		return false;
 	}
 	public void Close(){
@@ -327,21 +334,22 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public int UpdateUserInfos(boolean incrementFailedLoginTriesCount,
 			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int userID) {
-		// TODO Auto-generated method stub
-		/*cnx.update("UPDATE `log619lab5`.`LoginLogs` SET `FailedTriesCount`='" + ((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + "") + 
-				"', `LoggedIn`='" + (loggedIn ? "1" : "0") + "', `LogoutNeeded`='" + (LogoutNeeded ? "1" : "0") + "' WHERE `idUser`='" + user + "';","");*/
 		
 		return cnx.update(QueryFactory.UPDATE_LOGING_lOG, 
 				new String[] {((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + ""), 
-					(loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0"), userID + ""});
+							   (loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0"), userID + ""});
 	}
 
 	@Override
 	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog) {
-		// TODO Auto-generated method stub
-			cnx.insert(QueryFactory.INSERT_LOGINLOG, 
-		new String[] {llog.userId + "", (incrementFailedLoginTriesCount ? "1" : "0"), (llog.loggedIn ? "1" : "0"), (llog.logoutNeeded ? "1" : "0") });
-		return true;
+
+			int value = cnx.insert(QueryFactory.INSERT_LOGINLOG, 
+							new String[] {llog.userId + "", (incrementFailedLoginTriesCount ? "1" : "0"), 
+															(llog.loggedIn ? "1" : "0"), (llog.logoutNeeded ? "1" : "0") });
+		if(value==1)
+			return true;
+	
+		return false;	
 	}
 
 	

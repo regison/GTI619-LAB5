@@ -48,51 +48,37 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	}
 
 	public User GetUserByUserName(String userName) {
-		// TODO Auto-generated method stub
-		if (userName != null){
-			return data.GetUserByUserName(userName);
-		}
-		return null;
+		return data.GetUserByUserName(userName);
 	}
-
 	
-	/*public User GetUserByUNameSaltPwd(User user, String uname, String pwd) {
-		// TODO Auto-generated method stub
-		return data.GetUserByUNameSaltPwd(user, uname, pwd);
-	}*/
 	public User Authenticate(String uname, String pwd) {
-		// TODO Auto-generated method stub
 		return data.AuthenticateUser(uname, pwd);
 	}
 
 	
 	public RoleLevel GetRoleLevel(int roleLevelId) {
-		// TODO Auto-generated method stub
 		return data.GetRoleLevel(roleLevelId);
 	}
 
 	
 	public LoginLog GetLoginLogsByUserId(int userID) {
-		// TODO Auto-generated method stub
 		return data.GetLoginLogsByUserId(userID);
 	}
 
 	
 	public boolean CreateLog(Log event) {
-		// TODO Auto-generated method stub
 		return data.CreateLog(event);
 	}
 
 	
 	public boolean UpdateUser(User user) {
-		// TODO Auto-generated method stub
+
 		return data.UpdateUser(user);
 	}
 
 	
 	public boolean UpdateUserRoleRights(int userid, int roleLevelId,
 			int... rights) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 	
