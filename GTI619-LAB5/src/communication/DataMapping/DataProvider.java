@@ -38,12 +38,7 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	public Role GetRole(int roleid){
 		return data.GetRole(roleid);
 	}
-
-	public void Dispose(){
-	  if (data != null){
-		  data.Close();
-	  }
-	}
+	//C tristan qui a enlevé le dispose parce que la connexion à la BD devrait toujours être fermé juste après l'avoir ouverte (on est dans un cours de sécurité)
 	public void Open(){		
 	}
 

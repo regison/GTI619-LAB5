@@ -51,8 +51,8 @@
                     <legend>Gestion mots de passe</legend>
     
                     <label>Changement de mot de passe apres :</label><br/>
-                    <input type="checkbox" name="changement" value="Oublie" />Oubli<br/>
-                    <input type="checkbox" name="changement" value="Depassement" />Depassement de la limite de tentatives
+                    <input type="checkbox" name="changementOublie" value="Oublie" />Oubli<br/>
+                    <input type="checkbox" name="changementTentatives" value="Depassement" />Depassement de la limite de tentatives
                     <br />
                     <br/>
                     
@@ -65,9 +65,9 @@
                     <br/>
                     
                     <label>Mots de passe doivent contenir :</label><br/>
-                    <input type="checkbox" name="politique" value="Majuscules" />Majuscules <br />
-                    <input type="checkbox" name="politique" value="Speciaux" />Caracteres Speciaux <br />
-                    <input type="checkbox" name="politique" value="Chiffre" />Chiffres <br />
+                    <input type="checkbox" name="politiqueMaj" value="Majuscules" />Majuscules <br />
+                    <input type="checkbox" name="politiqueCarac" value="Speciaux" />Caracteres Speciaux <br />
+                    <input type="checkbox" name="politiqueChiffres" value="Chiffre" />Chiffres <br />
                     <br />
                     <label>Forcer un changement de mot de passe à la prochaine connexion?</label><br/>
                     <input type="checkbox" name="changePassConnect" value="changePassConnect" />Majuscules <br />

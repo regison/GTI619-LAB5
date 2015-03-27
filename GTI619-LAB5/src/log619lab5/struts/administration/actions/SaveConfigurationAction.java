@@ -26,12 +26,29 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 	HttpSession session = request.getSession();
 	
 	String hidden = request.getParameter("hidden");
-	if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("gestionUtilisateuriddenString")))
+	
+	request.setAttribute("hidden", "");
+	session.setAttribute("adminHiddenString", "");
+	
+	if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
 	{
 		return mapping.findForward(FAILURE);
 	}
 	
-	request.setAttribute("message", "Operation réuisse");
+	String tentativeMax = request.getParameter("tentativeMax");
+	String delais = request.getParameter("delais");
+	String bloquage = request.getParameter("bloquage");
+	String changementOublie = request.getParameter("changementOublie");
+	String changementTentatives = request.getParameter("changementTentatives");
+	String longueurMinMDP = request.getParameter("lmin");
+	String longueurMaxMDP = request.getParameter("lmax");
+	String politiqueMaj = request.getParameter("politiqueMaj");
+	String politiqueCarac = request.getParameter("politiqueCarac");
+	String politiqueChiffres = request.getParameter("politiqueChiffres");
+	String changePassConnect = request.getParameter("changePassConnect");
+	String changePassPage = request.getParameter("changePassPage");
+	
+	request.setAttribute("message", "Operation réussie");
 	pageSection = Section.ADMIN;
 	String randomString = generateHiddenRandomString();
 	request.setAttribute("hidden", randomString);

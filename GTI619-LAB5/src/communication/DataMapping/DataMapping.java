@@ -25,6 +25,7 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		ArrayList<ArrayList<Object>> usersMapping =  cnx.Select(QueryFactory.SELECT_ALL_USERS, null, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
+		cnx.Close();
 		ArrayList<User> usersToShow = new ArrayList<User>();
 		User toAdd = null;
 		if (usersMapping.size() > 0){				
@@ -47,8 +48,6 @@ public class DataMapping implements IDataMapping {
 				
 				usersToShow.add(toAdd);
 			}
-		
-			cnx.Close();
 		}		
 		return usersToShow;
 	}
@@ -61,7 +60,7 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_ALL_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Log> systemLogs = null;
-		
+		cnx.Close();
 		if (systemLogMappingObject.size() > 0 || systemLogMappingObject != null){
 			systemLogs = new ArrayList<Log>();
 			
@@ -73,8 +72,7 @@ public class DataMapping implements IDataMapping {
 				logToAdd.userLogId = Integer.parseInt(log.get(3).toString());
 				
 				systemLogs.add(logToAdd);
-			}		
-			cnx.Close();
+			}	
 		}
 		return systemLogs;		
 	}
@@ -133,7 +131,7 @@ public class DataMapping implements IDataMapping {
 			}			
 		}		
 		
-	//	cnx.Close();		
+		cnx.Close();		
 		return rightLevels;
 	}
 
@@ -153,7 +151,7 @@ public class DataMapping implements IDataMapping {
 			role.roleName = result.get(0).get(2).toString();
 			role.timeConnexion = new SimpleDateFormat(result.get(0).get(3).toString());
 		}
-		//cnx.Close();
+		cnx.Close();
 		return role;
 	}
 
@@ -181,7 +179,7 @@ public class DataMapping implements IDataMapping {
 			userRL.canModifyBlocage = Integer.parseInt(result.get(0).get(6).toString()) == 1 ? true : false;
 			userRL.canModifyComplexiteMdp = Integer.parseInt(result.get(0).get(7).toString()) == 1 ? true : false;
 		}
-		//cnx.Close();
+		cnx.Close();
 		return userRL;
 	}
 
@@ -209,7 +207,7 @@ public class DataMapping implements IDataMapping {
 			user.isAuthenticated =  Boolean.valueOf(result.get(12).toString());
 			user.isLogOutNeeded =  Boolean.valueOf(result.get(13).toString());
 		}
-	//	cnx.Close();
+		cnx.Close();
 		return user;
 	}
 
@@ -220,7 +218,7 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		int value = cnx.insert(QueryFactory.INSERT_LOG, 
 						new String[] { String.valueOf(event.logId), event.logName, String.valueOf(event.logDate), String.valueOf(event.userLogId) });
-		
+		cnx.Close();
 		if (value == 1)
 			return true;
 		
@@ -239,10 +237,8 @@ public class DataMapping implements IDataMapping {
 		
 		CreateLog(event);
 		
-		return false;
-	}
-	public void Close(){
 		cnx.Close();
+		return false;
 	}
 
 		
@@ -259,12 +255,15 @@ public class DataMapping implements IDataMapping {
 
 	@Override
 	public boolean UpdateUserRoleRights(int userid, int roleLevelId, int... rights) {
+		cnx.Open();
 		// TODO Auto-generated method stub
+		cnx.Close();
 		return false;
 	}
 
 	@Override
 	public User GetUserByUserName(String uname) {
+		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
 		User user = null;
@@ -288,7 +287,7 @@ public class DataMapping implements IDataMapping {
 			user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
 			
 		}
-
+		cnx.Close();
 		return user;
 	}
 
@@ -322,9 +321,10 @@ public class DataMapping implements IDataMapping {
 			
 			if (result.size() == 1 && result != null){
 			//	cnx.Close();	
-			}			
+			}	
+			
 		}
-		
+		cnx.Close();
 		return user;
 	
 		
@@ -354,21 +354,22 @@ public class DataMapping implements IDataMapping {
 			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int userID) {
 		cnx.Open();
 		
-		return cnx.update(QueryFactory.UPDATE_LOGING_lOG, 
+		int toreturn = cnx.update(QueryFactory.UPDATE_LOGING_lOG, 
 				new String[] {((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + ""), 
 							   (loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0"), userID + ""});
+		cnx.Close();
+		return toreturn;
 	}
 
 	@Override
 	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog) {
 		cnx.Open();
-			int value = cnx.insert(QueryFactory.INSERT_LOGINLOG, 
-							new String[] {llog.userId + "", (incrementFailedLoginTriesCount ? "1" : "0"), 
-															(llog.loggedIn ? "1" : "0"), (llog.logoutNeeded ? "1" : "0") });
+		int value = cnx.insert(QueryFactory.INSERT_LOGINLOG, 
+						new String[] {llog.userId + "", (incrementFailedLoginTriesCount ? "1" : "0"), 
+														(llog.loggedIn ? "1" : "0"), (llog.logoutNeeded ? "1" : "0") });
+		cnx.Close();
 		if(value==1)
 			return true;
-	
-		cnx.Close();
 		return false;	
 		
 	}	
@@ -379,8 +380,11 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		boolean isUserNameExist = !cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] { username }, "idUser").isEmpty();
 		
-		if (isUserNameExist)			
+		if (isUserNameExist)	
+		{
+			cnx.Close();
 			return false;
+		}
 		else{
 			//Get role salt counter
 			int saltCountAuthorize = Integer.parseInt(cnx.Select(QueryFactory.SELECT_USER_ROLE, new String[] { userType + ""}, "sasltCountAuthorize").get(0).get(0).toString());
@@ -391,10 +395,8 @@ public class DataMapping implements IDataMapping {
 			
 //			cnx.insert(QueryFactory.INSERT_USER, new String[] { user.name,String.valueOf(user.roleId) , user.saltPassword, user.saltCounter +"",
 //															"DATE","CurrentUSer","MODDATE","CURRENUSERNAME", user.salt, user.enabled +""});
-//			
-			
 		}
-		
+		cnx.Close();
 		return true;
 	}
 

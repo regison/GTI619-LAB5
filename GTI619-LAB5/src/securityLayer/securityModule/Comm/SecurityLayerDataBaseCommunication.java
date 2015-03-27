@@ -39,7 +39,6 @@ public class SecurityLayerDataBaseCommunication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		dtp.Dispose();
 	}
 	
 	public boolean UserNeedToLogout(){
