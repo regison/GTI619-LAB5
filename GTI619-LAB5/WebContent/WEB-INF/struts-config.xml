@@ -22,6 +22,7 @@
 		<forward name="norole" path="/WEB-INF/jsp/member/NoRoleAssigned.jsp" />
 <!-- 		<forward name="Logout" path="/Logout.do"/> -->
         <forward name="AccessDenied" path="/WEB-INF/jsp/AccessDenied.jsp"/>
+        <forward name="OperationDenied" path="/WEB-INF/jsp/OperationDenied.jsp"/>
     </global-forwards>
 
     <action-mappings>        
@@ -63,6 +64,10 @@
         
         <action path="/GestionUtilisateur" type="log619lab5.struts.administration.actions.GestionUtilisateursAction" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/administration/gestionUtilisateurs.jsp" />
+        </action>
+        
+        <action path="/Logs" type="log619lab5.struts.administration.actions.LogsAction" scope="session">
+        	<forward name="success" path="/WEB-INF/jsp/administration/log.jsp" />
         </action>
         
     </action-mappings>

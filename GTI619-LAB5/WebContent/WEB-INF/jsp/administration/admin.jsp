@@ -13,6 +13,7 @@
 			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
 			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
 			<td><a href="GestionUtilisateur.do">Gestion Utilisateurs</a></td>
+			<td><a href="Logs.do">Voir Logs</a></td>
 			<td width="100">Log out</td>
 		</tr>
 	
@@ -51,8 +52,8 @@
                     <legend>Gestion mots de passe</legend>
     
                     <label>Changement de mot de passe apres :</label><br/>
-                    <input type="checkbox" name="changement" value="Oublie" />Oubli<br/>
-                    <input type="checkbox" name="changement" value="Depassement" />Depassement de la limite de tentatives
+                    <input type="checkbox" name="changementOublie" value="Oublie" />Oubli<br/>
+                    <input type="checkbox" name="changementDepassement" value="Depassement" />Depassement de la limite de tentatives
                     <br />
                     <br/>
                     
@@ -70,11 +71,14 @@
                     <input type="checkbox" name="politiqueCarac" value="Speciaux" />Caracteres Speciaux <br />
                     <input type="checkbox" name="politiqueChiffres" value="Chiffre" />Chiffres <br />
                     <br />
-                    <label>Forcer un changement de mot de passe à la prochaine connexion?</label><br/>
+                    <!--  <label>Forcer un changement de mot de passe à la prochaine connexion?</label><br/>
                     <input type="checkbox" name="changePassConnect" value="changePassConnect" />Majuscules <br />
                     <br />
                     <label>Forcer un changement de mot de passe au prochain accès à une page?</label><br/>
                     <input type="checkbox" name="changePassPage" value="changePassPage" />Majuscules <br />
+                    <br />-->
+                    <label>Impossibilite d'utiliser un mot de passe parmis les </label>
+                    <input type="text" name="ancien" value="0" />derniers <br />
                     <br />
                 </fieldset>
                 <% if(request.getAttribute("message")!=null){ out.print(request.getAttribute("message"));} %>

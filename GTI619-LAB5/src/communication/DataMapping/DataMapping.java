@@ -193,20 +193,20 @@ public class DataMapping implements IDataMapping {
 		User user = null;
 		if (result.size() == 1){
 			user = new Objects().new User();
-			user.idUser = Integer.parseInt(result.get(0).toString());
-			user.name = result.get(1).toString();
-			user.roleId = Integer.parseInt(result.get(2).toString());
-			user.saltPassword = result.get(3).toString();
-			user.nbCryptIteration = Integer.parseInt(result.get(4).toString());
-			user.ModifiedDate = new SimpleDateFormat(result.get(5).toString());
-			user.ModifiedBy = result.get(6).toString();
-			user.CreateDate = new SimpleDateFormat(result.get(7).toString());
-			user.CreateBy = result.get(8).toString();
-			user.salt = result.get(9).toString();
-			user.saltCounter = Integer.parseInt(result.get(10).toString());
-			user.enabled = Boolean.valueOf(result.get(11).toString());	
-			user.isAuthenticated =  Boolean.valueOf(result.get(12).toString());
-			user.isLogOutNeeded =  Boolean.valueOf(result.get(13).toString());
+			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
+			user.name = result.get(0).get(1).toString();
+			user.roleId = Integer.parseInt(result.get(0).get(2).toString());
+			user.saltPassword = result.get(0).get(3).toString();
+			user.nbCryptIteration = Integer.parseInt(result.get(0).get(4).toString());
+			user.ModifiedDate = new SimpleDateFormat(result.get(0).get(5).toString());
+			user.ModifiedBy = result.get(0).get(6).toString();
+			user.CreateDate = new SimpleDateFormat(result.get(0).get(7).toString());
+			user.CreateBy = result.get(0).get(8).toString();
+			user.salt = result.get(0).get(9).toString();
+			user.saltCounter = Integer.parseInt(result.get(0).get(10).toString());
+			user.enabled = Boolean.valueOf(result.get(0).get(11).toString());	
+			user.isAuthenticated =  Boolean.valueOf(result.get(0).get(12).toString());
+			user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
 		}
 		cnx.Close();
 		return user;
@@ -320,9 +320,9 @@ public class DataMapping implements IDataMapping {
 			
 			ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
 			
-			if (result.size() == 1 && result != null){
-			//	cnx.Close();	
-			}	
+//			if (result.size() == 1 && result != null){
+//			//	cnx.Close();	
+//			}	
 			
 		}
 		cnx.Close();

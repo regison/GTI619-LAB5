@@ -7,15 +7,38 @@
 <title>Accès refusé!</title>
 </head>
 <body>
-	Voici les Logs parce que evidemment quand tu clicques sur un lien qui dit "Voir les logs" ben ca va montrer les logs
+
+	<h1>Voici les Logs parce que evidemment quand tu clicques sur un lien qui dit "Voir les logs" ben ca va montrer les logs</h1>
+		
+	<table>
+	<tr>
+		<th>Evenement</th>
+		<th>UserID</th>
+		<th>Nom utilisateur</th>
+		<th>Role</th>
+		<th>Moment</th>
+	</tr>
+		
 	
    	<% 
   		DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+   		Objects.User u;
+   		Objects.Role r;
   		for(Objects.Log data : dp.getLogs()){
-  			out.println(data.logName + "<br/>   ");
+  			u = dp.GetUser(data.userLogId);
+  			if(u!=null){
+  			out.println("<tr>");
+  			out.println("<td>" + data.logName + "</td>");
+  			out.println("<td>" + data.userLogId + "</td>");
+  			r = dp .GetRole(u.roleId);
+  			out.println("<td>" + u.name + "</td>");
+  			out.println("<td>" + r.roleName + "</td>");
+  			out.println("<td>" + data.logDate + "</td>");
+  			out.println("</tr>");}
   		}
   	
   	%>
+  	</table>
   	<br/> 
 	<a href="AdminPage.do">Retour</a>
 </body>
