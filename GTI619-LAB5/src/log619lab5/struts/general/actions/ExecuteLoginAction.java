@@ -83,8 +83,7 @@ public class ExecuteLoginAction extends AbstractAction {
 				dtP.Dispose();
 				return mapping.findForward("failure");
 			}			
-			
-			securityModule.setUser(_currentUser);		
+					
 			
 			if(!_currentUser.enabled){
 				loginFailedLogic();
@@ -103,7 +102,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		
 		securityModule.setUser(_currentUser);
-		securityModule.updateSuccessfullLoginTime();	
+		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);	
 
 		session.setAttribute("Username", _currentUser.name);
 		session.setAttribute("Role", _currentUser.role.roleName);

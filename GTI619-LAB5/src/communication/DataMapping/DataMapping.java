@@ -3,6 +3,7 @@ package communication.DataMapping;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
@@ -68,7 +69,7 @@ public class DataMapping implements IDataMapping {
 				Log logToAdd = new Objects().new Log();
 				logToAdd.logId = Integer.parseInt(log.get(0).toString());
 				logToAdd.logName = log.get(1).toString();
-				logToAdd.logDate = new SimpleDateFormat(log.get(2).toString());
+				logToAdd.logDate =log.get(2).toString();
 				logToAdd.userLogId = Integer.parseInt(log.get(3).toString());
 				
 				systemLogs.add(logToAdd);
@@ -216,6 +217,13 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean CreateLog(Log event) {
 		// TODO Auto-generated method stub
+		cnx.Open();
+		int value = cnx.insert(QueryFactory.INSERT_LOG, 
+						new String[] { String.valueOf(event.logId), event.logName, String.valueOf(event.logDate), String.valueOf(event.userLogId) });
+		
+		if (value == 1)
+			return true;
+		
 		return false;
 	}
 
@@ -225,7 +233,7 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		
 		Log event = new Objects().new Log();
-		event.logDate = new SimpleDateFormat();
+		event.logDate = new SimpleDateFormat().format(new Date());
 		event.logName = "Update User password";
 		event.userLogId = user.idUser;
 		
@@ -360,7 +368,34 @@ public class DataMapping implements IDataMapping {
 		if(value==1)
 			return true;
 	
+		cnx.Close();
 		return false;	
+		
+	}	
+	
+	@Override
+	public boolean CreateUser(String username, String password, int userType) {
+		
+		cnx.Open();
+		boolean isUserNameExist = !cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] { username }, "idUser").isEmpty();
+		
+		if (isUserNameExist)			
+			return false;
+		else{
+			//Get role salt counter
+			int saltCountAuthorize = Integer.parseInt(cnx.Select(QueryFactory.SELECT_USER_ROLE, new String[] { userType + ""}, "sasltCountAuthorize").get(0).get(0).toString());
+			
+			User user = new Objects().new User();
+			
+			user.name = username;
+			
+//			cnx.insert(QueryFactory.INSERT_USER, new String[] { user.name,String.valueOf(user.roleId) , user.saltPassword, user.saltCounter +"",
+//															"DATE","CurrentUSer","MODDATE","CURRENUSERNAME", user.salt, user.enabled +""});
+//			
+			
+		}
+		
+		return true;
 	}
 
 	

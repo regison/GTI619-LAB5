@@ -89,6 +89,12 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog){
 		return data.CreateLoginLog(incrementFailedLoginTriesCount, llog);
 	}
+
+	public boolean CreateUser(String username, String tpw, int type) {
+
+		return data.CreateUser(username, tpw, type);
+		
+	}
   
 }
 

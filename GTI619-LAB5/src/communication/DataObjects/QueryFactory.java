@@ -22,6 +22,7 @@ public class QueryFactory {
 	public static final String UDPATE_USER_LAST_LOGIN_TIME = "UPDATE log619lab5. SET LastLoginTime= ? WHERE userID= ? ;";
 	
 	//INSERT SECTION	
-	public static final String INSERT_LOG = "INSERT INTO Log Values ({0},'{1}','{2}',{3})";
+	public static final String INSERT_USER = "INSERT INTO USER Values ( ? ,? ,? ,? )";
+	public static final String INSERT_LOG = "INSERT INTO Log Values (?, ?, ?, ?)";
 	public static final String INSERT_LOGINLOG = "INSERT INTO log619lab5.LoginLogs (idUser, FailedTriesCount, LoggedIn, LogoutNeeded) VALUES ( ? , ? , ? , ? );";
 }
