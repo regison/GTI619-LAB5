@@ -71,10 +71,15 @@ public class Objects {
 		public int complexity;
 		public int max;
 		public int min;
+		public boolean changementOublie;
+		public boolean changementDepassement;
+		
 	}
 	
 	public class LoginPolitic{
-		
+		public int maxTentative;
+		public int delais;
+		public boolean bloquage;
 	}
 
 	public class LoginLog{

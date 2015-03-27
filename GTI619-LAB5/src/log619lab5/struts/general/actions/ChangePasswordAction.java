@@ -40,7 +40,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("updatePWHiddenString")))
 			{
-				return mapping.findForward("carre");
+				return mapping.findForward("OperationDenied");
 			}
 			
 			if(newPassword.equals(copynewPassword))

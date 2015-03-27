@@ -44,7 +44,6 @@
              <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
              <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='<% out.print(session.getAttribute("from") + ".do"); %>'" />
      </form>
-     <!--<form method="post" action="Carre.do"><input type="submit" value="Retour" /> </form>-->
 </body>
 
 </html>
