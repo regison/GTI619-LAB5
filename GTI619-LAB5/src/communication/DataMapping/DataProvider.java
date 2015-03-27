@@ -44,12 +44,7 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	}
 	
 	
-
-	public void Dispose(){
-	  if (data != null){
-		  data.Close();
-	  }
-	}
+	//C tristan qui a enlevé le dispose parce que la connexion à la BD devrait toujours être fermé juste après l'avoir ouverte (on est dans un cours de sécurité)
 	public void Open(){		
 	}
 
@@ -94,6 +89,12 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	
 	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog){
 		return data.CreateLoginLog(incrementFailedLoginTriesCount, llog);
+	}
+
+	public boolean CreateUser(String username, String tpw, int type) {
+
+		return data.CreateUser(username, tpw, type);
+		
 	}
   
 }

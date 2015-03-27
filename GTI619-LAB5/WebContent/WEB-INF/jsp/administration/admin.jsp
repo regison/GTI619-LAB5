@@ -65,10 +65,10 @@
                     <br/>
                     
                     <label>Mots de passe doivent contenir :</label><br/>
-                    <input type="checkbox" name="politique" value="Minuscules" />Minuscules <br />
-                    <input type="checkbox" name="politique" value="Majuscules" />Majuscules <br />
-                    <input type="checkbox" name="politique" value="Speciaux" />Caracteres Speciaux <br />
-                    <input type="checkbox" name="politique" value="Chiffre" />Chiffres <br />
+                    <input type="checkbox" name="politiqueMin" value="Minuscules" />Minuscules <br />
+                    <input type="checkbox" name="politiqueMaj" value="Majuscules" />Majuscules <br />
+                    <input type="checkbox" name="politiqueCarac" value="Speciaux" />Caracteres Speciaux <br />
+                    <input type="checkbox" name="politiqueChiffres" value="Chiffre" />Chiffres <br />
                     <br />
                     <label>Forcer un changement de mot de passe à la prochaine connexion?</label><br/>
                     <input type="checkbox" name="changePassConnect" value="changePassConnect" />Majuscules <br />

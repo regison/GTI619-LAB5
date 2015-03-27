@@ -16,6 +16,7 @@ public interface IDataMapping{
 	
 	boolean CreateLog(Log event);
 	boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog);
+	boolean CreateUser(String username, String password, int userType);
 	
 	boolean UpdateUser(User user);
 	boolean UpdateUserRoleRights(int userid, int roleLevelId, int... rights);

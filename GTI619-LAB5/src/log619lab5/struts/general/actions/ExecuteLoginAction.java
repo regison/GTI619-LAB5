@@ -80,16 +80,13 @@ public class ExecuteLoginAction extends AbstractAction {
 			if(_currentUser == null){
 				loginFailedLogic();
 				pageSection = Section.GENERAL;
-				dtP.Dispose();
 				return mapping.findForward("failure");
 			}			
-			
-			securityModule.setUser(_currentUser);		
+					
 			
 			if(!_currentUser.enabled){
 				loginFailedLogic();
 				pageSection = Section.GENERAL;
-				dtP.Dispose();
 				return mapping.findForward("failure");
 			}
 
@@ -103,16 +100,18 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		
 		securityModule.setUser(_currentUser);
-		securityModule.updateSuccessfullLoginTime();	
+		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);	
 
 		session.setAttribute("Username", _currentUser.name);
 		session.setAttribute("Role", _currentUser.role.roleName);
 		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
 		session.setAttribute("idUser", _currentUser.idUser);
-		//Close the connection to DB
-		dtP.Dispose();
 		
-		if(_currentUser.role.roleName.equals(Objects.Role.AdministratorRoleName)){
+		if(_currentUser.role == null){
+			pageSection = Section.GENERAL;
+			return mapping.findForward("norole");
+		}
+		else if(_currentUser.role.roleName.equals(Objects.Role.AdministratorRoleName)){
 			pageSection = Section.ADMIN;	
 			return mapping.findForward("admin");
 		}

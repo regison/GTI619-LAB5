@@ -1,6 +1,7 @@
 package securityLayer.securityModule.Core;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
@@ -56,20 +57,20 @@ public class SecurityModuleCore {
 		return true;
 	}
 	
-	public void updateSuccessfullLoginTime(){
+	public void updateSuccessfullLoginTime(int userID){
 		
 		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 		
 		try {
 			Log event = new Objects().new Log();
-			event.logDate = new SimpleDateFormat();
+			event.logDate = new SimpleDateFormat().format(new Date());
 			event.logName = "Full Login Time succeed";
-			event.userLogId = user.idUser;
+			event.userLogId = userID;
 			
 			dtp.CreateLog(event);
 			
 			session.setAttribute("failedLoginCount", "0");
-			dbComm.UpdateUserInfo(false, true, false);
+			dbComm.UpdateUserInfo(userID, false, true, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,12 +83,12 @@ public class SecurityModuleCore {
 		
 		try {
 			Log event = new Objects().new Log();
-			event.logDate = new SimpleDateFormat();
+			event.logDate = new SimpleDateFormat().format(new Date());
 			event.logName = "Full Login Time failed";
 			event.userLogId = user.idUser;
 			
 			dtp.CreateLog(event);
-			dbComm.UpdateUserInfo(true, false, false);
+			dbComm.UpdateUserInfo(user.idUser, true, false, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

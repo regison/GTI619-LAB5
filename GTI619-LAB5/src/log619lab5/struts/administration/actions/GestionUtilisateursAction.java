@@ -21,6 +21,7 @@ import database.mysql.Mysql;
 public class GestionUtilisateursAction extends AbstractAction {
 
 	private final String PAGE = "GestionUtilisateur";
+	private DataProvider dtp;
 	
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -28,6 +29,8 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 	HttpSession session = request.getSession();
 	String submit= request.getParameter("submit");
 	pageSection = Section.ADMIN;
+	
+	dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 	
 	if(submit != null){
 		String hidden = request.getParameter("hidden");
@@ -42,7 +45,23 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			String tpw = request.getParameter("tpassword");
 			String type = request.getParameter("acces");
 			
-			request.setAttribute("ajoutMessage", "Operation réuisse");
+			int newUserRole = 0;
+			
+			switch (type){
+				case "admin" : newUserRole = 1;
+				break;
+				case "cercle" : newUserRole = 2;
+				break;
+				case "carre" : newUserRole = 2;
+				break;			
+			}
+			
+			boolean check = dtp.CreateUser(username, tpw, newUserRole);
+			
+			if (check)			
+				request.setAttribute("ajoutMessage", "Operation réuisse");
+			else
+				request.setAttribute("ajoutMessage", "Le nom d'utilisateur existe déjà");
 			
 		}
 		

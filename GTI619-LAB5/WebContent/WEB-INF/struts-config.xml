@@ -19,6 +19,7 @@
 		<forward name="carre" path="/Carre.do" redirect="true" />
 		<forward name="cercle" path="/Cercle.do" redirect="true" />
 		<forward name="admin" path="/AdminPage.do" redirect="true"/>
+		<forward name="norole" path="/WEB-INF/jsp/member/NoRoleAssigned.jsp" />
 <!-- 		<forward name="Logout" path="/Logout.do"/> -->
         <forward name="AccessDenied" path="/WEB-INF/jsp/AccessDenied.jsp"/>
     </global-forwards>

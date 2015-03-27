@@ -35,6 +35,11 @@ public class Objects {
 	    public String roleName;
 	    public SimpleDateFormat timeConnexion;
 	    public RoleLevel roleLevel;
+	    public SimpleDateFormat ModifiedDate;
+	    public String ModifiedBy;
+	    public SimpleDateFormat CreateDate;
+	    public String CreateBy;
+	    public int saltCountAuthorize;
 	    
 	    public Role(){
 	    	roleLevel = new RoleLevel();
@@ -59,7 +64,7 @@ public class Objects {
 		public int logId;
 		public String logName;
 		public int userLogId;
-		public SimpleDateFormat logDate;
+		public String logDate;
 	}
 	
 	public class PasswordPolitic{

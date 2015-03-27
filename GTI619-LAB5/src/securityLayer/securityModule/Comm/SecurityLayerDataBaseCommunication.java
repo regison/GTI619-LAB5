@@ -39,7 +39,6 @@ public class SecurityLayerDataBaseCommunication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		dtp.Dispose();
 	}
 	
 	public boolean UserNeedToLogout(){
@@ -63,7 +62,7 @@ public class SecurityLayerDataBaseCommunication {
 	}
 
 	
-	public void UpdateUserInfo(boolean incrementFailedLoginTriesCount, boolean loggedIn, boolean LogoutNeeded) throws Exception{
+	public void UpdateUserInfo(int userID, boolean incrementFailedLoginTriesCount, boolean loggedIn, boolean LogoutNeeded) throws Exception{
 		if(!initialised)
 			throw new Exception("Not initialised!");
 		
@@ -81,7 +80,7 @@ public class SecurityLayerDataBaseCommunication {
 				if (value == 1){
 					//SuccessUpdate
 					Log event = new Objects().new Log();
-					event.logDate = new SimpleDateFormat();
+					event.logDate = new SimpleDateFormat().format(new Date());
 					event.logName = "User Login log Info Update";
 					event.userLogId = userID;
 					
@@ -100,7 +99,7 @@ public class SecurityLayerDataBaseCommunication {
 				dtp.CreateLoginLog(incrementFailedLoginTriesCount,llog);
 				
 				Log event = new Objects().new Log();
-				event.logDate = new SimpleDateFormat();
+				event.logDate = new SimpleDateFormat().format(new Date());
 				event.logName = "Login Log creation";
 				event.userLogId = userID;
 				
@@ -122,7 +121,7 @@ public class SecurityLayerDataBaseCommunication {
 			//cnx.update("UPDATE log619lab5.LoginLogs SET idUser= ? WHERE userID= ? ;", new String[]{userID + "", userID + ""});
 			
 			Log event = new Objects().new Log();
-			event.logDate = new SimpleDateFormat();
+			event.logDate = new SimpleDateFormat().format(new Date());
 			event.logName = "UpdateUserLastLogInTime";
 			event.userLogId = userID;
 			
