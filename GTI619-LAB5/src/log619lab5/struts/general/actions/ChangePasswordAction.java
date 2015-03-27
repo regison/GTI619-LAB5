@@ -12,6 +12,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import communication.DataMapping.DataProvider;
+
 import securityLayer.securityModule.gestionPassword.SecurityModulePassword;
 import database.IDatabase;
 import database.mysql.Mysql;
@@ -36,6 +38,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			String newPassword = request.getParameter("npassword");
 			String copynewPassword = request.getParameter("cnpassword");
 			String hidden = request.getParameter("hidden");
+			DataProvider dtp =  new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 			SecurityModulePassword sPass = new SecurityModulePassword();
 			
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("updatePWHiddenString")))
@@ -43,19 +46,31 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 				return mapping.findForward("OperationDenied");
 			}
 			
-			if(newPassword.equals(copynewPassword))
-			{
-				//On va passer le id au lieu du username
-				if(sPass.updatePassword((int) request.getSession().getAttribute("userId"), (String) request.getSession().getAttribute("Username"), oldPassword, newPassword)){
-					request.setAttribute("message", "ca  a marché");
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("usernae"), oldPassword) !=null;
+			if(reauthentification){
+				if(newPassword.equals(copynewPassword))
+				{
+					if(sPass.validatePassword(newPassword)){
+						//On va passer le id au lieu du username
+						if(sPass.updatePassword((int) request.getSession().getAttribute("userId"), (String) request.getSession().getAttribute("Username"), oldPassword, newPassword)){
+							request.setAttribute("message", "ca  a marché");
+						}
+						else{
+							request.setAttribute("message", "ca pas marché");
+						}
+					}
+					else{
+						request.setAttribute("message", sPass.getPasswordConstraint());
+					}
 				}
 				else{
-					request.setAttribute("message", "ca pas marché");
+					request.setAttribute("message", "les deux mots de passes doivent etre pareils");
 				}
 			}
 			else{
-				request.setAttribute("message", "les deux mots de passes doivent etre pareils");
+				request.setAttribute("message", "Mauvais mot de passe actuel");
 			}
+				
 		}
 		
 		String randomString = generateHiddenRandomString();

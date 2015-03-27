@@ -34,50 +34,64 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 		if(submit != null){
 			String hidden = request.getParameter("hidden");
 			String pw = request.getParameter("password");
-			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("gestionUtilisateuriddenString")) /*|| !ValidateUser*/)
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("gestionUtilisateuriddenString")) )
 			{
-				return mapping.findForward("carre");
+				return mapping.findForward("AccessDenied");
 			}	
-			
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("usernae"), pw) !=null;
 			if("Ajouter".equals(submit)){
-				String username = request.getParameter("username");
-				String tpw = request.getParameter("tpassword");
-				String type = request.getParameter("acces");
-				
-				int newUserRole = 0;
-				
-				switch (type){
-					case "admin" : newUserRole = 1;
-					break;
-					case "cercle" : newUserRole = 2;
-					break;
-					case "carre" : newUserRole = 2;
-					break;			
+				if(reauthentification){
+					String username = request.getParameter("username");
+					String tpw = request.getParameter("tpassword");
+					String type = request.getParameter("acces");
+					
+					int newUserRole = 0;
+					
+					switch (type){
+						case "admin" : newUserRole = 1;
+						break;
+						case "cercle" : newUserRole = 2;
+						break;
+						case "carre" : newUserRole = 3;
+						break;			
+					}
+					
+					boolean check = dtp.CreateUser(username, tpw, newUserRole);
+					
+					if (check)			
+						request.setAttribute("ajoutMessage", "Operation réuisse");
+					else
+						request.setAttribute("ajoutMessage", "Le nom d'utilisateur existe déjà");
 				}
-				
-				boolean check = dtp.CreateUser(username, tpw, newUserRole);
-				
-				if (check)			
-					request.setAttribute("ajoutMessage", "Operation réuisse");
 				else
-					request.setAttribute("ajoutMessage", "Le nom d'utilisateur existe déjà");
-				
+					request.setAttribute("ajoutMessage", "Mauvais mot de Passe ");
 			}
 			
 			if(submit.equals("Reactiver")){
-				String username = request.getParameter("user");		
-				request.setAttribute("activateMessage", "Operation réuisse");
-				
+				if(reauthentification){
+					String username = request.getParameter("user");		
+					request.setAttribute("activateMessage", "Operation réuisse");
+				}
+				else
+					request.setAttribute("activateMessage", "Mauvais mot de Passe ");				
 			}
 			
 			if(submit.equals("Supprimer")){
-				String username = request.getParameter("user");		
-				request.setAttribute("suppMessage", "Operation réuisse");	
+				if(reauthentification){
+					String username = request.getParameter("user");		
+					request.setAttribute("suppMessage", "Operation réuisse");	
+				}
+				else
+					request.setAttribute("suppMessage", "Mauvais mot de Passe ");			
 			}
 			if(submit.equals("Valider")){
-				String username = request.getParameter("user");
-				String type = request.getParameter("privilege");	
-				request.setAttribute("privMessage", "Operation réuisse");	
+				if(reauthentification){
+					String username = request.getParameter("user");
+					String type = request.getParameter("privilege");	
+					request.setAttribute("privMessage", "Operation réuisse");	
+				}
+				else
+					request.setAttribute("privMessage", "Mauvais mot de Passe ");			
 			}
 		}
 		
