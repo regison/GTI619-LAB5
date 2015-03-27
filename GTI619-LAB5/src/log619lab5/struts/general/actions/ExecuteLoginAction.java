@@ -66,39 +66,25 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		dtP = new DataProvider();
+		dtP = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 		
 		Objects obj = new Objects();
 		User _currentUser = obj.new User();
 		
 		try {
-			_currentUser = dtP.GetUserByUserName(userName);			
+			//User _currentUsertest = dtP.G
+			_currentUser = dtP.Authenticate(userName, password);			
 			 
+			
+			
 			if(_currentUser == null){
 				loginFailedLogic();
 				pageSection = Section.GENERAL;
 				dtP.Dispose();
 				return mapping.findForward("failure");
-			}
-	
-			securityModule.setUser(_currentUser);
+			}			
 			
-
-			//Will get an tempuser with the currentUser to check if 
-			//the salt is correct
-			User tempUser = dtP.GetUserByUNameSaltPwd(_currentUser, userName, password);
-			
-			if( tempUser == null ){
-				loginFailedLogic();
-				pageSection = Section.GENERAL;	
-				dtP.Dispose();
-				return mapping.findForward("failure");
-			}
-			
-			_currentUser.idUser = tempUser.idUser;
-			_currentUser.name = tempUser.name;
-			_currentUser.roleId = tempUser.roleId;
-			_currentUser.enabled = tempUser.enabled;
+			securityModule.setUser(_currentUser);		
 			
 			if(!_currentUser.enabled){
 				loginFailedLogic();
@@ -107,30 +93,29 @@ public class ExecuteLoginAction extends AbstractAction {
 				return mapping.findForward("failure");
 			}
 
-			_currentUser.role = dtP.GetUserRole(_currentUser.roleId);			
+			_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 			_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);	
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//Close the connection to DB
-		dtP.Dispose();
+		
 		
 		securityModule.setUser(_currentUser);
 		securityModule.updateSuccessfullLoginTime();	
-
 
 		session.setAttribute("Username", _currentUser.name);
 		session.setAttribute("Role", _currentUser.role.roleName);
 		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
 		session.setAttribute("idUser", _currentUser.idUser);
+		//Close the connection to DB
+		dtP.Dispose();
 		
 		if(_currentUser.role.roleName.equals(Objects.Role.AdministratorRoleName)){
 			pageSection = Section.ADMIN;	
 			return mapping.findForward("admin");
 		}
-
 
 		else if(_currentUser.role.roleName.equals(Objects.Role.CercleRoleName)){
 			pageSection = Section.CERCLE;	

@@ -1,7 +1,11 @@
 package securityLayer.securityModule.gestionPassword;
 
 import communication.DataMapping.DataProvider;
+mport communication.DataObjects.Objects;
+import communication.DataObjects.Objects.Log;
+import communication.DataObjects.Objects.User;
 import communication.DataObjects.Objects.PasswordPolitic;
+import database.mysql.Mysql;
 
 public class SecurityModulePassword {
 
@@ -10,10 +14,10 @@ public class SecurityModulePassword {
 	private final int chiffre = 4;
 	private final int lowerCase = 8;
 	
-	DataProvider dp = new DataProvider();
 	
 	public boolean validatePassword(String password){
 		
+		DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 		boolean result = true;
 		
 		PasswordPolitic pwp = dp.getPasswordPolitic();
@@ -38,8 +42,20 @@ public class SecurityModulePassword {
 		//TODO
 	}
 	
-	public boolean updatePassword(String username, String oldPassword, String newPassword){
+	public boolean updatePassword(int userid, String currenUserName, String oldPassword, String newPassword){
+		
+		DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		User u = dp.GetUser(userid);
+		//Dependement du user on va lui set un saltcounter
+		u.saltCounter = 0;
+		//on va salter sur le nouveau password (selon le rolelevel)
+		u.saltPassword = newPassword;
+		
+		u.ModifiedBy = currenUserName;
+		u.ModifiedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");		
+		
+		return dp.UpdateUser(u);
 		//TODO
-		return true;
+		 
 	}
 }

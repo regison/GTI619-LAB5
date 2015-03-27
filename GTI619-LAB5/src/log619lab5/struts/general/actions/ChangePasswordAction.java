@@ -26,6 +26,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		request.setAttribute("Page", "ChangePassword");
 
 		HttpSession session = request.getSession();
+		
 		pageSection = Section.GENERAL;
 		
 		if(request.getParameter("updatePassword") != null){
@@ -44,7 +45,8 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			
 			if(newPassword.equals(copynewPassword))
 			{
-				if(sPass.updatePassword((String) request.getSession().getAttribute("Username"), oldPassword, newPassword)){
+				//On va passer le id au lieu du username
+				if(sPass.updatePassword((int) request.getSession().getAttribute("userId"), (String) request.getSession().getAttribute("Username"), oldPassword, newPassword)){
 					request.setAttribute("message", "ca  a marché");
 				}
 				else{
