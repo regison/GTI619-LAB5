@@ -111,7 +111,11 @@ public class ExecuteLoginAction extends AbstractAction {
 		//Close the connection to DB
 		dtP.Dispose();
 		
-		if(_currentUser.role.roleName.equals(Objects.Role.AdministratorRoleName)){
+		if(_currentUser.role == null){
+			pageSection = Section.GENERAL;
+			return mapping.findForward("norole");
+		}
+		else if(_currentUser.role.roleName.equals(Objects.Role.AdministratorRoleName)){
 			pageSection = Section.ADMIN;	
 			return mapping.findForward("admin");
 		}
