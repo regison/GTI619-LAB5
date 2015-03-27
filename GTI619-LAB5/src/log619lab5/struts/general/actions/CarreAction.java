@@ -23,8 +23,13 @@ public class CarreAction extends AbstractAction {
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
 		request.setAttribute("Page", "Carre");
-		pageSection = Section.CARRE;
+
 		request.getSession().setAttribute("from", "Carre");
 		return mapping.findForward("success");
+	}
+
+	@Override
+	public void setPageSection() {
+		pageSection = Section.CARRE;
 	}
 }

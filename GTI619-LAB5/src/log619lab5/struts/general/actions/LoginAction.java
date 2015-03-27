@@ -22,17 +22,21 @@ public class LoginAction extends AbstractAction {
 	
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	request.setAttribute("Page", PAGE);
-	String randomString = generateHiddenRandomString();
-	request.setAttribute("hidden", randomString);
-	HttpSession session = request.getSession();
-	session.setAttribute("loginHiddenString", randomString);
-	session.setAttribute("Username", "");
-	session.setAttribute("Role", "");
-	session.setAttribute("idUser", "");
-	session.setAttribute("LastLoggedInActionTime", "");
-	request.getSession().setAttribute("from", "Login");
-	pageSection = Section.GENERAL;	
-	return mapping.findForward(SUCCESS);
+		request.setAttribute("Page", PAGE);
+		String randomString = generateHiddenRandomString();
+		request.setAttribute("hidden", randomString);
+		HttpSession session = request.getSession();
+		session.setAttribute("loginHiddenString", randomString);
+		session.setAttribute("Username", "");
+		session.setAttribute("Role", "");
+		session.setAttribute("idUser", "");
+		session.setAttribute("LastLoggedInActionTime", "");
+		request.getSession().setAttribute("from", "Login");
+		return mapping.findForward(SUCCESS);
     }
+
+	@Override
+	public void setPageSection() {
+		pageSection = Section.GENERAL;
+	}
 }

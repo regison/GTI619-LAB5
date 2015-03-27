@@ -63,4 +63,9 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		session.setAttribute("updatePWHiddenString", randomString);
 		return mapping.findForward("success");
     }
+
+	@Override
+	public void setPageSection() {
+		pageSection = Section.CONNECTED;
+	}
 }

@@ -15,14 +15,14 @@ import database.IDatabase;
 import database.mysql.Mysql;
 
 
-public class AdminPageAction extends AbstractAction {
+public class AdminPageAction extends AbstractAdminAction {
 
 	private final String PAGE = "Login";
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("Page", "Admin");
-		pageSection = Section.ADMIN;
+		
+		
 		String randomString = generateHiddenRandomString();
 		request.setAttribute("hidden", randomString);
 		request.getSession().setAttribute("adminHiddenString", randomString);

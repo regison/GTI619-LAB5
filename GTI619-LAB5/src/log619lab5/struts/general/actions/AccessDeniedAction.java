@@ -14,11 +14,16 @@ public class AccessDeniedAction extends AbstractAction {
 
 	private final String PAGE = "AccessRight";
 	
-@Override
-public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	request.setAttribute("Page", PAGE); 
-	pageSection = Section.GENERAL;
+	@Override
+	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		request.setAttribute("Page", PAGE); 
+		return mapping.findForward(SUCCESS);
+	    }
 	
-	return mapping.findForward(SUCCESS);
-    }
+	@Override
+	public void setPageSection() {
+		pageSection = Section.GENERAL;
+	}
+
+
 }

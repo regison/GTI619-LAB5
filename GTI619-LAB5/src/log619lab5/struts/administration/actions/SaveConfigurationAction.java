@@ -16,45 +16,44 @@ import database.IDatabase;
 import database.mysql.Mysql;
 
 
-public class SaveConfigurationAction extends AbstractAction {
+public class SaveConfigurationAction extends AbstractAdminAction {
 
 	private final String PAGE = "Admin";
 	
-@Override
-public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	request.setAttribute("Page", PAGE);
-	HttpSession session = request.getSession();
-	
-	String hidden = request.getParameter("hidden");
-	
-	request.setAttribute("hidden", "");
-	session.setAttribute("adminHiddenString", "");
-	
-	if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
-	{
-		return mapping.findForward(FAILURE);
-	}
-	
-	String tentativeMax = request.getParameter("tentativeMax");
-	String delais = request.getParameter("delais");
-	String bloquage = request.getParameter("bloquage");
-	String changementOublie = request.getParameter("changementOublie");
-	String changementTentatives = request.getParameter("changementTentatives");
-	String longueurMinMDP = request.getParameter("lmin");
-	String longueurMaxMDP = request.getParameter("lmax");
-	String politiqueMaj = request.getParameter("politiqueMaj");
-	String politiqueCarac = request.getParameter("politiqueCarac");
-	String politiqueChiffres = request.getParameter("politiqueChiffres");
-	String changePassConnect = request.getParameter("changePassConnect");
-	String changePassPage = request.getParameter("changePassPage");
-	
-	request.setAttribute("message", "Operation réussie");
-	pageSection = Section.ADMIN;
-	String randomString = generateHiddenRandomString();
-	request.setAttribute("hidden", randomString);
-	session.setAttribute("adminHiddenString", randomString);
-	session.setAttribute("from", "AdminPage");
-	
-	return mapping.findForward(SUCCESS);
+	@Override
+	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		request.setAttribute("Page", PAGE);
+		HttpSession session = request.getSession();
+		
+		String hidden = request.getParameter("hidden");
+		
+		request.setAttribute("hidden", "");
+		session.setAttribute("adminHiddenString", "");
+		
+		if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
+		{
+			return mapping.findForward(FAILURE);
+		}
+		
+		String tentativeMax = request.getParameter("tentativeMax");
+		String delais = request.getParameter("delais");
+		String bloquage = request.getParameter("bloquage");
+		String changementOublie = request.getParameter("changementOublie");
+		String changementTentatives = request.getParameter("changementTentatives");
+		String longueurMinMDP = request.getParameter("lmin");
+		String longueurMaxMDP = request.getParameter("lmax");
+		String politiqueMaj = request.getParameter("politiqueMaj");
+		String politiqueCarac = request.getParameter("politiqueCarac");
+		String politiqueChiffres = request.getParameter("politiqueChiffres");
+		String changePassConnect = request.getParameter("changePassConnect");
+		String changePassPage = request.getParameter("changePassPage");
+		
+		request.setAttribute("message", "Operation réussie");
+		String randomString = generateHiddenRandomString();
+		request.setAttribute("hidden", randomString);
+		session.setAttribute("adminHiddenString", randomString);
+		session.setAttribute("from", "AdminPage");
+		
+		return mapping.findForward(SUCCESS);
     }
 }

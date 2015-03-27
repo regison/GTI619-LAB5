@@ -135,4 +135,9 @@ public class ExecuteLoginAction extends AbstractAction {
 	private void loginFailedLogic(){
 		securityModule.manageUnsuccessfullLogin();
 	}
+	
+	@Override
+	public void setPageSection() {
+		pageSection = Section.GENERAL;
+	}
 }

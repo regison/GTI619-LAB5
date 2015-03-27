@@ -22,8 +22,12 @@ public class CercleAction extends AbstractAction {
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute("Page", "Cercle");
-		pageSection = Section.CERCLE;
 		request.getSession().setAttribute("from", "Cercle");
 		return mapping.findForward("success");
+	}
+	
+	@Override
+	public void setPageSection() {
+		pageSection = Section.CERCLE;
 	}
 }

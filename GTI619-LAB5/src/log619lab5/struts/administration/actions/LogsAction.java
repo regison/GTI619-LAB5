@@ -16,14 +16,13 @@ import database.IDatabase;
 import database.mysql.Mysql;
 
 
-public class LogsAction extends AbstractAction {
+public class LogsAction extends AbstractAdminAction {
 
 	private final String PAGE = "Logs";
 	
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	request.setAttribute("Page", PAGE);
-	pageSection = Section.ADMIN;
 	return mapping.findForward(SUCCESS);
     }
 }

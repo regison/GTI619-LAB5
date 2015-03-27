@@ -18,73 +18,72 @@ import database.IDatabase;
 import database.mysql.Mysql;
 
 
-public class GestionUtilisateursAction extends AbstractAction {
+public class GestionUtilisateursAction extends AbstractAdminAction {
 
 	private final String PAGE = "GestionUtilisateur";
 	private DataProvider dtp;
 	
-@Override
-public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	request.setAttribute("Page", PAGE);
-	HttpSession session = request.getSession();
-	String submit= request.getParameter("submit");
-	pageSection = Section.ADMIN;
-	
-	dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
-	
-	if(submit != null){
-		String hidden = request.getParameter("hidden");
-		String pw = request.getParameter("password");
-		if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("gestionUtilisateuriddenString")) /*|| !ValidateUser*/)
-		{
-			return mapping.findForward("carre");
-		}	
+	@Override
+	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		request.setAttribute("Page", PAGE);
+		HttpSession session = request.getSession();
+		String submit= request.getParameter("submit");
 		
-		if("Ajouter".equals(submit)){
-			String username = request.getParameter("username");
-			String tpw = request.getParameter("tpassword");
-			String type = request.getParameter("acces");
+		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		
+		if(submit != null){
+			String hidden = request.getParameter("hidden");
+			String pw = request.getParameter("password");
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("gestionUtilisateuriddenString")) /*|| !ValidateUser*/)
+			{
+				return mapping.findForward("carre");
+			}	
 			
-			int newUserRole = 0;
-			
-			switch (type){
-				case "admin" : newUserRole = 1;
-				break;
-				case "cercle" : newUserRole = 2;
-				break;
-				case "carre" : newUserRole = 2;
-				break;			
+			if("Ajouter".equals(submit)){
+				String username = request.getParameter("username");
+				String tpw = request.getParameter("tpassword");
+				String type = request.getParameter("acces");
+				
+				int newUserRole = 0;
+				
+				switch (type){
+					case "admin" : newUserRole = 1;
+					break;
+					case "cercle" : newUserRole = 2;
+					break;
+					case "carre" : newUserRole = 2;
+					break;			
+				}
+				
+				boolean check = dtp.CreateUser(username, tpw, newUserRole);
+				
+				if (check)			
+					request.setAttribute("ajoutMessage", "Operation réuisse");
+				else
+					request.setAttribute("ajoutMessage", "Le nom d'utilisateur existe déjà");
+				
 			}
 			
-			boolean check = dtp.CreateUser(username, tpw, newUserRole);
+			if(submit.equals("Reactiver")){
+				String username = request.getParameter("user");		
+				request.setAttribute("activateMessage", "Operation réuisse");
+				
+			}
 			
-			if (check)			
-				request.setAttribute("ajoutMessage", "Operation réuisse");
-			else
-				request.setAttribute("ajoutMessage", "Le nom d'utilisateur existe déjà");
-			
+			if(submit.equals("Supprimer")){
+				String username = request.getParameter("user");		
+				request.setAttribute("suppMessage", "Operation réuisse");	
+			}
+			if(submit.equals("Valider")){
+				String username = request.getParameter("user");
+				String type = request.getParameter("privilege");	
+				request.setAttribute("privMessage", "Operation réuisse");	
+			}
 		}
 		
-		if(submit.equals("Reactiver")){
-			String username = request.getParameter("user");		
-			request.setAttribute("activateMessage", "Operation réuisse");
-			
-		}
-		
-		if(submit.equals("Supprimer")){
-			String username = request.getParameter("user");		
-			request.setAttribute("suppMessage", "Operation réuisse");	
-		}
-		if(submit.equals("Valider")){
-			String username = request.getParameter("user");
-			String type = request.getParameter("privilege");	
-			request.setAttribute("privMessage", "Operation réuisse");	
-		}
+		String randomString = generateHiddenRandomString();
+		request.setAttribute("hidden", randomString);
+		session.setAttribute("gestionUtilisateuriddenString", randomString);
+		return mapping.findForward(SUCCESS);
 	}
-	
-	String randomString = generateHiddenRandomString();
-	request.setAttribute("hidden", randomString);
-	session.setAttribute("gestionUtilisateuriddenString", randomString);
-	return mapping.findForward(SUCCESS);
-    }
 }

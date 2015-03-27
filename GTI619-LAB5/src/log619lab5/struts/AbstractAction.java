@@ -24,7 +24,7 @@ import communication.DataObjects.Objects;
 
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 
-public class AbstractAction extends Action {
+public abstract class AbstractAction extends Action {
 	protected static final String SUCCESS = "success";
 	protected static final String FAILURE = "failure";
 	protected static final String FRENCH = "fr";
@@ -34,10 +34,15 @@ public class AbstractAction extends Action {
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		ActionForward action = null;
 		setSessionWithCookies(request, response, "Language");
 		//setSessionWithCookies(request, response, "UserName");
-		ActionForward action = directive(mapping, form, request, response);
-		validatePageAccess(request, response);
+		setPageSection();
+		if(validatePageAccess(request, response))
+			action = directive(mapping, form, request, response);
+		else
+			redirectPage(request, response, "AccessDenied.do");
+		
 		
 		/*Logger logger = Logger.getLogger("MyLog");  
 	    FileHandler fh;  
@@ -64,31 +69,55 @@ public class AbstractAction extends Action {
 		return action;
 	}
 	
-	private void validatePageAccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	private boolean validatePageAccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(true);
-    	
+    	boolean validate = true;
 		if (pageSection != null) {
-			if (pageSection.equals(Section.LOGIN) 
-					&& session.getAttribute("Username") != null
-					&& session.getAttribute("Role") != null) {
-				redirectPage(request, response, "Login.do");
-			} else {
+			if(!pageSection.equals(Section.GENERAL)){
 				if (pageSection.equals(Section.CARRE)
 						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
 								|| session.getAttribute("Role").equals(Objects.Role.SquareRoleName)))) {
-					redirectPage(request, response, "AccessDenied.do");
+					validate = false;
 				} else if (pageSection.equals(Section.CERCLE)
 						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
 								|| session.getAttribute("Role").equals(Objects.Role.CercleRoleName)))){
-					redirectPage(request, response, "AccessDenied.do");
+					validate = false;
 				} else if (pageSection.equals(Section.ADMIN) 
 						&& (session.getAttribute("Role") == null || !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName))){
-					redirectPage(request, response, "AccessDenied.do");
-				}
+					validate = false;
+				} else if (pageSection.equals(Section.CONNECTED) && session.getAttribute("Username") == null )
+					validate = false;
+				
 			}
 		} else {
-			redirectPage(request, response, "Login.do");
+			validate = false;
 		}
+		
+		return validate;
+		
+//		if (pageSection != null) {
+//			if (pageSection.equals(Section.LOGIN) 
+//					&& session.getAttribute("Username") != null
+//					&& session.getAttribute("Role") != null) {
+//				redirectPage(request, response, "Login.do");
+//			} else {
+//				if (pageSection.equals(Section.CARRE)
+//						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
+//								|| session.getAttribute("Role").equals(Objects.Role.SquareRoleName)))) {
+//					redirectPage(request, response, "AccessDenied.do");
+//				} else if (pageSection.equals(Section.CERCLE)
+//						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
+//								|| session.getAttribute("Role").equals(Objects.Role.CercleRoleName)))){
+//					redirectPage(request, response, "AccessDenied.do");
+//				} else if (pageSection.equals(Section.ADMIN) 
+//						&& (session.getAttribute("Role") == null || !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName))){
+//					redirectPage(request, response, "AccessDenied.do");
+//				}
+//			}
+//		} else {
+//			redirectPage(request, response, "Login.do");
+//		}
+		
 	}
 	
 	private void redirectPage(HttpServletRequest request, HttpServletResponse response, String p_page) throws IOException {		
@@ -123,4 +152,6 @@ public class AbstractAction extends Action {
 		HiddenStringGenerator hiddenGenerator = new HiddenStringGenerator();
 		return hiddenGenerator.generateRandomString();
 	}
+	
+	public abstract void setPageSection();
 }
