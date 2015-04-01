@@ -75,16 +75,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			//User _currentUsertest = dtP.G
 			_currentUser = dtP.Authenticate(userName, password);			
 			 
-			
-			
-			if(_currentUser == null){
-				loginFailedLogic();
-				pageSection = Section.GENERAL;
-				return mapping.findForward("failure");
-			}			
-					
-			
-			if(!_currentUser.enabled){
+			if(_currentUser == null || !_currentUser.enabled){
 				loginFailedLogic();
 				pageSection = Section.GENERAL;
 				return mapping.findForward("failure");
@@ -96,6 +87,10 @@ public class ExecuteLoginAction extends AbstractAction {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			loginFailedLogic();
+			pageSection = Section.GENERAL;
+			return mapping.findForward("failure");
 		}
 		
 		

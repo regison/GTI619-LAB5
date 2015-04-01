@@ -85,7 +85,7 @@ public abstract class AbstractAction extends Action {
 				} else if (pageSection.equals(Section.ADMIN) 
 						&& (session.getAttribute("Role") == null || !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName))){
 					validate = false;
-				} else if (pageSection.equals(Section.CONNECTED) && session.getAttribute("Username") == null )
+				} else if (pageSection.equals(Section.CONNECTED) && (session.getAttribute("Username") == null || session.getAttribute("Username").equals("")))
 					validate = false;
 				
 			}

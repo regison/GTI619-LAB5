@@ -263,70 +263,86 @@ public class DataMapping implements IDataMapping {
 	}
 
 	@Override
-	public User GetUserByUserName(String uname) {
+	public ArrayList<Objects.User> GetAllUsersFromAUserName(String uname) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
-																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
-		User user = null;
-		
-		if (result.size() == 1 && result != null){
-			user = new Objects().new User();
-			
-			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
-			user.name = result.get(0).get(1).toString();
-			user.roleId = Integer.parseInt(result.get(0).get(2).toString());
-			user.saltPassword = result.get(0).get(3).toString();
-			user.nbCryptIteration = Integer.parseInt(result.get(0).get(4).toString());
-			user.ModifiedDate = new SimpleDateFormat(result.get(0).get(5).toString());
-			user.ModifiedBy = result.get(0).get(6).toString();
-			user.CreateDate = new SimpleDateFormat(result.get(0).get(7).toString());
-			user.CreateBy = result.get(0).get(8).toString();
-			user.salt = result.get(0).get(9).toString();
-			user.saltCounter = Integer.parseInt(result.get(0).get(10).toString());
-			user.enabled = Boolean.valueOf(result.get(0).get(11).toString());
-			user.isAuthenticated =  Boolean.valueOf(result.get(0).get(12).toString());
-			user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
-			
-		}
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
+																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled");
 		cnx.Close();
-		return user;
+		
+		if(result == null)
+			return null;
+		
+		ArrayList<Objects.User> allUsers = new ArrayList<Objects.User>();
+		
+		User user;
+		
+		for (int i = 0; i < result.size(); i++) {
+			user = null;
+			if (result.get(i) != null && result.get(i).size() > 0) {
+				user = new Objects().new User();
+
+				user.idUser = Integer.parseInt(result.get(i).get(0).toString());
+				user.name = result.get(i).get(1).toString();
+				user.roleId = Integer.parseInt(result.get(i).get(2).toString());
+				user.nbCryptIteration = Integer.parseInt(result.get(i).get(3)
+						.toString());
+				user.ModifiedDate = new SimpleDateFormat(result.get(i).get(4)
+						.toString());
+				user.ModifiedBy = result.get(i).get(5).toString();
+				user.CreateDate = new SimpleDateFormat(result.get(i).get(6)
+						.toString());
+				user.CreateBy = result.get(i).get(7).toString();
+				user.salt = result.get(i).get(8).toString();
+				user.saltCounter = Integer.parseInt(result.get(i).get(9)
+						.toString());
+				user.enabled = Boolean
+						.valueOf(result.get(i).get(10).toString());
+				
+				allUsers.add(user);
+			}
+		}
+		return allUsers;
 	}
 
 	@Override
 	public User AuthenticateUser(String uname, String pwd) {
-		cnx.Open();
+		
 		// TODO Auto-generated method stub
-		User user = GetUserByUserName(uname);
+		ArrayList<Objects.User> users = GetAllUsersFromAUserName(uname);
 		
-		if (user != null){
-			String query = QueryFactory.SELECT_USER_BY_UNAME_PWD;
-			for(int i = 1; i < user.nbCryptIteration; i++){
-				query += "SHA2(";
+		if (users != null){
+			for (int j = 0; j < users.size(); j++) {
+				if (users.get(j) != null) {
+					String query = QueryFactory.SELECT_USER_BY_UNAME_PWD;
+					for (int i = 1; i < users.get(j).nbCryptIteration; i++) {
+						query += "SHA2(";
+					}
+					query += "'";
+					for (int i = 0; i < users.get(j).saltCounter; i++) {
+						query += users.get(j).salt;
+					}
+					query += "'?'";
+					for (int i = 0; i < users.get(j).saltCounter; i++) {
+						query += users.get(j).salt;
+					}
+					query += "'";
+					for (int i = 1; i < users.get(j).nbCryptIteration; i++) {
+						query += ", 512)";
+					}
+					query += ", 512);";
+					cnx.Open();
+					ArrayList<ArrayList<Object>> result = cnx.Select(query,
+							new String[] { uname, pwd }, "idUser", "name",
+							"roleId", "enabled");
+					cnx.Close();
+					if(result != null && result.size() == 1){
+						return users.get(j);
+					}
+				}
 			}
-			query += "'";
-			for(int i = 0; i < user.saltCounter; i++){
-				query += user.salt;
-			}
-			query += "'?'";
-			for(int j = 0; j < user.saltCounter; j++){
-				query += user.salt;
-			}
-			query += "'";
-			for(int i = 1; i < user.nbCryptIteration; i++){
-				query += ", 512)";
-			}
-			query += ", 512);";
-		
-			
-			ArrayList<ArrayList<Object>> result = cnx.Select(query, new String[] {uname, pwd}, "idUser", "name", "roleId", "enabled");
-			
-//			if (result.size() == 1 && result != null){
-//			//	cnx.Close();	
-//			}	
-			
 		}
-		cnx.Close();
-		return user;
+		
+		return null;
 	
 		
 	}	

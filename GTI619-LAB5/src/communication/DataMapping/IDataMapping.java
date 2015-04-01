@@ -1,5 +1,8 @@
 package communication.DataMapping;
 
+import java.util.ArrayList;
+
+import communication.DataObjects.Objects.User;
 import communication.DataObjects.Objects.*;
 
 public interface IDataMapping{	
@@ -7,7 +10,7 @@ public interface IDataMapping{
 	User GetUserByID(int userid);	
 
 	User AuthenticateUser(String uname, String pwd);
-	User GetUserByUserName(String uname);
+	ArrayList<User> GetAllUsersFromAUserName(String uname);
 	
 	Role GetRole(int roleid);
 	RoleLevel GetRoleLevel (int rolelevelid);

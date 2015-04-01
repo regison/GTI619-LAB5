@@ -2,11 +2,7 @@ package communication.DataMapping;
 
 import java.util.ArrayList;
 
-import communication.DataObjects.Objects.Log;
-import communication.DataObjects.Objects.LoginLog;
-import communication.DataObjects.Objects.Role;
-import communication.DataObjects.Objects.RoleLevel;
-import communication.DataObjects.Objects.User;
+import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 /**
  * Classe qui doit etre appelé par les modules externes
@@ -48,8 +44,8 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	public void Open(){		
 	}
 
-	public User GetUserByUserName(String userName) {
-		return data.GetUserByUserName(userName);
+	public ArrayList<Objects.User> GetAllUsersFromAUserName(String userName) {
+		return data.GetAllUsersFromAUserName(userName);
 	}
 	
 	public User Authenticate(String uname, String pwd) {
