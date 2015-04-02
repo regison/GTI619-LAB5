@@ -1,5 +1,7 @@
 package log619lab5.struts.general.actions;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -13,7 +15,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import communication.DataMapping.DataProvider;
-
 import securityLayer.securityModule.gestionPassword.SecurityModulePassword;
 import database.IDatabase;
 import database.mysql.Mysql;
@@ -28,8 +29,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		request.setAttribute("Page", "ChangePassword");
 
 		HttpSession session = request.getSession();
-		
-		pageSection = Section.GENERAL;
+		SecurityModulePassword sPass = new SecurityModulePassword();
 		
 		if(request.getParameter("updatePassword") != null){
 
@@ -39,7 +39,6 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			String copynewPassword = request.getParameter("cnpassword");
 			String hidden = request.getParameter("hidden");
 			DataProvider dtp =  new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
-			SecurityModulePassword sPass = new SecurityModulePassword();
 			
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("updatePWHiddenString")))
 			{
@@ -50,7 +49,9 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			if(reauthentification){
 				if(newPassword.equals(copynewPassword))
 				{
-					if(sPass.validatePassword(newPassword)){
+					List<String> errors = sPass.validatePassword(newPassword);
+					
+					if(errors.size()==0){
 						//On va passer le id au lieu du username
 						if(sPass.updatePassword((int) request.getSession().getAttribute("userId"), (String) request.getSession().getAttribute("Username"), oldPassword, newPassword)){
 							request.setAttribute("message", "ca  a marché");
@@ -60,7 +61,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 						}
 					}
 					else{
-						request.setAttribute("message", sPass.getPasswordConstraint());
+						request.setAttribute("error", errors);
 					}
 				}
 				else{
@@ -71,6 +72,9 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 				request.setAttribute("message", "Mauvais mot de passe actuel");
 			}
 				
+		}
+		else{
+			request.setAttribute("error", sPass.getPasswordConstraintMessage());
 		}
 		
 		String randomString = generateHiddenRandomString();

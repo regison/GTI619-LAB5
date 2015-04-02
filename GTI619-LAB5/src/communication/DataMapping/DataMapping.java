@@ -7,6 +7,7 @@ import java.util.Date;
 
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
+import communication.DataObjects.Objects.LoginPolitic;
 import communication.DataObjects.Objects.PasswordPolitic;
 import communication.DataObjects.Objects.LoginLog;
 import communication.DataObjects.QueryFactory;
@@ -420,6 +421,11 @@ public class DataMapping implements IDataMapping {
 	public PasswordPolitic getPasswordPolitic() {
 		// TODO Auto-generated method stub
 		PasswordPolitic pwp =  new Objects().new PasswordPolitic();
+		return pwp;
+	}
+	public LoginPolitic getLoginPolitic() {
+		// TODO Auto-generated method stub
+		LoginPolitic pwp =  new Objects().new LoginPolitic();
 		return pwp;
 	}
 

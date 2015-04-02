@@ -73,13 +73,13 @@ public class Objects {
 		public int min;
 		public boolean changementOublie;
 		public boolean changementDepassement;
-		
+		public int lastPasswords;
 	}
 	
 	public class LoginPolitic{
 		public int maxTentative;
 		public int delais;
-		public boolean bloquage;
+		public boolean bloquage2tentatives;
 	}
 
 	public class LoginLog{

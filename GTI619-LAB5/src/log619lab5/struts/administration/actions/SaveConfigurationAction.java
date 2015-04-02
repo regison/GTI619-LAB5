@@ -14,7 +14,9 @@ import org.apache.struts.action.ActionMapping;
 
 import database.IDatabase;
 import database.mysql.Mysql;
-
+import communication.DataMapping.DataProvider;
+import communication.DataObjects.Objects;
+import communication.DataObjects.Objects.*;
 
 public class SaveConfigurationAction extends AbstractAdminAction {
 
@@ -25,30 +27,49 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 		request.setAttribute("Page", PAGE);
 		HttpSession session = request.getSession();
 		
-		String hidden = request.getParameter("hidden");
+		DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
 		
-		request.setAttribute("hidden", "");
-		session.setAttribute("adminHiddenString", "");
-		
-		if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
-		{
-			return mapping.findForward(FAILURE);
+		if(request.getParameter("submit")!=null){
+			Objects bob = new Objects();
+			Objects.LoginPolitic lop = bob.new LoginPolitic();
+			Objects.PasswordPolitic pwp = bob.new PasswordPolitic();
+			
+			String hidden = request.getParameter("hidden");
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
+			{
+				return mapping.findForward(FAILURE);
+			}
+			
+			try{
+				lop.maxTentative = Integer.parseInt(request.getParameter("tentativeMax"));
+				lop.delais = Integer.parseInt(request.getParameter("delais"));
+				lop.bloquage2tentatives = request.getParameter("bloquage").equals("true");
+				pwp.changementOublie = request.getParameter("changementOublie")!=null;
+				pwp.changementDepassement = request.getParameter("changementTentatives")!=null;
+				pwp.min = Integer.parseInt(request.getParameter("lmin"));
+				pwp.max = Integer.parseInt(request.getParameter("lmax"));
+				pwp.complexity = 0;
+				if(request.getParameter("politiqueMaj")!=null);
+					pwp.complexity+=1;
+				if(request.getParameter("politiqueCarac")!=null);
+					pwp.complexity+=2;
+				if(request.getParameter("politiqueChiffres")!=null);
+					pwp.complexity+=4;
+				if(request.getParameter("politiqueMin")!=null);
+					pwp.complexity+=8;
+				pwp.lastPasswords = Integer.parseInt(request.getParameter("tentativeMax"));
+				
+				if(dp.UpdatePolitics(pwp, lop))
+					request.setAttribute("message", "Operation réussie");
+				else
+					request.setAttribute("message", "Operation Echouée");
+			}	
+			catch(Exception e){
+				request.setAttribute("message", "Operation Echouée");
+			}
 		}
 		
-		String tentativeMax = request.getParameter("tentativeMax");
-		String delais = request.getParameter("delais");
-		String bloquage = request.getParameter("bloquage");
-		String changementOublie = request.getParameter("changementOublie");
-		String changementTentatives = request.getParameter("changementTentatives");
-		String longueurMinMDP = request.getParameter("lmin");
-		String longueurMaxMDP = request.getParameter("lmax");
-		String politiqueMaj = request.getParameter("politiqueMaj");
-		String politiqueCarac = request.getParameter("politiqueCarac");
-		String politiqueChiffres = request.getParameter("politiqueChiffres");
-		String changePassConnect = request.getParameter("changePassConnect");
-		String changePassPage = request.getParameter("changePassPage");
 		
-		request.setAttribute("message", "Operation réussie");
 		String randomString = generateHiddenRandomString();
 		request.setAttribute("hidden", randomString);
 		session.setAttribute("adminHiddenString", randomString);
