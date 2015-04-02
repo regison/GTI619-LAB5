@@ -107,7 +107,7 @@
           </fieldset>
           <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
           <input type="submit" name="submit" value="Valider"  />
-          <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='/AdminPage.do' %>'" />      
+          <input type="button" value="Retour" onclick="window.location.href='/AdminPage.do'" />      
      </form>
 	 <br />
     <br />
