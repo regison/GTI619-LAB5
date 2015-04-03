@@ -2,6 +2,7 @@ package securityLayer.securityModule.gestionPassword;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class SecurityModulePassword {
 		u.saltPassword = newPassword;
 		
 		u.ModifiedBy = currenUserName;
-		u.ModifiedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");		
+		u.ModifiedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());		
 		
 		return dp.UpdateUser(u);
 		//TODO

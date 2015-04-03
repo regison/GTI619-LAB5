@@ -38,9 +38,9 @@ public class DataMapping implements IDataMapping {
 				toAdd.roleId = Integer.parseInt(user.get(2).toString());
 				toAdd.saltPassword = user.get(3).toString();
 				toAdd.nbCryptIteration = Integer.parseInt(user.get(4).toString());
-				toAdd.ModifiedDate = new SimpleDateFormat(user.get(5).toString());
+				toAdd.ModifiedDate = user.get(5).toString();
 				toAdd.ModifiedBy = user.get(6).toString();
-				toAdd.CreateDate = new SimpleDateFormat(user.get(7).toString());
+				toAdd.CreateDate = user.get(7).toString();
 				toAdd.CreateBy = user.get(8).toString();
 				toAdd.salt = user.get(9).toString();
 				toAdd.saltCounter = Integer.parseInt(user.get(10).toString());
@@ -199,9 +199,9 @@ public class DataMapping implements IDataMapping {
 			user.roleId = Integer.parseInt(result.get(0).get(2).toString());
 			user.saltPassword = result.get(0).get(3).toString();
 			user.nbCryptIteration = Integer.parseInt(result.get(0).get(4).toString());
-			user.ModifiedDate = new SimpleDateFormat(result.get(0).get(5).toString());
+			user.ModifiedDate = result.get(0).get(5).toString();
 			user.ModifiedBy = result.get(0).get(6).toString();
-			user.CreateDate = new SimpleDateFormat(result.get(0).get(7).toString());
+			user.CreateDate = result.get(0).get(7).toString();
 			user.CreateBy = result.get(0).get(8).toString();
 			user.salt = result.get(0).get(9).toString();
 			user.saltCounter = Integer.parseInt(result.get(0).get(10).toString());
@@ -279,11 +279,11 @@ public class DataMapping implements IDataMapping {
 				user.roleId = Integer.parseInt(result.get(i).get(2).toString());
 				user.nbCryptIteration = Integer.parseInt(result.get(i).get(3)
 						.toString());
-				user.ModifiedDate = new SimpleDateFormat(result.get(i).get(4)
-						.toString());
+				user.ModifiedDate = result.get(i).get(4)
+						.toString();
 				user.ModifiedBy = result.get(i).get(5).toString();
-				user.CreateDate = new SimpleDateFormat(result.get(i).get(6)
-						.toString());
+				user.CreateDate = result.get(i).get(6)
+						.toString();
 				user.CreateBy = result.get(i).get(7).toString();
 				user.salt = result.get(i).get(8).toString();
 				user.saltCounter = Integer.parseInt(result.get(i).get(9)
@@ -385,26 +385,55 @@ public class DataMapping implements IDataMapping {
 	}	
 	
 	@Override
-	public boolean CreateUser(String username, String password, int userType) {
-		
+	public boolean CreateUser(String username, String password, int userType, String salt) {
+	
 		cnx.Open();
 		boolean isUserNameExist = !cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] { username }, "idUser").isEmpty();
 		
-		if (isUserNameExist)	
-		{
-			cnx.Close();
+		if (isUserNameExist)			
 			return false;
-		}
-		else{
-			//Get role salt counter
-			int saltCountAuthorize = Integer.parseInt(cnx.Select(QueryFactory.SELECT_USER_ROLE, new String[] { userType + ""}, "sasltCountAuthorize").get(0).get(0).toString());
-			
+		else{	
 			User user = new Objects().new User();
 			
 			user.name = username;
+			user.saltCounter = (int) Math.floor (Math.random() * (1 + 10 - 1)) + 1;
+			user.nbCryptIteration = (int) Math.floor (Math.random() * (1 + 10 - 5)) + 5;
+			user.salt = salt;
 			
-//			cnx.insert(QueryFactory.INSERT_USER, new String[] { user.name,String.valueOf(user.roleId) , user.saltPassword, user.saltCounter +"",
-//															"DATE","CurrentUSer","MODDATE","CURRENUSERNAME", user.salt, user.enabled +""});
+			String saltPwdBuilder = "SHA2(";
+			for(int i = 1; i < user.nbCryptIteration; i++){
+				saltPwdBuilder += "SHA2(";
+			}
+			saltPwdBuilder += "'";
+			for(int i = 0; i < user.saltCounter; i++){
+				saltPwdBuilder += user.salt;
+			}
+			saltPwdBuilder += "'"+ password + "'";
+			for(int j = 0; j < user.saltCounter; j++){
+				saltPwdBuilder += user.salt;
+			}
+			saltPwdBuilder += "'";
+			for(int i = 1; i < user.nbCryptIteration; i++){
+				saltPwdBuilder += ", 512)";
+			}
+			saltPwdBuilder += ", 512);";
+			
+			user.CreateBy = "currentUser";
+			user.CreateDate = new SimpleDateFormat().format(new Date());
+			user.ModifiedBy = "currentUSer";
+			user.ModifiedDate = new SimpleDateFormat().format(new Date());
+			user.isAuthenticated = false;
+			user.enabled = true;
+			user.isLogOutNeeded = false;
+			user.roleId = userType;
+			user.saltPassword = saltPwdBuilder;
+			user.crypVersion = 1;
+
+			cnx.insert(QueryFactory.INSERT_USER, new String[] { user.name,String.valueOf(user.roleId) , user.saltPassword, user.nbCryptIteration +"",
+															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled +"", 
+															String.valueOf( user.crypVersion)});
+			
+			
 		}
 		cnx.Close();
 		return true;

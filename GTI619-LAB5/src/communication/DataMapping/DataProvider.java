@@ -86,9 +86,9 @@ public class DataProvider {
 		return data.CreateLoginLog(incrementFailedLoginTriesCount, llog);
 	}
 
-	public boolean CreateUser(String username, String tpw, int type) {
+	public boolean CreateUser(String username, String password, int userType, String salt){
 
-		return data.CreateUser(username, tpw, type);
+		return data.CreateUser(username, password, userType, salt);
 		
 	}
 	
@@ -97,6 +97,7 @@ public class DataProvider {
 		return true;
 		
 	}
+
   
 }
 

@@ -18,9 +18,9 @@ public class Objects {
 	    public String saltPassword;
 	    public int nbCryptIteration;
 
-	    public SimpleDateFormat ModifiedDate;
+	    public String ModifiedDate;
 	    public String ModifiedBy;
-	    public SimpleDateFormat CreateDate;
+	    public String CreateDate;
 	    public String CreateBy;
 	    public String salt;
 	    public int saltCounter;

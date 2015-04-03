@@ -12,6 +12,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 import securityLayer.securityModule.gestionPassword.SecurityModulePassword;
 import communication.DataMapping.DataProvider;
 import database.IDatabase;
@@ -46,17 +47,20 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 					String type = request.getParameter("acces");
 					
 					int newUserRole = 0;
+					int userlevel = 0;
 					
 					switch (type){
-						case "admin" : newUserRole = 1;
+					case "admin" 	: userlevel = Section.ADMIN.ordinal();
 						break;
-						case "cercle" : newUserRole = 2;
+					case "cercle" 	: userlevel = Section.CERCLE.ordinal();
 						break;
-						case "carre" : newUserRole = 3;
+					case "carre" 	: userlevel = Section.CARRE.ordinal();
 						break;			
-					}
+				}
+					String salt = new HiddenStringGenerator().generateRandomString();			
 					
-					boolean check = dtp.CreateUser(username, tpw, newUserRole);
+					
+					boolean check = dtp.CreateUser(username, tpw, userlevel, salt);
 					
 					if (check)			
 						request.setAttribute("ajoutMessage", "Operation réuisse");
