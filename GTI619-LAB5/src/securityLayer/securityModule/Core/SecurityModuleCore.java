@@ -62,13 +62,7 @@ public class SecurityModuleCore {
 		dtp = new DataProvider();
 		
 		try {
-			Log event = new Objects().new Log();
-			event.logDate = new SimpleDateFormat().format(new Date());
-			event.logName = "Full Login Time succeed";
-			event.userLogId = userID;
-			
-			dtp.CreateLog(event);
-			
+					
 			session.setAttribute("failedLoginCount", "0");
 			dbComm.UpdateUserInfo(userID, false, true, false);
 		} catch (Exception e) {
@@ -82,12 +76,6 @@ public class SecurityModuleCore {
 		dtp = new DataProvider();
 		
 		try {
-			Log event = new Objects().new Log();
-			event.logDate = new SimpleDateFormat().format(new Date());
-			event.logName = "Full Login Time failed";
-			event.userLogId = user.idUser;
-			
-			dtp.CreateLog(event);
 			dbComm.UpdateUserInfo(user.idUser, true, false, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

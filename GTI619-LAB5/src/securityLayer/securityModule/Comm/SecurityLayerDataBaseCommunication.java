@@ -84,7 +84,7 @@ public class SecurityLayerDataBaseCommunication {
 					event.logName = "User Login log Info Update";
 					event.userLogId = userID;
 					
-					dtp.CreateLog(event);
+					
 				}
 			
 			} catch (NumberFormatException e) {
@@ -103,7 +103,6 @@ public class SecurityLayerDataBaseCommunication {
 				event.logName = "Login Log creation";
 				event.userLogId = userID;
 				
-				dtp.CreateLog(event);
 			
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
@@ -124,8 +123,7 @@ public class SecurityLayerDataBaseCommunication {
 			event.logDate = new SimpleDateFormat().format(new Date());
 			event.logName = "UpdateUserLastLogInTime";
 			event.userLogId = userID;
-			
-			dtp.CreateLog(event);
+
 			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block

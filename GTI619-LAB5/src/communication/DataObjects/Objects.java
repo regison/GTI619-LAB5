@@ -3,6 +3,11 @@ package communication.DataObjects;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
+import communication.DataMapping.DataProvider;
+import communication.DataObjects.Objects.Log;
+import database.IDatabase;
+import database.mysql.Mysql;
+
 
 public class Objects {
 
@@ -23,6 +28,7 @@ public class Objects {
 	    public Role role;
 	    public boolean isAuthenticated;
 	    public boolean isLogOutNeeded;
+	    public int crypVersion;
 	    
 	    public User(){
 	    	role = new Role();
@@ -65,6 +71,11 @@ public class Objects {
 		public String logName;
 		public int userLogId;
 		public String logDate;
+		
+		public void CreateLog(Log event, boolean byPass) {
+			DataProvider dataProvider = new DataProvider();
+			dataProvider.CreateLog(event, byPass);			
+		}
 	}
 	
 	public class PasswordPolitic{

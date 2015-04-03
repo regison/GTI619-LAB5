@@ -6,8 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import communication.DataObjects.Objects;
+import communication.DataObjects.Objects.Log;
 import database.IDatabase;
 
 public class Mysql implements IDatabase {
@@ -16,16 +20,18 @@ public class Mysql implements IDatabase {
 	private String url;
 	private String username;
 	private String password;
+	private boolean byPassLog = true;
 
 	public static final short MYSQL_DATABASE_LOG619LAB5 = 0;
 	
-	public Mysql(short mysql_table_type){
+	public Mysql(short mysql_table_type, boolean byPassLog){
 		if(mysql_table_type == MYSQL_DATABASE_LOG619LAB5)
 			this.url = "jdbc:mysql://log619lab5.no-ip.org:3306/log619lab5";
 		else
 			this.url = "jdbc:mysql://log619lab5.no-ip.org:3306/log619lab5"; //default
 		this.username = "mysqllog619lab5";
 		this.password = "fsid$ofuosidf7s7fd987f!@";
+		this.byPassLog = byPassLog;
 	}
 	
 	private Mysql(String p_url, String p_username, String p_password) {
@@ -90,6 +96,14 @@ public class Mysql implements IDatabase {
 				}
 				data.add(row);
 			}
+			
+			if (!byPassLog){
+				Log event = new Objects().new Log();
+				event.logDate = new SimpleDateFormat().format(new Date());
+				event.logName = p_request + " " + prepStmt.toString();
+				
+				event.CreateLog(event, byPassLog);
+			};
 			prepStmt.close();
 			return data;
 		} catch (Exception e) {
@@ -107,6 +121,14 @@ public class Mysql implements IDatabase {
 				}
 			}
 			int row = prepStmt.executeUpdate();
+			
+			if (!byPassLog){
+				Log event = new Objects().new Log();
+				event.logDate = new SimpleDateFormat().format(new Date());
+				event.logName = p_request + " " + prepStmt.toString();
+				
+				event.CreateLog(event, byPassLog);
+			};
 			prepStmt.close();
 			return row;
 		} catch (Exception e) {

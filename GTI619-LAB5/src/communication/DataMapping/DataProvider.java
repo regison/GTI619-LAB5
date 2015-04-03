@@ -11,7 +11,7 @@ import communication.DataObjects.Objects.*;
  *
  */
 
-public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu pense avoir de multiples dataprovider et un accesseur généralisé qui pourait avoir une liste de DataProvider
+public class DataProvider {
 
 	private DataMapping data;
 	public DataProvider(){
@@ -43,11 +43,6 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 		return data.getLoginPolitic();
 	}
 	
-	
-	//C tristan qui a enlevé le dispose parce que la connexion à la BD devrait toujours être fermé juste après l'avoir ouverte (on est dans un cours de sécurité)
-	public void Open(){		
-	}
-
 	public ArrayList<Objects.User> GetAllUsersFromAUserName(String userName) {
 		return data.GetAllUsersFromAUserName(userName);
 	}
@@ -67,8 +62,8 @@ public class DataProvider { //Une interface c inutile dans notre cas, sauf si tu
 	}
 
 	
-	public boolean CreateLog(Log event) {
-		return data.CreateLog(event);
+	public boolean CreateLog(Log event, boolean byPass) {
+		return data.CreateLog(event, byPass);
 	}
 
 	

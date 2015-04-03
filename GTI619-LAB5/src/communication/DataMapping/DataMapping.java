@@ -17,7 +17,7 @@ public class DataMapping implements IDataMapping {
 
 	private Mysql cnx;
 	public DataMapping() {		
-		cnx= new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		cnx = new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5, false);
 	}
 	/**
 	 * Return all users
@@ -214,8 +214,7 @@ public class DataMapping implements IDataMapping {
 	}
 
 
-	@Override
-	public boolean CreateLog(Log event) {
+	public boolean CreateLog(Log event, boolean byPass) {
 		// TODO Auto-generated method stub
 		cnx.Open();
 		int value = cnx.insert(QueryFactory.INSERT_LOG, 
@@ -231,13 +230,6 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean UpdateUser(User user) {
 		cnx.Open();
-		
-		Log event = new Objects().new Log();
-		event.logDate = new SimpleDateFormat().format(new Date());
-		event.logName = "Update User password";
-		event.userLogId = user.idUser;
-		
-		CreateLog(event);
 		
 		cnx.Close();
 		return false;
