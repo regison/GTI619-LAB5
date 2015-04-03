@@ -59,7 +59,7 @@ public class SecurityModuleCore {
 	
 	public void updateSuccessfullLoginTime(int userID){
 		
-		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtp = new DataProvider();
 		
 		try {
 			Log event = new Objects().new Log();
@@ -79,7 +79,7 @@ public class SecurityModuleCore {
 	
 	private void incrementUnsuccessfullLogin(){
 		
-		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtp = new DataProvider();
 		
 		try {
 			Log event = new Objects().new Log();

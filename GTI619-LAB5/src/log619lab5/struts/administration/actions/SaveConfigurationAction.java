@@ -27,7 +27,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 		request.setAttribute("Page", PAGE);
 		HttpSession session = request.getSession();
 		
-		DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		DataProvider dp = new DataProvider();
 		
 		if(request.getParameter("submit")!=null){
 			Objects bob = new Objects();

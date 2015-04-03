@@ -16,8 +16,8 @@ import database.mysql.Mysql;
 public class DataMapping implements IDataMapping {
 
 	private Mysql cnx;
-	public DataMapping(short database) {		
-		cnx= new Mysql(database);
+	public DataMapping() {		
+		cnx= new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5);
 	}
 	/**
 	 * Return all users
@@ -245,7 +245,7 @@ public class DataMapping implements IDataMapping {
 
 		
 	public static void main (String [] args){
-		DataProvider m = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		DataProvider m = new DataProvider();
 
 		ArrayList<User> users = m.Users();
 		

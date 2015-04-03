@@ -38,7 +38,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			String newPassword = request.getParameter("npassword");
 			String copynewPassword = request.getParameter("cnpassword");
 			String hidden = request.getParameter("hidden");
-			DataProvider dtp =  new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+			DataProvider dtp =  new DataProvider();
 			
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("updatePWHiddenString")))
 			{

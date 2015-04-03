@@ -25,7 +25,7 @@ public class SecurityLayerDataBaseCommunication {
 	
 	private DataProvider dtp;
 	public SecurityLayerDataBaseCommunication(){		
-		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtp = new DataProvider();
 	}
 	
 	public void initialise(int userID){
@@ -115,7 +115,7 @@ public class SecurityLayerDataBaseCommunication {
 	private void UpdateUserLastLoginTimeToNow(){
 		if(userID < 0)
 			return;
-		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtp = new DataProvider();
 		try {
 			
 			//cnx.update("UPDATE log619lab5.LoginLogs SET idUser= ? WHERE userID= ? ;", new String[]{userID + "", userID + ""});

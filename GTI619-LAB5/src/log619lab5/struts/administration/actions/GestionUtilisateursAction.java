@@ -29,7 +29,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 		HttpSession session = request.getSession();
 		String submit= request.getParameter("submit");
 		
-		dtp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+		dtp = new DataProvider();
 		
 		if(submit != null){
 			String hidden = request.getParameter("hidden");

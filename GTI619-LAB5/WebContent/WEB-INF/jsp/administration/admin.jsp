@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" import="communication.DataMapping.DataProvider,communication.DataObjects.*,database.mysql.Mysql"%>
 <% 
-	DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+	DataProvider dp = new DataProvider();
 	Objects.PasswordPolitic pwp = dp.getPasswordPolitic();
 	Objects.LoginPolitic lop = dp.getLoginPolitic();
 %>
@@ -20,7 +20,7 @@
 			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
 			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
 			<td><a href="GestionUtilisateur.do">Gestion Utilisateurs</a></td>
-			<td><a href="Logs.do">Voir Logs</a></td>
+			<td><a href="Logs.do">Voir les 10 Logs les plus récent</a></td>
 			<td width="100">Log out</td>
 		</tr>
 	

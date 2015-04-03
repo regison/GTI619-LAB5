@@ -57,7 +57,7 @@
               <label for="user">User name <span class="requis">*</span></label>
               <select name="user">
               	<% 
-              		DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+              		DataProvider dp = new DataProvider();
               		for(Objects.User data : dp.Users()){
               			out.println("<option value=\"" + data.idUser + "\">" + data.name + "</option>");
               		}
@@ -107,7 +107,7 @@
           </fieldset>
           <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
           <input type="submit" name="submit" value="Valider"  />
-          <input type="button" value="Retour" onclick="window.location.href='/AdminPage.do'" />      
+          <input type="button" value="Retour" onclick="window.location.href='/GTI619-LAB5/AdminPage.do'" />      
      </form>
 	 <br />
     <br />

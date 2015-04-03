@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="communication.DataMapping.DataProvider,communication.DataObjects.*,database.mysql.Mysql"%>
+    pageEncoding="ISO-8859-1" import="communication.DataMapping.DataProvider,communication.DataObjects.*,database.mysql.Mysql, java.util.ArrayList"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Accès refusé!</title>
+<title>Logs</title>
 </head>
 <body>
 
@@ -21,10 +21,12 @@
 		
 	
    	<% 
-  		DataProvider dp = new DataProvider(Mysql.MYSQL_DATABASE_LOG619LAB5);
+  		DataProvider dp = new DataProvider();
    		Objects.User u;
    		Objects.Role r;
-  		for(Objects.Log data : dp.getLogs()){
+   		ArrayList<Objects.Log> logs = dp.getLogs();
+  		for(int i = logs.size() - 1; i >= logs.size() - 10; i--){
+  			Objects.Log data = logs.get(i);
   			u = dp.GetUser(data.userLogId);
   			if(u!=null){
   			out.println("<tr>");
@@ -40,6 +42,6 @@
   	%>
   	</table>
   	<br/> 
-	<a href="AdminPage.do">Retour</a>
+	<a href="/GTI619-LAB5/AdminPage.do">Retour</a>
 </body>
 </html>
