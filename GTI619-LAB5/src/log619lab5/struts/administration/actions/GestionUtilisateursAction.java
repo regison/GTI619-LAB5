@@ -38,7 +38,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			{
 				return mapping.findForward("AccessDenied");
 			}	
-			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("usernae"), pw) !=null;
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("Username"), pw) !=null;
 			if("Ajouter".equals(submit)){
 				if(reauthentification){
 					String username = request.getParameter("username");
