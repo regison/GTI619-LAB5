@@ -6,19 +6,12 @@
 <head>
 
 <title>Administration</title>
-<link type="text/css" rel="stylesheet" href="../../style.css" / >
+<%@include file="../style.jsp" %>
 
 </head>
 
 <body class="homepage">
-	<table class=common>
-		<tr>
-			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
-			<td width="100">Log out</td>
-		</tr>
-	
-	</table>
-	 <br />
+	<%@include file="../tableheader.jsp" %>
     <br />
 	<form method="post" action="GestionUtilisateur.do">
           <fieldset>

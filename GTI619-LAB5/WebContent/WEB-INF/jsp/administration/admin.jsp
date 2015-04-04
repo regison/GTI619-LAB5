@@ -10,22 +10,15 @@
 <head>
 
 <title>Administration</title>
-<link type="text/css" rel="stylesheet" href="../../style.css" / >
+<%@include file="../style.jsp" %>
 
 </head>
 
 <body class="homepage">
-	<table class=common>
-		<tr>
-			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
-			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
-			<td><a href="GestionUtilisateur.do">Gestion Utilisateurs</a></td>
-			<td><a href="Logs.do">Voir les 10 Logs les plus récent</a></td>
-			<td width="100">Log out</td>
-		</tr>
-	
-	</table>
-	 <br />
+	<%@include file="../tableheader.jsp" %>
+	<a href="ChangePassword.do">Changer mot de passe</a><br/>
+	<a href="GestionUtilisateur.do">Gestion Utilisateurs</a><br/>
+	<a href="Logs.do">Voir les 10 Logs les plus récent</a><br/>
     <br />
 	<a href="Cercle.do">Cercle</a><br/>
 	<a href="Carre.do">Carre</a>

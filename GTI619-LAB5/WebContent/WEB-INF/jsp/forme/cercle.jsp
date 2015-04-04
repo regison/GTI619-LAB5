@@ -3,19 +3,11 @@
 <head>
         <meta charset="utf-8" />
         <title>Cercle</title>
-        <link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/WEB-INF/css/style.css" />
+        <%@include file="../style.jsp" %>
     </head>
     <body>
 
-	<table class=common>
-		<tr>
-			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
-
-			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
-			<td width="100">Log out</td>
-		</tr>
-	
-	</table>
+	<%@include file="../tableheader.jsp" %>
 
 
 

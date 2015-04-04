@@ -5,7 +5,6 @@
 <head>
 
 <title>Bienvenue!</title>
-<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/style.css" />
 </head>
 
 <body class="homepage">

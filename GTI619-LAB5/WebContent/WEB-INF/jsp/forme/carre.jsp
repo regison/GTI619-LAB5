@@ -3,21 +3,13 @@
 <head>
 
 <title>Carre!</title>
-<link href="WEB-INF/css/style.css" rel="stylesheet">
+<%@include file="../style.jsp" %>
 
 </head>
 
 <body class="homepage">
 	
-	    <table class=common>
-		<tr>
-			<td class=name>Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
-
-			<td><a href="ChangePassword.do">Changer mot de passe</a></td>
-			<td width="100">Log out</td>
-		</tr>
-	
-	</table>
+	<%@include file="../tableheader.jsp" %>
 	
 	       <pre>
  <u>                                                              </u> 

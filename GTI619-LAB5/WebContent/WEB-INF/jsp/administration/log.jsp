@@ -5,9 +5,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Logs</title>
+<%@include file="../style.jsp" %>
 </head>
 <body>
-
+	<%@include file="../tableheader.jsp" %>
 	<h1>Voici les Logs parce que evidemment quand tu clicques sur un lien qui dit "Voir les logs" ben ca va montrer les logs</h1>
 		
 	<table>
