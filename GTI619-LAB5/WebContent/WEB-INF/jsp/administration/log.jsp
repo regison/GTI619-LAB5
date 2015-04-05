@@ -23,7 +23,7 @@
 		
 	
    	<% 
-  		DataProvider dp = new DataProvider();
+  		DataProvider dp = new DataProvider(true);
    		Objects.User u;
    		Objects.Role r;
    		ArrayList<Objects.Log> logs = dp.getLogs();
@@ -42,6 +42,15 @@
   			out.println("<td>" + r.roleName + "</td>");
   			out.println("<td>" + data.logDate + "</td>");
   			out.println("</tr>");}
+  			else{
+  				out.println("<tr>");
+  	  			out.println("<td>" + data.logName + "</td>");
+  	  			out.println("<td>" + data.userLogId + "</td>");
+  	  			out.println("<td>" +  "</td>");
+  	  			out.println("<td>"  + "</td>");
+  	  			out.println("<td>" + data.logDate + "</td>");
+  	  			out.println("</tr>");
+  			}
   		}
   	
   	%>
