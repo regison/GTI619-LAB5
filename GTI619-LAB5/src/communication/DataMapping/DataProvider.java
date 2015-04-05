@@ -14,8 +14,12 @@ import communication.DataObjects.Objects.*;
 public class DataProvider {
 
 	private DataMapping data;
+	public DataProvider(boolean bypasLogs){
+		data = new DataMapping(bypasLogs);
+	}
+	
 	public DataProvider(){
-		data = new DataMapping();
+		data = new DataMapping(false);
 	}
 	
 	//Select users from db

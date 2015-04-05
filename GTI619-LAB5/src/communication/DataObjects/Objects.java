@@ -73,7 +73,7 @@ public class Objects {
 		public String logDate;
 		
 		public void CreateLog(Log event, boolean byPass) {
-			DataProvider dataProvider = new DataProvider();
+			DataProvider dataProvider = new DataProvider(byPass);
 			dataProvider.CreateLog(event, byPass);			
 		}
 	}

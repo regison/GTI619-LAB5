@@ -59,7 +59,7 @@ public class SecurityModuleCore {
 	
 	public void updateSuccessfullLoginTime(int userID){
 		
-		dtp = new DataProvider();
+		dtp = new DataProvider(false);
 		
 		try {
 					
@@ -73,7 +73,7 @@ public class SecurityModuleCore {
 	
 	private void incrementUnsuccessfullLogin(){
 		
-		dtp = new DataProvider();
+		dtp = new DataProvider(false);
 		
 		try {
 			dbComm.UpdateUserInfo(user.idUser, true, false, false);

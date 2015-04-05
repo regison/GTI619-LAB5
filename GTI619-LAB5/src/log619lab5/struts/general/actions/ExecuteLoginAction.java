@@ -66,7 +66,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		dtP = new DataProvider();
+		dtP = new DataProvider(false);
 		
 		Objects obj = new Objects();
 		User _currentUser = obj.new User();

@@ -27,7 +27,7 @@ public class SecurityModulePassword {
 			
 	public List<String> validatePassword(String password){
 		
-		DataProvider dp = new DataProvider();
+		DataProvider dp = new DataProvider(false);
 		PasswordPolitic pwp = dp.getPasswordPolitic();
 		List<String> errors = new ArrayList<String>();
 		if(!(password.length() >= pwp.min && password.length() <= pwp.max))
@@ -57,7 +57,7 @@ public class SecurityModulePassword {
 	
 	public boolean updatePassword(int userid, String currenUserName, String oldPassword, String newPassword){
 		
-		DataProvider dp = new DataProvider();
+		DataProvider dp = new DataProvider(false);
 		User u = dp.GetUser(userid);
 		//Dependement du user on va lui set un saltcounter
 		u.saltCounter = 0;

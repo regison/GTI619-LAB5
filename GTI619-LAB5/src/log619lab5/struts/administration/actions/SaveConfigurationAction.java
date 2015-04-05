@@ -27,7 +27,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 		request.setAttribute("Page", PAGE);
 		HttpSession session = request.getSession();
 		
-		DataProvider dp = new DataProvider();
+		DataProvider dp = new DataProvider(false);
 		
 		if(request.getParameter("submit")!=null){
 			Objects bob = new Objects();

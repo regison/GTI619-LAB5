@@ -18,8 +18,8 @@ import database.mysql.Mysql;
 public class DataMapping implements IDataMapping {
 
 	private Mysql cnx;
-	public DataMapping() {		
-		cnx = new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5, false);
+	public DataMapping(boolean bypasLogs) {		
+		cnx = new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5, bypasLogs);
 	}
 	/**
 	 * Return all users with isAuthenticated and Needlogout from loginlog table
@@ -247,7 +247,7 @@ public class DataMapping implements IDataMapping {
 
 		
 	public static void main (String [] args){
-		DataProvider m = new DataProvider();
+		DataProvider m = new DataProvider(false);
 
 		/*ArrayList<User> users = m.Users();
 		
