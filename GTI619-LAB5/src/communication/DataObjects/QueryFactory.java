@@ -3,7 +3,7 @@ package communication.DataObjects;
 public class QueryFactory {
 
 	//SELECT SECTION
-	public static final String SELECT_ALL_USERS = "SELECT u.*, ll.LoggedIn, ll.LogoutNeeded FROM User u INNER JOIN LoginLogs ll ON u.idUser = ll.idUser";
+	public static final String SELECT_ALL_USERS = "SELECT u.*, ll.LoggedIn, ll.LogoutNeeded FROM User u LEFT JOIN LoginLogs ll ON u.idUser = ll.idUser";
 	public static final String SELECT_ALL_ROLELEVEL = "SELECT * FROM RoleLevel";
 	public static final String SELECT_ALL_ROLES = "SELECT * FROM RoleLevel";
 	public static final String SELECT_ALL_LOGS = "SELECT * FROM Log";
