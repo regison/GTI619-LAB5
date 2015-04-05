@@ -140,7 +140,7 @@ public class Mysql implements IDatabase {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return -1;
 	}
 
 	@Override

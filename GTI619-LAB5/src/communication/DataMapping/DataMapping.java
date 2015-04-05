@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import log619lab5.domain.enumType.Section;
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.LoginPolitic;
@@ -391,7 +392,8 @@ public class DataMapping implements IDataMapping {
 	public boolean CreateUser(String username, String password, int userType, String salt) {
 	
 		cnx.Open();
-		boolean isUserNameExist = !cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] { username }, "idUser").isEmpty();
+		boolean isUserNameExist = AuthenticateUser(username, password) != null;			
+		cnx.Close();
 		
 		if (isUserNameExist)			
 			return false;
@@ -411,7 +413,7 @@ public class DataMapping implements IDataMapping {
 			for(int i = 0; i < user.saltCounter; i++){
 				saltPwdBuilder += user.salt;
 			}
-			saltPwdBuilder += "'"+ password + "'";
+			saltPwdBuilder += "'?'";
 			for(int j = 0; j < user.saltCounter; j++){
 				saltPwdBuilder += user.salt;
 			}
@@ -419,7 +421,7 @@ public class DataMapping implements IDataMapping {
 			for(int i = 1; i < user.nbCryptIteration; i++){
 				saltPwdBuilder += ", 512)";
 			}
-			saltPwdBuilder += ", 512);";
+			saltPwdBuilder += ", 512));";
 			
 			user.CreateBy = "currentUser";
 			user.CreateDate = new SimpleDateFormat().format(new Date());
@@ -429,29 +431,18 @@ public class DataMapping implements IDataMapping {
 			user.enabled = true;
 			user.isLogOutNeeded = false;
 			user.roleId = userType;
-			user.saltPassword = saltPwdBuilder;
+			user.saltPassword = password;
 			user.crypVersion = 1;
- 
-			cnx.insert(QueryFactory.INSERT_USER, new String[] { user.idUser +"", user.name,String.valueOf(user.roleId) , user.saltPassword, user.nbCryptIteration +"",
+			
+			cnx.Open();
+			int row = cnx.insert(QueryFactory.INSERT_USER + saltPwdBuilder, new String[] {  user.name, String.valueOf(user.roleId) , user.nbCryptIteration +"",
 															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled ? "1" : "0", 
-															String.valueOf( user.crypVersion)});
-			int useradded = cnx.Select("SELECT idUser FROM User",null, "idUser").size();
-			
-			
-			/*LoginLog log = new Objects().new LoginLog();
-			log.failedTriesCount = 0;
-			log.lastloginTime = new Tim("yyyy-mm-dd hh:mm:ss[.fffffffff]");
-			log.loggedIn = false;
-			log.logoutNeeded = false;
-			log.userId = useradded;
-			log.loginlogId = 0;
-			
-			CreateLoginLog(false, log );
-		*/	
-			
+															String.valueOf( user.crypVersion), user.saltPassword});
+			cnx.Close();
+			if(row > -1)
+				return true;
 		}
-		cnx.Close();
-		return true;
+		return false;
 	}
 
 	public PasswordPolitic getPasswordPolitic() {

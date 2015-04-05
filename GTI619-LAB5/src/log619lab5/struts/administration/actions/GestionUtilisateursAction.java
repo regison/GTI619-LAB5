@@ -59,13 +59,13 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 				}
 					String salt = new HiddenStringGenerator().generateRandomString();			
 					
-					
+					//TODO: Vérifier avec la politique de mot de passe
 					boolean check = dtp.CreateUser(username, tpw, userlevel, salt);
 					
 					if (check)			
 						request.setAttribute("ajoutMessage", "Operation réuisse");
 					else
-						request.setAttribute("ajoutMessage", "Le nom d'utilisateur existe déjà");
+						request.setAttribute("ajoutMessage", "Cet utilisateur existe déjà");
 				}
 				else
 					request.setAttribute("ajoutMessage", "Mauvais mot de Passe ");

@@ -79,14 +79,11 @@ public class SecurityLayerDataBaseCommunication {
 				int value = dtp.UpdateLoginLogsByUserId(incrementFailedLoginTriesCount, loggedIn, userFailedTriesCount, LogoutNeeded, userID);
 				if (value == 1){
 					//SuccessUpdate
-					Log event = new Objects().new Log();
-					event.logDate = new SimpleDateFormat().format(new Date());
-					event.logName = "User Login log Info Update";
-					event.userLogId = userID;
-					
 					
 				}
-			
+				else{
+					dtp.CreateLoginLog(incrementFailedLoginTriesCount,llog);
+				}
 			} catch (NumberFormatException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -97,11 +94,6 @@ public class SecurityLayerDataBaseCommunication {
 			try {
 				
 				dtp.CreateLoginLog(incrementFailedLoginTriesCount,llog);
-				
-				Log event = new Objects().new Log();
-				event.logDate = new SimpleDateFormat().format(new Date());
-				event.logName = "Login Log creation";
-				event.userLogId = userID;
 				
 			
 			} catch (NumberFormatException e) {
@@ -118,11 +110,6 @@ public class SecurityLayerDataBaseCommunication {
 		try {
 			
 			//cnx.update("UPDATE log619lab5.LoginLogs SET idUser= ? WHERE userID= ? ;", new String[]{userID + "", userID + ""});
-			
-			Log event = new Objects().new Log();
-			event.logDate = new SimpleDateFormat().format(new Date());
-			event.logName = "UpdateUserLastLogInTime";
-			event.userLogId = userID;
 
 			
 		} catch (NumberFormatException e) {
