@@ -73,6 +73,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			
 			if(submit.equals("Reactiver")){
 				if(reauthentification){
+					//TODO: vérifier que le user et le userid correspondent
 					String username = request.getParameter("user");		
 					request.setAttribute("activateMessage", "Operation réuisse");
 				}
@@ -82,6 +83,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			
 			if(submit.equals("Supprimer")){
 				if(reauthentification){
+					//TODO: vérifier que le user et le userid correspondent
 					String username = request.getParameter("user");		
 					request.setAttribute("suppMessage", "Operation réuisse");	
 				}
