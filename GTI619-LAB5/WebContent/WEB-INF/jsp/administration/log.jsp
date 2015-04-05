@@ -10,6 +10,7 @@
 <body>
 	<%@include file="../tableheader.jsp" %>
 	<h1>Voici les Logs parce que evidemment quand tu clicques sur un lien qui dit "Voir les logs" ben ca va montrer les logs</h1>
+	<h1>10 derniers événements </h1>
 		
 	<table>
 	<tr>
@@ -26,8 +27,11 @@
    		Objects.User u;
    		Objects.Role r;
    		ArrayList<Objects.Log> logs = dp.getLogs();
+   	
+   		
   		for(int i = logs.size() - 1; i >= logs.size() - 10; i--){
   			Objects.Log data = logs.get(i);
+  			
   			u = dp.GetUser(data.userLogId);
   			if(u!=null){
   			out.println("<tr>");

@@ -1,6 +1,6 @@
 package communication.DataMapping;
 
-import java.sql.Time;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +10,7 @@ import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.LoginPolitic;
 import communication.DataObjects.Objects.PasswordPolitic;
 import communication.DataObjects.Objects.LoginLog;
+import communication.DataObjects.Objects.PreviousPassword;
 import communication.DataObjects.QueryFactory;
 import database.mysql.Mysql;
 
@@ -20,7 +21,7 @@ public class DataMapping implements IDataMapping {
 		cnx = new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5, false);
 	}
 	/**
-	 * Return all users
+	 * Return all users with isAuthenticated and Needlogout from loginlog table
 	 * @return
 	 */
 	public ArrayList<User> Users() {
@@ -30,7 +31,9 @@ public class DataMapping implements IDataMapping {
 		cnx.Close();
 		ArrayList<User> usersToShow = new ArrayList<User>();
 		User toAdd = null;
-		if (usersMapping.size() > 0){				
+		if (usersMapping.size() > 0){	
+			System.out.println(usersMapping.size());
+			
 			for ( ArrayList<Object> user : usersMapping ){				
 				toAdd = new Objects().new User();
 				toAdd.idUser = Integer.parseInt(user.get(0).toString());
@@ -215,7 +218,7 @@ public class DataMapping implements IDataMapping {
 
 
 	public boolean CreateLog(Log event, boolean byPass) {
-		// TODO Auto-generated method stub
+	
 		cnx.Open();
 		int value = cnx.insert(QueryFactory.INSERT_LOG, 
 						new String[] { String.valueOf(event.logId), event.logName, String.valueOf(event.logDate), String.valueOf(event.userLogId) });
@@ -239,11 +242,12 @@ public class DataMapping implements IDataMapping {
 	public static void main (String [] args){
 		DataProvider m = new DataProvider();
 
-		ArrayList<User> users = m.Users();
+		/*ArrayList<User> users = m.Users();
 		
 		for (User u : users){
 			System.out.println(u.idUser);		
-			}
+			}*/
+		//m.RemoveUser(4);
 		
 	}
 
@@ -300,7 +304,6 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public User AuthenticateUser(String uname, String pwd) {
 		
-		// TODO Auto-generated method stub
 		ArrayList<Objects.User> users = GetAllUsersFromAUserName(uname);
 		
 		if (users != null){
@@ -428,11 +431,23 @@ public class DataMapping implements IDataMapping {
 			user.roleId = userType;
 			user.saltPassword = saltPwdBuilder;
 			user.crypVersion = 1;
-
-			cnx.insert(QueryFactory.INSERT_USER, new String[] { user.name,String.valueOf(user.roleId) , user.saltPassword, user.nbCryptIteration +"",
-															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled +"", 
+ 
+			cnx.insert(QueryFactory.INSERT_USER, new String[] { user.idUser +"", user.name,String.valueOf(user.roleId) , user.saltPassword, user.nbCryptIteration +"",
+															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled ? "1" : "0", 
 															String.valueOf( user.crypVersion)});
+			int useradded = cnx.Select("SELECT idUser FROM User",null, "idUser").size();
 			
+			
+			/*LoginLog log = new Objects().new LoginLog();
+			log.failedTriesCount = 0;
+			log.lastloginTime = new Tim("yyyy-mm-dd hh:mm:ss[.fffffffff]");
+			log.loggedIn = false;
+			log.logoutNeeded = false;
+			log.userId = useradded;
+			log.loginlogId = 0;
+			
+			CreateLoginLog(false, log );
+		*/	
 			
 		}
 		cnx.Close();
@@ -448,6 +463,72 @@ public class DataMapping implements IDataMapping {
 		// TODO Auto-generated method stub
 		LoginPolitic pwp =  new Objects().new LoginPolitic();
 		return pwp;
+	}
+	@Override
+	public ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid) {
+		// TODO Auto-generated method stub
+		cnx.Open();
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_PREVIOUS_PASSWORDS, new String[] {userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified");
+		cnx.Close();
+		 if (result.size() <= 0)
+			 return null;
+		 
+		 ArrayList<PreviousPassword> upp = new ArrayList<PreviousPassword>();
+		 	if (result.size() > 0){
+				
+				PreviousPassword pPwd = null ;
+				
+				for(ArrayList<Object> obj : result){
+					pPwd = new Objects().new PreviousPassword();
+					
+					pPwd.idPreviousPassword = Integer.parseInt(obj.get(0).toString());
+					pPwd.userID = Integer.parseInt(obj.get(1).toString());
+					pPwd.previousPassword = obj.get(2).toString();
+					pPwd.ModifiedDate = obj.get(3).toString();
+					
+					upp.add(pPwd);
+				}	
+		}
+		return upp;
+	}
+	@Override
+	public boolean CreatePreviousPasswordHistory(PreviousPassword pp) {
+		cnx.Open();
+		
+		int value = cnx.insert(QueryFactory.INSERT_PREVIOUS_PASSWORD, 
+				new String[] { String.valueOf(pp.userID), pp.previousPassword, pp.ModifiedDate });
+		cnx.Close();
+
+		return false;
+	}
+	@Override
+	public boolean UpdateUserPassword(int userid, String oldPassword, String password) {
+		
+		return false;
+	}
+	@Override
+	public boolean RemoveUser(int userid) {
+
+	
+		
+		User user = GetUserByID(userid);
+		
+		if (user != null)
+		{
+			System.out.println("user exists");
+			//Un utilisateur connecté ne doit pas se supprimer lui-meme
+			if (user.isAuthenticated)
+				return false;
+	
+			cnx.Open();
+			//int value = cnx.delete(QueryFactory.DELETE_USER, new String[] { userid + ""});
+			System.out.println(cnx.delete(QueryFactory.DELETE_USER, new String[] { userid + ""}));
+			//if (value == 0)
+			cnx.Close();
+			return true;
+		}
+		cnx.Close();
+		return false;
 	}
 
 	

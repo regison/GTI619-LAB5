@@ -102,6 +102,12 @@ public class Objects {
 		public boolean logoutNeeded;
 		
 	}
+	public class PreviousPassword {
+		public int idPreviousPassword;
+		public int userID;
+		public String previousPassword;
+		public String ModifiedDate;
+	}
 	public Objects() {
 		// TODO Auto-generated constructor stub
 	}

@@ -42,6 +42,9 @@ public class DataProvider {
 	public LoginPolitic getLoginPolitic(){
 		return data.getLoginPolitic();
 	}
+	public ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid){
+		return data.GetUserPreviousPasswordByID(userid);
+	}
 	
 	public ArrayList<Objects.User> GetAllUsersFromAUserName(String userName) {
 		return data.GetAllUsersFromAUserName(userName);
@@ -96,6 +99,9 @@ public class DataProvider {
 		//TODO
 		return true;
 		
+	}
+	public boolean RemoveUser(int userid){
+		return data.RemoveUser(userid);
 	}
 
   

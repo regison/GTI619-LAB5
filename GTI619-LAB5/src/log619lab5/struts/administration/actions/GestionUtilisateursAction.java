@@ -50,11 +50,11 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 					int userlevel = 0;
 					
 					switch (type){
-					case "admin" 	: userlevel = Section.ADMIN.ordinal();
+					case "admin" 	: userlevel = Section.ADMIN.ordinal() + 1;
 						break;
-					case "cercle" 	: userlevel = Section.CERCLE.ordinal();
+					case "cercle" 	: userlevel = Section.CERCLE.ordinal() + 1;
 						break;
-					case "carre" 	: userlevel = Section.CARRE.ordinal();
+					case "carre" 	: userlevel = Section.CARRE.ordinal() + 1;
 						break;			
 				}
 					String salt = new HiddenStringGenerator().generateRandomString();			

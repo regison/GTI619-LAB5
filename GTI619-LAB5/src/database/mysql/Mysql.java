@@ -98,11 +98,14 @@ public class Mysql implements IDatabase {
 			}
 			
 			if (!byPassLog){
+				
+				System.out.println("SELECT " + prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
+				
 				Log event = new Objects().new Log();
 				event.logDate = new SimpleDateFormat().format(new Date());
-				event.logName = p_request + " " + prepStmt.toString();
-				
-				event.CreateLog(event, byPassLog);
+				event.logName = p_request;
+				//System.out.println("even.logName, longeur =" + event.logName.length());
+				//event.CreateLog(event, byPassLog);
 			};
 			prepStmt.close();
 			return data;
@@ -123,11 +126,14 @@ public class Mysql implements IDatabase {
 			int row = prepStmt.executeUpdate();
 			
 			if (!byPassLog){
+				System.out.println("OTHER " + prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
+				
 				Log event = new Objects().new Log();
 				event.logDate = new SimpleDateFormat().format(new Date());
-				event.logName = p_request + " " + prepStmt.toString();
 				
-				event.CreateLog(event, byPassLog);
+				event.logName = p_request;
+				//System.out.println("even.logName, longeur =" + event.logName.length());
+				//event.CreateLog(event, byPassLog);
 			};
 			prepStmt.close();
 			return row;
