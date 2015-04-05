@@ -16,7 +16,6 @@
 
 <body class="homepage">
 	<%@include file="../tableheader.jsp" %>
-	<a href="ChangePassword.do">Changer mot de passe</a><br/>
 	<a href="GestionUtilisateur.do">Gestion Utilisateurs</a><br/>
 	<a href="Logs.do">Voir les 10 Logs les plus récent</a><br/>
     <br />
