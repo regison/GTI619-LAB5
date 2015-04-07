@@ -307,41 +307,78 @@ public class DataMapping implements IDataMapping {
 		}
 		return allUsers;
 	}
+	
+	@Override
+	public User GetUserByUsername(String uname) {
+		cnx.Open();
+		ArrayList<ArrayList<Object>> resultList = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
+																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled");
+		cnx.Close();
+		
+		if(resultList == null)
+			return null;
+		
+		if (resultList.size() == 0)
+			return null;
+		
+		ArrayList<Object> result = resultList.get(0);
+			
+		User user = null;
+
+		if (result != null) {
+			user = new Objects().new User();
+
+			user.idUser = Integer.parseInt(result.get(0).toString());
+			user.name = result.get(1).toString();
+			user.roleId = Integer.parseInt(result.get(2).toString());
+			user.nbCryptIteration = Integer.parseInt(result.get(3)
+					.toString());
+			user.ModifiedDate = result.get(4)
+					.toString();
+			user.ModifiedBy = result.get(5).toString();
+			user.CreateDate = result.get(6)
+					.toString();
+			user.CreateBy = result.get(7).toString();
+			user.salt = result.get(8).toString();
+			user.saltCounter = Integer.parseInt(result.get(9)
+					.toString());
+			user.enabled = Boolean
+					.valueOf(result.get(10).toString());
+		}
+			
+		return user;
+	}
 
 	@Override
 	public User AuthenticateUser(String uname, String pwd) {
 		
-		ArrayList<Objects.User> users = GetAllUsersFromAUserName(uname);
+		Objects.User user = GetUserByUsername(uname);
 		
-		if (users != null){
-			for (int j = 0; j < users.size(); j++) {
-				if (users.get(j) != null) {
-					String query = QueryFactory.SELECT_USER_BY_UNAME_PWD;
-					for (int i = 1; i < users.get(j).nbCryptIteration; i++) {
-						query += "SHA2(";
-					}
-					query += "'";
-					for (int i = 0; i < users.get(j).saltCounter; i++) {
-						query += users.get(j).salt;
-					}
-					query += "'?'";
-					for (int i = 0; i < users.get(j).saltCounter; i++) {
-						query += users.get(j).salt;
-					}
-					query += "'";
-					for (int i = 1; i < users.get(j).nbCryptIteration; i++) {
-						query += ", 512)";
-					}
-					query += ", 512);";
-					cnx.Open();
-					ArrayList<ArrayList<Object>> result = cnx.Select(query,
-							new String[] { uname, pwd }, "idUser", "name",
-							"roleId", "enabled");
-					cnx.Close();
-					if(result != null && result.size() == 1){
-						return users.get(j);
-					}
-				}
+		if (user != null){
+			String query = QueryFactory.SELECT_USER_BY_UNAME_PWD;
+			for (int i = 1; i < user.nbCryptIteration; i++) {
+				query += "SHA2(";
+			}
+			query += "'";
+			for (int i = 0; i < user.saltCounter; i++) {
+				query += user.salt;
+			}
+			query += "'?'";
+			for (int i = 0; i < user.saltCounter; i++) {
+				query += user.salt;
+			}
+			query += "'";
+			for (int i = 1; i < user.nbCryptIteration; i++) {
+				query += ", 512)";
+			}
+			query += ", 512);";
+			cnx.Open();
+			ArrayList<ArrayList<Object>> result = cnx.Select(query,
+					new String[] { uname, pwd }, "idUser", "name",
+					"roleId", "enabled");
+			cnx.Close();
+			if(result != null && result.size() == 1){
+				return user;
 			}
 		}
 		
@@ -398,9 +435,9 @@ public class DataMapping implements IDataMapping {
 	public boolean CreateUser(String username, String password, int userType, String salt) {
 		boolean isUserNameExist = true;
 		cnx.Open();
-		ArrayList<User> sameUsernameUsers = GetAllUsersFromAUserName(username);
+		User sameUsernameUser = GetUserByUsername(username);
 		
-		if (sameUsernameUsers != null && sameUsernameUsers.size() == 0)
+		if (sameUsernameUser != null)
 			isUserNameExist = false;
 		
 		cnx.Close();

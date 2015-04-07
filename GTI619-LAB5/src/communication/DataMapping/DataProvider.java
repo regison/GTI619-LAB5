@@ -54,6 +54,10 @@ public class DataProvider {
 		return data.GetAllUsersFromAUserName(userName);
 	}
 	
+	public Objects.User GetUserByUsername(String userName) {
+		return data.GetUserByUsername(userName);
+	}
+	
 	public User Authenticate(String uname, String pwd) {
 		return data.AuthenticateUser(uname, pwd);
 	}

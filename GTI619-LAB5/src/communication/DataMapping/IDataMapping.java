@@ -2,14 +2,16 @@ package communication.DataMapping;
 
 import java.util.ArrayList;
 
+import communication.DataObjects.Objects.User;
 import communication.DataObjects.Objects.*;
 
 public interface IDataMapping{	
 
 	ArrayList<User> GetAllUsersFromAUserName(String uname);
 	ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid);
-	
 	User GetUserByID(int userid);
+	User GetUserByUsername(String uname);
+	
 	User AuthenticateUser(String uname, String pwd);	
 	Role GetRole(int roleid);
 	RoleLevel GetRoleLevel (int rolelevelid);	
