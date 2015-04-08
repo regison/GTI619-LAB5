@@ -19,7 +19,6 @@ public class SecurityModulePassword {
 	private final int special = 2;
 	private final int chiffre = 4;
 	private final int lowerCase = 8;
-	private Objects.PasswordPolitic pwp;
 	
 	public List<String> getPasswordConstraintMessage(){		
 		return validatePassword("");
@@ -55,7 +54,7 @@ public class SecurityModulePassword {
 		//TODO
 	}
 	
-	public boolean updatePassword(int userid, String currenUserName, String oldPassword, String newPassword){
+	public boolean updatePassword(int userid, String currenUserName, String newPassword){
 		
 		DataProvider dp = new DataProvider(false);
 		User u = dp.GetUser(userid);

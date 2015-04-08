@@ -2,6 +2,7 @@ package communication.DataObjects;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects.Log;
@@ -29,6 +30,10 @@ public class Objects {
 	    public boolean isAuthenticated;
 	    public boolean isLogOutNeeded;
 	    public int crypVersion;
+	    public Date blockTime;
+	    public boolean isChangePassword;
+		public boolean changepw;
+	    
 	    
 	    public User(){
 	    	role = new Role();
@@ -84,6 +89,7 @@ public class Objects {
 		public int min;
 		public boolean changementOublie;
 		public boolean changementDepassement;
+		public boolean changementBloquage;
 		public int lastPasswords;
 	}
 	

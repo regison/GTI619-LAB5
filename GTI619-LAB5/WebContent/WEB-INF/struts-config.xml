@@ -32,11 +32,12 @@
         
         <action path="/Login" type="log619lab5.struts.general.actions.LoginAction" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/general/login.jsp" />
-        	<forward name="changepw" path="/ChangePassword.do" />
         </action>
         
         <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">
         	<forward name="failure" path="/WEB-INF/jsp/LoginFailed.jsp" />
+        	<forward name="changepw" path="/ChangePassword.do" />
+        	<forward name="bloque" path="/WEB-INF/CompteBarrer.jsp" />
         </action>
                
         <action path="/Carre" type="log619lab5.struts.general.actions.CarreAction" scope="session">

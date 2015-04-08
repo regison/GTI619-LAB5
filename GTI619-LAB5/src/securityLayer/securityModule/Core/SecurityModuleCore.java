@@ -90,4 +90,12 @@ public class SecurityModuleCore {
 		BruteForceProtection bruteProtect = new BruteForceProtection();
 		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount());
 	}
+	
+	public void manageUnsuccessfullLogin(String username){
+		if(user != null){
+			incrementUnsuccessfullLogin();
+		}
+		BruteForceProtection bruteProtect = new BruteForceProtection();
+		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount());
+	}
 }

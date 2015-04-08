@@ -15,6 +15,8 @@ import org.apache.struts.action.ActionMapping;
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 import securityLayer.securityModule.gestionPassword.SecurityModulePassword;
 import communication.DataMapping.DataProvider;
+import communication.DataObjects.Objects.PasswordPolitic;
+import communication.DataObjects.Objects.User;
 import database.IDatabase;
 import database.mysql.Mysql;
 
@@ -56,7 +58,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						break;
 					case "carre" 	: userlevel = Section.CARRE.ordinal() + 1;
 						break;			
-				}
+					}
 					String salt = new HiddenStringGenerator().generateRandomString();			
 					
 					//TODO: Vérifier avec la politique de mot de passe
@@ -71,10 +73,25 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 					request.setAttribute("ajoutMessage", "Mauvais mot de Passe ");
 			}
 			
+			if(submit.equals("Modifier")){
+				if(reauthentification){
+					String username = request.getParameter("username");
+					String tpw = request.getParameter("tpassword");
+					
+					
+					
+				}
+				
+			}
 			if(submit.equals("Reactiver")){
 				if(reauthentification){
 					//TODO: vérifier que le user et le userid correspondent
-					String username = request.getParameter("user");		
+					String username = request.getParameter("user");
+					User user = dtp.GetAllUsersFromAUserName(username).get(0);
+					PasswordPolitic pwp = dtp.getPasswordPolitic();
+					user.enabled =true;
+					user.changepw = pwp.changementBloquage;
+					dtp.UpdateUser(user);
 					request.setAttribute("activateMessage", "Operation réuisse");
 				}
 				else
@@ -93,7 +110,11 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			if(submit.equals("Valider")){
 				if(reauthentification){
 					String username = request.getParameter("user");
-					String type = request.getParameter("privilege");	
+					String type = request.getParameter("privilege");
+					User user = dtp.GetAllUsersFromAUserName(username).get(0);
+					PasswordPolitic pwp = dtp.getPasswordPolitic();
+					user.roleId = Integer.parseInt(type);
+					dtp.UpdateUser(user);
 					request.setAttribute("privMessage", "Operation réuisse");	
 				}
 				else

@@ -7,7 +7,7 @@
 
 <title>Administration</title>
 <%@include file="../style.jsp" %>
-
+<% DataProvider dp = new DataProvider();%>
 </head>
 
 <body class="homepage">
@@ -39,6 +39,41 @@
           <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
           <input type="submit" name="submit" value="Ajouter"  />
                 
+      </form>
+           <br />
+       <br />
+       
+     	<form method="post" action="GestionUtilisateur.do">
+          <fieldset>
+              <legend>Oubli mot de passe</legend>
+
+              <label for="user">User name <span class="requis">*</span></label>
+              <select name="user">
+              	<% 
+              		dp = new DataProvider();
+              		for(Objects.User data : dp.Users()){
+              			out.println("<option value=\"" + data.idUser + "\">" + data.name + " " + data.idUser + "</option>");
+              		}
+              	
+              	%>
+              </select>
+              	 <br />
+             	<label for="tpassword">Mot de passe temporaire</label>
+              <input type="password" id="tpassword" name="tpassword" value="" size="20" maxlength="20" />
+              <br />
+              <label for="password">Entrez votre mot de passe pour confirmer l'action</label>
+              <input type="password" id="password" name="password" value="" size="20" maxlength="20" />
+              	 <br />
+              <% if(request.getAttribute("oubMessage")!=null){ out.print(request.getAttribute("oubMessage"));} %>
+          </fieldset>
+          <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
+          <input type="submit" name="submit" value="Modifier"  />
+                
+     </form>
+	 <br />
+    <br />
+   
+   
    </form>
            <br />
        <br />
@@ -50,7 +85,7 @@
               <label for="user">User name <span class="requis">*</span></label>
               <select name="user">
               	<% 
-              		DataProvider dp = new DataProvider();
+              		dp = new DataProvider();
               		for(Objects.User data : dp.Users()){
               			out.println("<option value=\"" + data.idUser + "\">" + data.name + " " + data.idUser + "</option>");
               		}
@@ -88,9 +123,11 @@
                <br />
               <label for="privilege">Nouveau Type</label>
               <select id="privilege" name="privilege">
-              	<option value="cercle" selected="selected" value="Cercle">Cercle</option>
-              	<option value="carre">Carre</option>
-              	<option value="admin">Administrateur</option>
+              	<%    
+              		for(Objects.Role data : dp.Roles()){
+              			out.println("<option value=\"" + data.idRole + "\">" + data.roleName + "</option>");
+              		}
+              	%>
               </select>
               	 <br />
               <label for="password">Entrez votre mot de passe pour confirmer l'action</label>

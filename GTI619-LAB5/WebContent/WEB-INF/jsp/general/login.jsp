@@ -24,6 +24,7 @@
                     <label for="password">Mot de passe <span class="requis">*</span></label>
                     <input type="password" id="password" name="password" value="" size="20" maxlength="20" />
                     <br />
+                    <p>Mot de passe oublié? : Contactez un administrateur.</p>
                 </fieldset>
                 <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
                 <input type="submit" value="Valider"  />

@@ -26,6 +26,11 @@ public class DataProvider {
 	public ArrayList<User> Users(){	  
 	  return  data.Users();
 	}
+	
+	public ArrayList<Role> Roles(){	  
+		  return  data.Roles();
+	}
+	
 	//Select all logs from db	
 	public ArrayList<Log> getLogs(){
 	  return data.Logs();
