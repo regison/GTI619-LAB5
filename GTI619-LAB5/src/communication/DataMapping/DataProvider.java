@@ -44,13 +44,10 @@ public class DataProvider {
 		return data.GetRole(roleid);
 	}
 	
-	public PasswordPolitic getPasswordPolitic(){
-		return data.getPasswordPolitic();
+	public PasswordLoginPolitic getPasswordLoginPolitic(){
+		return data.getPasswordLoginPolitic();
 	}
 	
-	public LoginPolitic getLoginPolitic(){
-		return data.getLoginPolitic();
-	}
 	public ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid){
 		return data.GetUserPreviousPasswordByID(userid);
 	}
@@ -104,7 +101,7 @@ public class DataProvider {
 		return data.CreateUser(username, password, userType, salt);		
 	}
 	
-	public boolean UpdatePolitics(PasswordPolitic pwp, LoginPolitic lop){
+	public boolean UpdatePolitics(PasswordLoginPolitic pwp){
 		//TODO
 		return true;
 		

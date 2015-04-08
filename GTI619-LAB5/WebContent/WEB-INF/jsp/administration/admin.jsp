@@ -2,8 +2,7 @@
     pageEncoding="ISO-8859-1" import="communication.DataMapping.DataProvider,communication.DataObjects.*,database.mysql.Mysql"%>
 <% 
 	DataProvider dp = new DataProvider();
-	Objects.PasswordPolitic pwp = dp.getPasswordPolitic();
-	Objects.LoginPolitic lop = dp.getLoginPolitic();
+	Objects.PasswordPLoginolitic pwp = dp.getPasswordPLoginolitic();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -35,13 +34,13 @@
                     <br />
                     
                     <label for="delais">Delais en cas d'atteinte du nombre maximal :</label>
-                    <input type="text" id="delais" name="delais" value="<% out.print(lop.delais); %>" size="5" onkeyup="validate('delais',0)"/>secondes
+                    <input type="text" id="delais" name="delais" value="<% out.print(pwp.delais); %>" size="5" onkeyup="validate('delais',0)"/>secondes
                      <br />
                      <br />
                     
                     <label>Bloquage acces suite deuxieme fois nombre maximal atteint :</label>
-                    <input type="radio" name="bloquage" value="true" <% if(lop.bloquage2tentatives) out.print("checked"); %> text=""/>Oui
-                    <input type="radio" name="bloquage" value="false" <% if(!lop.bloquage2tentatives) out.print("checked"); %>/>Non
+                    <input type="radio" name="bloquage" value="true" <% if(pwp.bloquage2tentatives) out.print("checked"); %> text=""/>Oui
+                    <input type="radio" name="bloquage" value="false" <% if(!pwp.bloquage2tentatives) out.print("checked"); %>/>Non
                     <br />
                 </fieldset>
                 <input type="submit" name="submit" value="Valider"  />

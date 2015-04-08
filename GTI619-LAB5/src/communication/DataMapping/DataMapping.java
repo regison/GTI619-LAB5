@@ -8,8 +8,6 @@ import java.util.Date;
 import log619lab5.domain.enumType.Section;
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
-import communication.DataObjects.Objects.LoginPolitic;
-import communication.DataObjects.Objects.PasswordPolitic;
 import communication.DataObjects.Objects.LoginLog;
 import communication.DataObjects.Objects.PreviousPassword;
 import communication.DataObjects.QueryFactory;
@@ -503,16 +501,12 @@ public class DataMapping implements IDataMapping {
 		return false;
 	}
 
-	public PasswordPolitic getPasswordPolitic() {
+	public PasswordLoginPolitic getPasswordLoginPolitic() {
 		// TODO Auto-generated method stub
-		PasswordPolitic pwp =  new Objects().new PasswordPolitic();
+		PasswordLoginPolitic pwp =  new Objects().new PasswordLoginPolitic();
 		return pwp;
 	}
-	public LoginPolitic getLoginPolitic() {
-		// TODO Auto-generated method stub
-		LoginPolitic pwp =  new Objects().new LoginPolitic();
-		return pwp;
-	}
+
 	@Override
 	public ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid) {
 		// TODO Auto-generated method stub

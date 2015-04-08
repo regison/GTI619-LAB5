@@ -10,7 +10,7 @@ import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.Log;
 import communication.DataObjects.Objects.User;
-import communication.DataObjects.Objects.PasswordPolitic;
+import communication.DataObjects.Objects.PasswordLoginPolitic;
 import database.mysql.Mysql;
 
 public class SecurityModulePassword {
@@ -27,25 +27,32 @@ public class SecurityModulePassword {
 	public List<String> validatePassword(String password){
 		
 		DataProvider dp = new DataProvider(false);
-		PasswordPolitic pwp = dp.getPasswordPolitic();
-		List<String> errors = new ArrayList<String>();
-		if(!(password.length() >= pwp.min && password.length() <= pwp.max))
-			errors.add("Doit contenir entre "+ pwp.min + " et " + pwp.max + "caractères.");
-		if((pwp.complexity & lowerCase) == lowerCase){
-			if(!password.matches(".*[a-z]"))
-				errors.add("Doit contenir minuscules.");
+		List<String> errors =  new ArrayList<String>();
+		try{
+			PasswordLoginPolitic pwp = dp.getPasswordLoginPolitic();
+			int complexity = pwp.complexity;
+			errors = new ArrayList<String>();
+			if(!(password.length() >= pwp.min && password.length() <= pwp.max))
+				errors.add("Doit contenir entre "+ pwp.min + " et " + pwp.max + "caractères.");
+			if((complexity & lowerCase) == lowerCase){
+				if(!password.matches(".*[a-z]"))
+					errors.add("Doit contenir minuscules.");
+			}
+			if((complexity & upperCase) == upperCase){
+				if(!password.matches(".*[A-Z]+.*"))
+					errors.add("Doit contenir majuscules.");
+			}
+			if((complexity & special) == special){
+				if(!password.matches(".*(?=[^a-z])(?=[^A-Z])(?=[^0-9])"))
+					errors.add("Doit contenir caractères speciaux.");
+			}
+			if((complexity & chiffre) == chiffre){
+				if(!password.matches(".*[0-9]"))
+					errors.add("Doit contenir chiffres.");
+			}
 		}
-		if((pwp.complexity & upperCase) == upperCase){
-			if(!password.matches(".*[A-Z]+.*"))
-				errors.add("Doit contenir majuscules.");
-		}
-		if((pwp.complexity & special) == special){
-			if(!password.matches(".*(?=[^a-z])(?=[^A-Z])(?=[^0-9])"))
-				errors.add("Doit contenir caractères speciaux.");
-		}
-		if((pwp.complexity & chiffre) == chiffre){
-			if(!password.matches(".*[0-9]"))
-				errors.add("Doit contenir chiffres.");
+		catch(Exception e){
+			errors.add("configuration pas trouvée");
 		}
 		return errors;
 	}

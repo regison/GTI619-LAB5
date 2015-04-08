@@ -15,7 +15,7 @@ import org.apache.struts.action.ActionMapping;
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 import securityLayer.securityModule.gestionPassword.SecurityModulePassword;
 import communication.DataMapping.DataProvider;
-import communication.DataObjects.Objects.PasswordPolitic;
+import communication.DataObjects.Objects.PasswordLoginPolitic;
 import communication.DataObjects.Objects.User;
 import database.IDatabase;
 import database.mysql.Mysql;
@@ -78,6 +78,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 					String username = request.getParameter("username");
 					String tpw = request.getParameter("tpassword");
 					
+					//TODO: Savoir ou mettre le mot de pass temporaire.
 					
 					
 				}
@@ -88,7 +89,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 					//TODO: vérifier que le user et le userid correspondent
 					String username = request.getParameter("user");
 					User user = dtp.GetAllUsersFromAUserName(username).get(0);
-					PasswordPolitic pwp = dtp.getPasswordPolitic();
+					PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
 					user.enabled =true;
 					user.changepw = pwp.changementBloquage;
 					dtp.UpdateUser(user);
@@ -101,7 +102,10 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			if(submit.equals("Supprimer")){
 				if(reauthentification){
 					//TODO: vérifier que le user et le userid correspondent
-					String username = request.getParameter("user");		
+					String username = request.getParameter("user");
+					User user = dtp.GetAllUsersFromAUserName(username).get(0);
+					dtp.RemoveUser(user.idUser);
+					
 					request.setAttribute("suppMessage", "Operation réuisse");	
 				}
 				else
@@ -112,7 +116,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 					String username = request.getParameter("user");
 					String type = request.getParameter("privilege");
 					User user = dtp.GetAllUsersFromAUserName(username).get(0);
-					PasswordPolitic pwp = dtp.getPasswordPolitic();
+					PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
 					user.roleId = Integer.parseInt(type);
 					dtp.UpdateUser(user);
 					request.setAttribute("privMessage", "Operation réuisse");	

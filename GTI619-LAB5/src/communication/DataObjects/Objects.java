@@ -83,7 +83,7 @@ public class Objects {
 		}
 	}
 	
-	public class PasswordPolitic{
+	public class PasswordLoginPolitic{
 		public int complexity;
 		public int max;
 		public int min;
@@ -91,9 +91,6 @@ public class Objects {
 		public boolean changementDepassement;
 		public boolean changementBloquage;
 		public int lastPasswords;
-	}
-	
-	public class LoginPolitic{
 		public int maxTentative;
 		public int delais;
 		public boolean bloquage2tentatives;

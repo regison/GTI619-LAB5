@@ -31,8 +31,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 		
 		if(request.getParameter("submit")!=null){
 			Objects bob = new Objects();
-			Objects.LoginPolitic lop = bob.new LoginPolitic();
-			Objects.PasswordPolitic pwp = bob.new PasswordPolitic();
+			Objects.PasswordLoginPolitic pwp = bob.new PasswordLoginPolitic();
 			
 			String hidden = request.getParameter("hidden");
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
@@ -41,9 +40,9 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 			}
 			
 			try{
-				lop.maxTentative = Integer.parseInt(request.getParameter("tentativeMax"));
-				lop.delais = Integer.parseInt(request.getParameter("delais"));
-				lop.bloquage2tentatives = request.getParameter("bloquage").equals("true");
+				pwp.maxTentative = Integer.parseInt(request.getParameter("tentativeMax"));
+				pwp.delais = Integer.parseInt(request.getParameter("delais"));
+				pwp.bloquage2tentatives = request.getParameter("bloquage").equals("true");
 				pwp.changementOublie = request.getParameter("changementOublie")!=null;
 				pwp.changementDepassement = request.getParameter("changementTentatives")!=null;
 				pwp.min = Integer.parseInt(request.getParameter("lmin"));
@@ -59,7 +58,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 					pwp.complexity+=8;
 				pwp.lastPasswords = Integer.parseInt(request.getParameter("tentativeMax"));
 				
-				if(dp.UpdatePolitics(pwp, lop))
+				if(dp.UpdatePolitics(pwp))
 					request.setAttribute("message", "Operation réussie");
 				else
 					request.setAttribute("message", "Operation Echouée");
