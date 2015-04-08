@@ -259,11 +259,22 @@ public class DataMapping implements IDataMapping {
 	}
 
 	@Override
-	public boolean UpdateUserRoleRights(int userid, int roleLevelId, int... rights) {
+	public boolean UpdateUserRoleLevel(RoleLevel rlevel) {
 		cnx.Open();
-		// TODO Auto-generated method stub
+
+		int toreturn = cnx.update(QueryFactory.UPDATE_USER_ROLELVEL, 
+				new String[] {rlevel.caneEditOwnAccount ? "1"  : "0",
+							  rlevel.canChangeMdp ? "1"  : "0", 
+							  rlevel.canEditAll ? "1"  : "0", 
+							  rlevel.canModifyDelay ? "1"  : "0", 
+							  rlevel.canModifynbTentative ? "1"  : "0", 
+							  rlevel.canModifyBlocage ? "1"  : "0", 
+							  rlevel.canModifyComplexiteMdp ? "1"  : "0" ,
+							  rlevel.idRoleLevel + ""});
 		cnx.Close();
-		return false;
+		
+		return toreturn == 1 ? true :  false;
+
 	}
 
 	@Override

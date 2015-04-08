@@ -59,7 +59,7 @@ public class DataProvider {
 		return data.GetAllUsersFromAUserName(userName);
 	}
 	
-	public Objects.User GetUserByUsername(String userName) {
+	public User GetUserByUsername(String userName) {
 		return data.GetUserByUsername(userName);
 	}
 	
@@ -84,14 +84,12 @@ public class DataProvider {
 
 	
 	public boolean UpdateUser(User user) {
-
 		return data.UpdateUser(user);
 	}
 
 	
-	public boolean UpdateUserRoleRights(int userid, int roleLevelId,
-			int... rights) {
-		return false;
+	public boolean UpdateUserRoleLevel(RoleLevel rlevel){
+		return data.UpdateUserRoleLevel(rlevel);
 	}
 	
 	public int UpdateLoginLogsByUserId(boolean incrementFailedLoginTriesCount, boolean loggedIn, long userFailedTriesCount,boolean LogoutNeeded, int user){
@@ -103,9 +101,7 @@ public class DataProvider {
 	}
 
 	public boolean CreateUser(String username, String password, int userType, String salt){
-
-		return data.CreateUser(username, password, userType, salt);
-		
+		return data.CreateUser(username, password, userType, salt);		
 	}
 	
 	public boolean UpdatePolitics(PasswordPolitic pwp, LoginPolitic lop){
