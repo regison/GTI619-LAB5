@@ -54,7 +54,7 @@ public class SecurityModulePassword {
 		//TODO
 	}
 	
-	public boolean updatePassword(int userid, String currenUserName, String newPassword){
+	public boolean updatePassword(int userid, String currenUserName,String oldPassword, String newPassword){
 		
 		DataProvider dp = new DataProvider(false);
 		User u = dp.GetUser(userid);
