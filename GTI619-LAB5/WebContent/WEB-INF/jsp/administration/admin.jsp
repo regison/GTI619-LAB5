@@ -2,7 +2,7 @@
     pageEncoding="ISO-8859-1" import="communication.DataMapping.DataProvider,communication.DataObjects.*,database.mysql.Mysql"%>
 <% 
 	DataProvider dp = new DataProvider();
-	Objects.PasswordPLoginolitic pwp = dp.getPasswordPLoginolitic();
+	Objects.PasswordLoginPolitic pwp = dp.getPasswordLoginPolitic();
 %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -29,7 +29,7 @@
                     <legend>Protection contre Brute Force</legend>
     
                     <label for="tentativeMax">Nombre de tentatives maximales :</label>
-                    <input type="text" id="tentativeMax" name="tentativeMax" value="<% out.print(lop.maxTentative); %>" size="5" onkeyup="validate('tentativeMax',0)"/>
+                    <input type="text" id="tentativeMax" name="tentativeMax" value="<% out.print(pwp.maxTentative); %>" size="5" onkeyup="validate('tentativeMax',0)"/>
                     <br />
                     <br />
                     
