@@ -45,7 +45,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			if (reauthentification) {
 				if ("Ajouter".equals(submit)) {
 						String username = request.getParameter("username");
-						String tpw = request.getParameter("tpassword");
+						String tpw = sendNewPassWord(request.getParameter("courriel"));
 						String type = request.getParameter("acces");
 
 						int newUserRole = 0;
@@ -79,8 +79,14 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 				}
 				else if (submit.equals("Modifier")) {
 						String username = request.getParameter("username");
-						String tpw = request.getParameter("tpassword");
+						String tpw = sendNewPassWord(request.getParameter("courriel"));
+						PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
 
+						User user = dtp.GetAllUsersFromAUserName(username).get(0);
+						user.changepw = pwp.changementOublie;
+						user.saltPassword = tpw;
+						
+						dtp.UpdateUser(user);
 						//TODO: Savoir ou mettre le mot de pass temporaire.
 						
 				} else if (submit.equals("Reactiver")) {
@@ -130,4 +136,15 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 		session.setAttribute("gestionUtilisateuriddenString", randomString);
 		return mapping.findForward(SUCCESS);
 	}
+	
+	/**
+	 * On simule le fait que ca envoie le mot de passe par courriel
+	 * @param courriel
+	 * @return
+	 */
+	private String sendNewPassWord(String courriel){
+		return new HiddenStringGenerator().generateRandomString().substring(3,23);
+	}
+	
+	
 }

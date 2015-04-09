@@ -5,8 +5,6 @@ import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
-import com.sun.org.apache.bcel.internal.generic.DMUL;
-
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.Log;
@@ -52,9 +50,9 @@ public class SecurityModuleCore {
 		return true;
 	}
 	
-	public boolean identifiedUserCanContinueAction(){
+	public boolean identifiedUserMustLogOut(){
 		
-		return true;
+		return user == null ? true : user.isLogOutNeeded;
 	}
 	
 	public void updateSuccessfullLoginTime(int userID){

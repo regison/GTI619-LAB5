@@ -6,6 +6,7 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
   <display-name>GTI619-LAB5</display-name>
   
  <session-config>
+     <session-timeout>5</session-timeout>
      <tracking-mode>COOKIE</tracking-mode>
  </session-config> 
 

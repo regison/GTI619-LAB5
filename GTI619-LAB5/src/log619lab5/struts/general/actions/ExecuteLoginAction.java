@@ -80,7 +80,9 @@ public class ExecuteLoginAction extends AbstractAction {
 				pageSection = Section.GENERAL;
 				return mapping.findForward("failure");
 			}
-
+			if(_currentUser.changepw){
+				return mapping.findForward("changepw");
+			}
 			_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 			_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);	
 
@@ -93,6 +95,10 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
+		// Login successful, instantiate old session and create a new one
+		session.invalidate();
+		session = request.getSession();
+
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);	
 
 		session.setAttribute("Username", _currentUser.name);
