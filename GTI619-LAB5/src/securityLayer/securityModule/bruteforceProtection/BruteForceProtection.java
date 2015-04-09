@@ -8,7 +8,7 @@ import communication.DataMapping.DataProvider;
 
 public class BruteForceProtection {
 	
-	public void manageLoginBruteForce(HttpSession session, long userFailedTriesCount){
+	public void manageLoginBruteForce(HttpSession session, long userFailedTriesCount, User attackedUser){
 		DataProvider dp = new DataProvider(false);
 		PasswordLoginPolitic lp = dp.getPasswordLoginPolitic();
 		if(session.getAttribute("failedLoginCount") == null){
@@ -26,8 +26,8 @@ public class BruteForceProtection {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				if(count >= lp.maxTentative * 2 && lp.bloquage2tentatives){
-					dp.RemoveUser(dp.GetAllUsersFromAUserName((String)session.getAttribute("Username")).get(0).idUser);
+				if(count >= lp.maxTentative * 2 && lp.bloquage2tentatives && attackedUser != null){
+					dp.RemoveUser(dp.GetAllUsersFromAUserName(attackedUser.name).get(0).idUser);
 				}
 			}
 		}

@@ -34,7 +34,16 @@ public class SecurityLayerDataBaseCommunication {
 		
 		try {
 			
-			dtp.GetLoginLogsByUserId(userID);
+			LoginLog ll = dtp.GetLoginLogsByUserId(userID);
+			if(ll == null)
+				return;
+			
+			this.userNeedToLogout = ll.logoutNeeded;
+			this.userIsLoggedIn = ll.loggedIn;
+			this.userFailedTriesCount = ll.failedTriesCount;
+			this.userLastLoginTime = ll.lastloginTime;
+			this.userID = ll.userId;
+			
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

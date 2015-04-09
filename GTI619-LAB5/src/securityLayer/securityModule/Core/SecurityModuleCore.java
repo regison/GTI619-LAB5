@@ -85,7 +85,7 @@ public class SecurityModuleCore {
 			incrementUnsuccessfullLogin();
 		}
 		BruteForceProtection bruteProtect = new BruteForceProtection();
-		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount());
+		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount(), user);
 	}
 	
 	public void manageUnsuccessfullLogin(String username){
@@ -93,6 +93,6 @@ public class SecurityModuleCore {
 			incrementUnsuccessfullLogin();
 		}
 		BruteForceProtection bruteProtect = new BruteForceProtection();
-		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount());
+		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount(), user);
 	}
 }

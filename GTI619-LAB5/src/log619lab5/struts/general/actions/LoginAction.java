@@ -26,7 +26,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		String randomString = generateHiddenRandomString();
 		request.setAttribute("hidden", randomString);
 		HttpSession session = request.getSession();
-		session.invalidate();
+		// Ne pas invalider! J'en ai besoin pour gérer le bruteforce session.invalidate();
 		session = request.getSession();
 		session.setAttribute("loginHiddenString", randomString);
 		session.setAttribute("Username", "");
