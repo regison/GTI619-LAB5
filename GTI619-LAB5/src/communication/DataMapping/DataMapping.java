@@ -508,6 +508,26 @@ public class DataMapping implements IDataMapping {
 
 	public PasswordLoginPolitic getPasswordLoginPolitic() {
 		PasswordLoginPolitic pwp =  new Objects().new PasswordLoginPolitic();
+
+		cnx.Open();
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_PASSWORDPOLITIC, null, "complexity","max","min","changementOublie", 
+				"changementDepassement", "changementBloquage", "lastPasswords", "maxTentative", "delais", "bloquage2tentatives");
+		cnx.Close();
+		 if (result.size() <= 0)
+			 return null;
+		
+		 int index = 0;
+		 pwp.complexity = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.max = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.min = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.changementOublie = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.changementDepassement = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.changementBloquage = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.lastPasswords = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.maxTentative = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.delais = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.bloquage2tentatives = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 
 		return pwp;
 	}
 

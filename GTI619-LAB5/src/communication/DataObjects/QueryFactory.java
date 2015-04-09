@@ -18,6 +18,8 @@ public class QueryFactory {
 	public static final String SELECT_USER_LOGINLOGS_BY_USERID = "SELECT * FROM LoginLogs WHERE idUser= ? ;"; 
 	public static final String SELECT_USER_PREVIOUS_PASSWORDS = "SELECT * FROM previousPasswords WHERE userID= ? ;";
 	
+	public static final String SELECT_PASSWORDPOLITIC = "SELECT * FROM PaswordPolitic WHERE idPasswordPolitic = '1';";
+	
 	//UPDATE SECTION	
 	public static final String UPDATE_LOGING_lOG = "UPDATE log619lab5.LoginLogs SET FailedTriesCount=? , LoggedIn=? , LogoutNeeded=? WHERE idUser=? ;";
 	public static final String UDPATE_USER_LAST_LOGIN_TIME = "UPDATE log619lab5. SET LastLoginTime= ? WHERE userID= ? ;";
