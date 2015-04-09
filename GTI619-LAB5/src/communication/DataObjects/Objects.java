@@ -110,6 +110,10 @@ public class Objects {
 		public int userID;
 		public String previousPassword;
 		public String ModifiedDate;
+		public int nbCryptIteration;
+		public String salt;
+		public int saltCounter;
+		public int cryptVersion;
 	}
 	public Objects() {
 		// TODO Auto-generated constructor stub

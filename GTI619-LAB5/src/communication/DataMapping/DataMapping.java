@@ -89,6 +89,31 @@ public class DataMapping implements IDataMapping {
 		}
 		return systemLogs;		
 	}
+	
+	/**
+	 * Returns all logs from the system
+	 * @return
+	 */
+	public ArrayList<Log> mostRecentLogs() {
+		cnx.Open();
+		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_10_MOST_RECENT_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
+		ArrayList<Log> systemLogs = null;
+		cnx.Close();
+		if (systemLogMappingObject.size() > 0 || systemLogMappingObject != null){
+			systemLogs = new ArrayList<Log>();
+			
+			for (ArrayList<Object> log : systemLogMappingObject){
+				Log logToAdd = new Objects().new Log();
+				logToAdd.logId = Integer.parseInt(log.get(0).toString());
+				logToAdd.logName = log.get(1).toString();
+				logToAdd.logDate =log.get(2).toString();
+				logToAdd.userLogId = Integer.parseInt(log.get(3).toString());
+				
+				systemLogs.add(logToAdd);
+			}	
+		}
+		return systemLogs;		
+	}
 
 	/**
 	 * Return an array of all roles in the DB
@@ -241,7 +266,35 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean UpdateUser(User user) {
 		cnx.Open();
-		
+		cnx.update(QueryFactory.UPDATE_USER, 
+				new String[] {user.name, user.roleId + "", user.nbCryptIteration + "", 
+				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled + "", user.crypVersion + ""});
+		cnx.Close();
+		return false;
+	}
+	
+	public boolean UpdateUserPassword(User user, String password) {
+		String query = QueryFactory.UPDATE_USER_PASSWORD_PART1;
+		for (int i = 1; i < user.nbCryptIteration; i++) {
+			query += "SHA2(";
+		}
+		query += "'";
+		for (int i = 0; i < user.saltCounter; i++) {
+			query += user.salt;
+		}
+		query += "'?'";
+		for (int i = 0; i < user.saltCounter; i++) {
+			query += user.salt;
+		}
+		query += "'";
+		for (int i = 1; i < user.nbCryptIteration; i++) {
+			query += ", 512)";
+		}
+		query += ", 512)";
+		query += QueryFactory.UPDATE_USER_PASSWORD_PART2;
+		cnx.Open();
+		cnx.update(query, 
+				new String[] { password, user.idUser + "" });
 		cnx.Close();
 		return false;
 	}
@@ -534,7 +587,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_PREVIOUS_PASSWORDS, new String[] {userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified");
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_ALL_USER_PREVIOUS_PASSWORDS, new String[] {userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
 		cnx.Close();
 		 if (result.size() <= 0)
 			 return null;
@@ -551,6 +604,10 @@ public class DataMapping implements IDataMapping {
 					pPwd.userID = Integer.parseInt(obj.get(1).toString());
 					pPwd.previousPassword = obj.get(2).toString();
 					pPwd.ModifiedDate = obj.get(3).toString();
+					pPwd.nbCryptIteration = Integer.parseInt(obj.get(4).toString());
+					pPwd.salt = obj.get(5).toString();
+					pPwd.saltCounter = Integer.parseInt(obj.get(6).toString());
+					pPwd.cryptVersion = Integer.parseInt(obj.get(7).toString());
 					
 					upp.add(pPwd);
 				}	
@@ -560,12 +617,11 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean CreatePreviousPasswordHistory(PreviousPassword pp) {
 		cnx.Open();
-		
 		int value = cnx.insert(QueryFactory.INSERT_PREVIOUS_PASSWORD, 
-				new String[] { String.valueOf(pp.userID), pp.previousPassword, pp.ModifiedDate });
+				new String[] { String.valueOf(pp.userID), pp.previousPassword, pp.ModifiedDate, pp.nbCryptIteration + "", pp.salt, pp.saltCounter + "", pp.cryptVersion + "" });
 		cnx.Close();
 
-		return false;
+		return true;
 	}
 	@Override
 	public boolean UpdateUserPassword(int userid, String oldPassword, String password) {
@@ -606,5 +662,36 @@ public class DataMapping implements IDataMapping {
 			return false;
 		}
 		return true;
+	}
+	
+	public ArrayList<PreviousPassword> selectAllPreviousPasswordsUnauthorised(int userid, String oldPassword){
+		PasswordLoginPolitic plp = getPasswordLoginPolitic();
+		cnx.Open();
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS, new String[] {userid + "", plp.lastPasswords + "", userid + "", oldPassword}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
+		cnx.Close();
+		 if (result.size() <= 0)
+			 return null;
+		 
+		 ArrayList<PreviousPassword> upp = new ArrayList<PreviousPassword>();
+		 	if (result.size() > 0){
+				
+				PreviousPassword pPwd = null ;
+				
+				for(ArrayList<Object> obj : result){
+					pPwd = new Objects().new PreviousPassword();
+					
+					pPwd.idPreviousPassword = Integer.parseInt(obj.get(0).toString());
+					pPwd.userID = Integer.parseInt(obj.get(1).toString());
+					pPwd.previousPassword = obj.get(2).toString();
+					pPwd.ModifiedDate = obj.get(3).toString();
+					pPwd.nbCryptIteration = Integer.parseInt(obj.get(4).toString());
+					pPwd.salt = obj.get(5).toString();
+					pPwd.saltCounter = Integer.parseInt(obj.get(6).toString());
+					pPwd.cryptVersion = Integer.parseInt(obj.get(7).toString());
+					
+					upp.add(pPwd);
+				}	
+		}
+		return upp;
 	}
 }

@@ -6,11 +6,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
-import communication.DataObjects.Objects.Log;
-import communication.DataObjects.Objects.User;
-import communication.DataObjects.Objects.PasswordLoginPolitic;
+import communication.DataObjects.Objects.*;
 import database.mysql.Mysql;
 
 public class SecurityModulePassword {
@@ -65,10 +64,46 @@ public class SecurityModulePassword {
 		
 		DataProvider dp = new DataProvider(false);
 		User u = dp.GetUser(userid);
+		
+		dp.selectAllPreviousPasswordsUnauthorised(u.idUser, oldPassword);
+	
+		if(dp.selectAllPreviousPasswordsUnauthorised(u.idUser, oldPassword).size() > 1)
+			return false;
+		
+		Objects obj = new Objects();
+		PreviousPassword pp = obj.new PreviousPassword();
+		pp.userID = u.idUser;
+		pp.previousPassword = u.saltPassword;
+		pp.ModifiedDate = new SimpleDateFormat().format(new Date());
+		pp.nbCryptIteration = u.nbCryptIteration;
+		pp.salt = u.salt;
+		pp.saltCounter = u.saltCounter;
+		pp.cryptVersion = u.crypVersion;
+		dp.CreatePreviousPasswordHistory(pp);
+		
+		
 		//Dependement du user on va lui set un saltcounter
-		u.saltCounter = 0;
-		//on va salter sur le nouveau password (selon le rolelevel)
-		u.saltPassword = newPassword;
+		u.saltCounter = (int) Math.floor (Math.random() * (1 + 10 - 1)) + 1;
+		u.nbCryptIteration = (int) Math.floor (Math.random() * (1 + 10 - 5)) + 5;
+		u.salt = generateHiddenRandomString();
+				
+		String saltPwdBuilder = "SHA2(";
+		for(int i = 1; i < u.nbCryptIteration; i++){
+			saltPwdBuilder += "SHA2(";
+		}
+		saltPwdBuilder += "'";
+		for(int i = 0; i < u.saltCounter; i++){
+			saltPwdBuilder += u.salt;
+		}
+		saltPwdBuilder += "'?'";
+		for(int j = 0; j < u.saltCounter; j++){
+			saltPwdBuilder += u.salt;
+		}
+		saltPwdBuilder += "'";
+		for(int i = 1; i < u.nbCryptIteration; i++){
+			saltPwdBuilder += ", 512)";
+		}
+		saltPwdBuilder += ", 512));";
 		
 		u.ModifiedBy = currenUserName;
 		u.ModifiedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());		
@@ -76,5 +111,10 @@ public class SecurityModulePassword {
 		return dp.UpdateUser(u);
 		//TODO
 		 
+	}
+	
+	public String generateHiddenRandomString(){
+		HiddenStringGenerator hiddenGenerator = new HiddenStringGenerator();
+		return hiddenGenerator.generateRandomString();
 	}
 }

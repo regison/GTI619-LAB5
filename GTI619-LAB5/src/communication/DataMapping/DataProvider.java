@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import securityLayer.securityModule.Core.SecurityModuleCore;
 import communication.DataObjects.Objects;
+import communication.DataObjects.QueryFactory;
 import communication.DataObjects.Objects.*;
 /**
  * Classe qui doit etre appelé par les modules externes
@@ -36,6 +37,11 @@ public class DataProvider {
 	public ArrayList<Log> getLogs(){
 	  return data.Logs();
 	}
+	
+	//Select 10 most recent logs from db	
+		public ArrayList<Log> getMostRecentLogs(){
+		  return data.mostRecentLogs();
+		}
 	
 	public User GetUser(int userid){
 		return data.GetUserByID(userid);
@@ -109,6 +115,12 @@ public class DataProvider {
 		return data.RemoveUser(userid);
 	}
 
-  
+	public boolean CreatePreviousPasswordHistory(PreviousPassword pp) {
+		return data.CreatePreviousPasswordHistory(pp);
+	}
+	
+	public ArrayList<PreviousPassword> selectAllPreviousPasswordsUnauthorised(int userid, String oldPassword){
+		return data.selectAllPreviousPasswordsUnauthorised(userid, oldPassword);
+	}
 }
 

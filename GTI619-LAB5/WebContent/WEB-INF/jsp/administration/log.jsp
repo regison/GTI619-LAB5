@@ -26,10 +26,10 @@
   		DataProvider dp = new DataProvider(true);
    		Objects.User u;
    		Objects.Role r;
-   		ArrayList<Objects.Log> logs = dp.getLogs();
+   		ArrayList<Objects.Log> logs = dp.getMostRecentLogs();
    	
    		
-  		for(int i = logs.size() - 1; i >= logs.size() - 10; i--){
+  		for(int i = 0; i < logs.size(); i++){
   			Objects.Log data = logs.get(i);
   			
   			u = dp.GetUser(data.userLogId);
