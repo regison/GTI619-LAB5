@@ -5,11 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import securityLayer.securityModule.Core.SecurityModuleCore;
 import log619lab5.domain.enumType.Section;
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.LoginLog;
+import communication.DataObjects.Objects.PasswordLoginPolitic;
 import communication.DataObjects.Objects.PreviousPassword;
+import communication.DataObjects.Objects.User;
 import communication.DataObjects.QueryFactory;
 import database.mysql.Mysql;
 
@@ -93,7 +96,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<Role> Roles() {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idog", "LogAction", "LogDate", "LogUserId");
+		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idRole", "roleLevelId", "roleName", "timeConnexion");
 		ArrayList<Role> roles = null;
 		
 		if (rolesMapping.size() > 0 || rolesMapping != null){
@@ -359,11 +362,13 @@ public class DataMapping implements IDataMapping {
 	}
 
 	@Override
-	public User AuthenticateUser(String uname, String pwd) {
+	public User AuthenticateUser(String uname, String pwd, SecurityModuleCore secMod) {
 		
 		Objects.User user = GetUserByUsername(uname);
 		
 		if (user != null){
+			if(secMod != null)
+				secMod.setUser(user);
 			String query = QueryFactory.SELECT_USER_BY_UNAME_PWD;
 			for (int i = 1; i < user.nbCryptIteration; i++) {
 				query += "SHA2(";
@@ -441,7 +446,7 @@ public class DataMapping implements IDataMapping {
 	}	
 	
 	@Override
-	public boolean CreateUser(String username, String password, int userType, String salt) {
+	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser) {
 		boolean isUserNameExist = true;
 		cnx.Open();
 		User sameUsernameUser = GetUserByUsername(username);
@@ -479,9 +484,9 @@ public class DataMapping implements IDataMapping {
 			}
 			saltPwdBuilder += ", 512));";
 			
-			user.CreateBy = "currentUser";
+			user.CreateBy = actualUser;
 			user.CreateDate = new SimpleDateFormat().format(new Date());
-			user.ModifiedBy = "currentUSer";
+			user.ModifiedBy = actualUser;
 			user.ModifiedDate = new SimpleDateFormat().format(new Date());
 			user.isAuthenticated = false;
 			user.enabled = true;
@@ -503,6 +508,26 @@ public class DataMapping implements IDataMapping {
 
 	public PasswordLoginPolitic getPasswordLoginPolitic() {
 		PasswordLoginPolitic pwp =  new Objects().new PasswordLoginPolitic();
+
+		cnx.Open();
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_PASSWORDPOLITIC, null, "complexity","max","min","changementOublie", 
+				"changementDepassement", "changementBloquage", "lastPasswords", "maxTentative", "delais", "bloquage2tentatives");
+		cnx.Close();
+		 if (result.size() <= 0)
+			 return null;
+		
+		 int index = 0;
+		 pwp.complexity = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.max = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.min = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.changementOublie = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.changementDepassement = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.changementBloquage = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.lastPasswords = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.maxTentative = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.delais = Integer.parseInt(result.get(0).get(index++).toString());
+		 pwp.bloquage2tentatives = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 
 		return pwp;
 	}
 
@@ -550,16 +575,13 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean RemoveUser(int userid) {
 
-	
-		
 		User user = GetUserByID(userid);
 		
 		if (user != null)
 		{
 			System.out.println("user exists");
-			//Un utilisateur connecté ne doit pas se supprimer lui-meme
-			if (user.isAuthenticated)
-				return false;
+			
+			//Un utilisateur peu être connecté et se faire disable. À ce moment là, il faut vérifier dans abstract action.
 	
 			cnx.Open();
 			//int value = cnx.delete(QueryFactory.DELETE_USER, new String[] { userid + ""});
@@ -568,9 +590,21 @@ public class DataMapping implements IDataMapping {
 			cnx.Close();
 			return true;
 		}
-		cnx.Close();
 		return false;
 	}
 
-	
+	@Override
+	public boolean UpdatePolitics(PasswordLoginPolitic pwp){
+		try{
+			cnx.Open();
+			System.out.println(cnx.delete(QueryFactory.UPDAE_PASSWORDPOLITIC, new String[] { pwp.complexity + "", pwp.max + "", pwp.min + "", 
+					pwp.changementOublie == true ? "1" : "0", pwp.changementDepassement == true ? "1" : "0", pwp.changementBloquage == true ? "1" : "0", pwp.lastPasswords + "", pwp.maxTentative + ""
+							, pwp.delais + "", pwp.bloquage2tentatives == true ? "1" : "0" }));
+			cnx.Close();
+		}
+		catch(Exception ex){
+			return false;
+		}
+		return true;
+	}
 }

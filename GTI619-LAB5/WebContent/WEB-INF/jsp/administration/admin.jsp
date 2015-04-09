@@ -33,8 +33,8 @@
                     <br />
                     <br />
                     
-                    <label for="delais">Delais en cas d'atteinte du nombre maximal :</label>
-                    <input type="text" id="delais" name="delais" value="<% out.print(pwp.delais); %>" size="5" onkeyup="validate('delais',0)"/>secondes
+                    <label for="delais">Delais exponentiel en cas d'atteinte du nombre maximal :</label>
+                    <input type="text" id="delais" name="delais" value="<% out.print(pwp.delais); %>" size="5" onkeyup="validate('delais',0)"/>e degré
                      <br />
                      <br />
                     

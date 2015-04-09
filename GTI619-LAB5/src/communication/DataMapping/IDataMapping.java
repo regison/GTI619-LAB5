@@ -2,6 +2,8 @@ package communication.DataMapping;
 
 import java.util.ArrayList;
 
+import securityLayer.securityModule.Core.SecurityModuleCore;
+import communication.DataObjects.Objects.PasswordLoginPolitic;
 import communication.DataObjects.Objects.*;
 
 public interface IDataMapping{	
@@ -11,7 +13,7 @@ public interface IDataMapping{
 	User GetUserByID(int userid);
 	User GetUserByUsername(String uname);
 	
-	User AuthenticateUser(String uname, String pwd);	
+	User AuthenticateUser(String uname, String pwd, SecurityModuleCore secMod);	
 	Role GetRole(int roleid);
 	RoleLevel GetRoleLevel (int rolelevelid);	
 	LoginLog GetLoginLogsByUserId(int userid);
@@ -19,7 +21,7 @@ public interface IDataMapping{
 	
 	boolean CreateLog(Log event, boolean byPass);
 	boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog);
-	boolean CreateUser(String username, String password, int userType, String salt);
+	boolean CreateUser(String username, String password, int userType, String salt, String actualUser);
 	boolean CreatePreviousPasswordHistory(PreviousPassword pp);
 	
 	boolean UpdateUser(User user);
@@ -29,7 +31,6 @@ public interface IDataMapping{
 	
 	
 	boolean RemoveUser(int userid);
-	
-	
+	boolean UpdatePolitics(PasswordLoginPolitic pwp);
 	
 }

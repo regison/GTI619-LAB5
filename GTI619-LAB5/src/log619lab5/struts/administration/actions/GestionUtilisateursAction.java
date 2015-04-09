@@ -41,89 +41,88 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			{
 				return mapping.findForward("AccessDenied");
 			}	
-			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("Username"), pw) !=null;
-			if("Ajouter".equals(submit)){
-				if(reauthentification){
-					String username = request.getParameter("username");
-					String tpw = request.getParameter("tpassword");
-					String type = request.getParameter("acces");
-					
-					int newUserRole = 0;
-					int userlevel = 0;
-					
-					switch (type){
-					case "admin" 	: userlevel = Section.ADMIN.ordinal() + 1;
-						break;
-					case "cercle" 	: userlevel = Section.CERCLE.ordinal() + 1;
-						break;
-					case "carre" 	: userlevel = Section.CARRE.ordinal() + 1;
-						break;			
-					}
-					String salt = new HiddenStringGenerator().generateRandomString();			
-					
-					//TODO: Vérifier avec la politique de mot de passe
-					boolean check = dtp.CreateUser(username, tpw, userlevel, salt);
-					
-					if (check)			
-						request.setAttribute("ajoutMessage", "Operation réuisse");
-					else
-						request.setAttribute("ajoutMessage", "Cet utilisateur existe déjà");
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("Username"), pw, null) !=null;
+			if (reauthentification) {
+				if ("Ajouter".equals(submit)) {
+						String username = request.getParameter("username");
+						String tpw = request.getParameter("tpassword");
+						String type = request.getParameter("acces");
+
+						int newUserRole = 0;
+						int userlevel = 0;
+
+						switch (type) {
+						case "admin":
+							userlevel = Section.ADMIN.ordinal() + 1;
+							break;
+						case "cercle":
+							userlevel = Section.CERCLE.ordinal() + 1;
+							break;
+						case "carre":
+							userlevel = Section.CARRE.ordinal() + 1;
+							break;
+						}
+						String salt = new HiddenStringGenerator()
+								.generateRandomString();
+
+						//TODO: Vérifier avec la politique de mot de passe
+						boolean check = dtp.CreateUser(username, tpw,
+								userlevel, salt,
+								(String) session.getAttribute("Username"));
+
+						if (check)
+							request.setAttribute("ajoutMessage",
+									"Operation réuisse");
+						else
+							request.setAttribute("ajoutMessage",
+									"Cet utilisateur existe déjà");
 				}
-				else
-					request.setAttribute("ajoutMessage", "Mauvais mot de Passe ");
-			}
-			
-			if(submit.equals("Modifier")){
-				if(reauthentification){
-					String username = request.getParameter("username");
-					String tpw = request.getParameter("tpassword");
+				else if (submit.equals("Modifier")) {
+						String username = request.getParameter("username");
+						String tpw = request.getParameter("tpassword");
+
+						//TODO: Savoir ou mettre le mot de pass temporaire.
+						
+				} else if (submit.equals("Reactiver")) {
 					
-					//TODO: Savoir ou mettre le mot de pass temporaire.
-					
-					
+						//TODO: vérifier que le user et le userid correspondent
+						String username = request.getParameter("user");
+						User user = dtp.GetAllUsersFromAUserName(username).get(
+								0);
+						PasswordLoginPolitic pwp = dtp
+								.getPasswordLoginPolitic();
+						user.enabled = true;
+						user.changepw = pwp.changementBloquage;
+						dtp.UpdateUser(user);
+						request.setAttribute("activateMessage",
+								"Operation réuisse");
 				}
-				
-			}
-			if(submit.equals("Reactiver")){
-				if(reauthentification){
-					//TODO: vérifier que le user et le userid correspondent
-					String username = request.getParameter("user");
-					User user = dtp.GetAllUsersFromAUserName(username).get(0);
-					PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
-					user.enabled =true;
-					user.changepw = pwp.changementBloquage;
-					dtp.UpdateUser(user);
-					request.setAttribute("activateMessage", "Operation réuisse");
+
+				else if (submit.equals("Supprimer")) {
+						//TODO: vérifier que le user et le userid correspondent
+						String username = request.getParameter("user");
+						if (!session.getAttribute("Username").equals(username)) {
+							User user = dtp.GetAllUsersFromAUserName(username)
+									.get(0);
+							dtp.RemoveUser(user.idUser);
+
+							request.setAttribute("suppMessage",
+									"Operation réuisse");
+						}
+				} else if (submit.equals("Valider")) {
+						String username = request.getParameter("user");
+						String type = request.getParameter("privilege");
+						User user = dtp.GetAllUsersFromAUserName(username).get(
+								0);
+						PasswordLoginPolitic pwp = dtp
+								.getPasswordLoginPolitic();
+						user.roleId = Integer.parseInt(type);
+						dtp.UpdateUser(user);
+						request.setAttribute("privMessage", "Operation réuisse");
 				}
-				else
-					request.setAttribute("activateMessage", "Mauvais mot de Passe ");				
 			}
-			
-			if(submit.equals("Supprimer")){
-				if(reauthentification){
-					//TODO: vérifier que le user et le userid correspondent
-					String username = request.getParameter("user");
-					User user = dtp.GetAllUsersFromAUserName(username).get(0);
-					dtp.RemoveUser(user.idUser);
-					
-					request.setAttribute("suppMessage", "Operation réuisse");	
-				}
-				else
-					request.setAttribute("suppMessage", "Mauvais mot de Passe ");			
-			}
-			if(submit.equals("Valider")){
-				if(reauthentification){
-					String username = request.getParameter("user");
-					String type = request.getParameter("privilege");
-					User user = dtp.GetAllUsersFromAUserName(username).get(0);
-					PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
-					user.roleId = Integer.parseInt(type);
-					dtp.UpdateUser(user);
-					request.setAttribute("privMessage", "Operation réuisse");	
-				}
-				else
-					request.setAttribute("privMessage", "Mauvais mot de Passe ");			
-			}
+			else
+				request.setAttribute("ajoutMessage", "Mauvais mot de Passe ");
 		}
 		
 		String randomString = generateHiddenRandomString();

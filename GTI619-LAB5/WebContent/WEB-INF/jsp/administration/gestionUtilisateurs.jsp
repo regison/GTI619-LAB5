@@ -52,7 +52,7 @@
               	<% 
               		dp = new DataProvider();
               		for(Objects.User data : dp.Users()){
-              			out.println("<option value=\"" + data.idUser + "\">" + data.name + " " + data.idUser + "</option>");
+              			out.println("<option value=\"" + data.idUser + "\">" + data.name + "</option>");
               		}
               	
               	%>
@@ -87,7 +87,7 @@
               	<% 
               		dp = new DataProvider();
               		for(Objects.User data : dp.Users()){
-              			out.println("<option value=\"" + data.idUser + "\">" + data.name + " " + data.idUser + "</option>");
+              			out.println("<option value=\"" + data.idUser + "\">" + data.name + "</option>");
               		}
               	
               	%>
@@ -115,7 +115,7 @@
               <select name="user">
               	<% 
               		for(Objects.User data : dp.Users()){
-              			out.println("<option value=\"" + data.idUser + "\">" + data.name + " " + data.idUser + "</option>");
+              			out.println("<option value=\"" + data.idUser + "\">" + data.name + "</option>");
               		}
               	
               	%>
