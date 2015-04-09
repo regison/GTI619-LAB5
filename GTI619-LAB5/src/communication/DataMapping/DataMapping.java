@@ -502,14 +502,12 @@ public class DataMapping implements IDataMapping {
 	}
 
 	public PasswordLoginPolitic getPasswordLoginPolitic() {
-		// TODO Auto-generated method stub
 		PasswordLoginPolitic pwp =  new Objects().new PasswordLoginPolitic();
 		return pwp;
 	}
 
 	@Override
 	public ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid) {
-		// TODO Auto-generated method stub
 		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_PREVIOUS_PASSWORDS, new String[] {userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified");
 		cnx.Close();

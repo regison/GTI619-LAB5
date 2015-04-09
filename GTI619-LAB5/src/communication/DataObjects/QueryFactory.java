@@ -29,5 +29,5 @@ public class QueryFactory {
 	public static final String INSERT_LOGINLOG = "INSERT INTO LoginLogs (idUser, FailedTriesCount, LoggedIn, LogoutNeeded) VALUES ( ? , ? , ? , ? );";
 	public static final String INSERT_PREVIOUS_PASSWORD = "INSERT INTO previousPasswords Values ( ? ,? ,? ,? )";
 
-	public static final String DELETE_USER = "DELETE FROM User WHERE idUser = ?;";
+	public static final String DELETE_USER = "UPDATE User SET enabled = 0 WHERE idUser= ? ;";
 }
