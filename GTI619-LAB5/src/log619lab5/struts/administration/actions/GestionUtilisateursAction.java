@@ -93,9 +93,8 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 				} else if (submit.equals("Reactiver")) {
 					
 						//TODO: vérifier que le user et le userid correspondent
-						String username = request.getParameter("user");
-						User user = dtp.GetAllUsersFromAUserName(username).get(
-								0);
+					int userID = Integer.parseInt(request.getParameter("user"));
+					User user = dtp.GetUser(userID);
 						PasswordLoginPolitic pwp = dtp
 								.getPasswordLoginPolitic();
 						user.enabled = true;
@@ -116,10 +115,9 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 									"Operation réuisse");
 						}
 				} else if (submit.equals("Valider")) {
-						String username = request.getParameter("user");
+						int userID = Integer.parseInt(request.getParameter("user"));
 						String type = request.getParameter("privilege");
-						User user = dtp.GetAllUsersFromAUserName(username).get(
-								0);
+						User user = dtp.GetUser(userID);
 						PasswordLoginPolitic pwp = dtp
 								.getPasswordLoginPolitic();
 						user.roleId = Integer.parseInt(type);
