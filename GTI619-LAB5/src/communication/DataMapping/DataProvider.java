@@ -122,5 +122,9 @@ public class DataProvider {
 	public ArrayList<PreviousPassword> selectAllPreviousPasswordsUnauthorised(int userid, String oldPassword){
 		return data.selectAllPreviousPasswordsUnauthorised(userid, oldPassword);
 	}
+	
+	public boolean UpdateUserPassword(User user, String password){
+		return data.UpdateUserPassword(user, password);
+	}
 }
 
