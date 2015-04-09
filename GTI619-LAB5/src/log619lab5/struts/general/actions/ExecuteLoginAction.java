@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -43,8 +44,8 @@ public class ExecuteLoginAction extends AbstractAction {
 
 		HttpSession session = request.getSession();
 		
-		session.setAttribute("Username", "");
-		session.setAttribute("Role", "");
+		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
+		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
 		
 		securityModule = new SecurityModuleCore(null, session);
 		
@@ -54,11 +55,11 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		request.setAttribute("Page", PAGE);
+		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		
-		String hidden = request.getParameter("hidden");
-		String random = session.getAttribute("loginHiddenString").toString();
-		session.setAttribute("loginHiddenString", "");
+		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
+		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
+		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
 		
 		if(hidden.equals("") || !hidden.equals(random)){
 			loginFailedLogic();
@@ -105,10 +106,10 @@ public class ExecuteLoginAction extends AbstractAction {
 		session.invalidate();
 		session = request.getSession();	
 
-		session.setAttribute("Username", _currentUser.name);
-		session.setAttribute("Role", _currentUser.role.roleName);
-		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
-		session.setAttribute("idUser", _currentUser.idUser);
+		session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
+		session.setAttribute(SessionAttributeIdentificator.ROLE, _currentUser.role.roleName);
+		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, Calendar.getInstance().getTimeInMillis());
+		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 		
 		if(_currentUser.role == null){
 			pageSection = Section.GENERAL;

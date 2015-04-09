@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -28,20 +29,20 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("Page", PAGE);
+		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		HttpSession session = request.getSession();
 		String submit= request.getParameter("submit");
 		
 		dtp = new DataProvider(false);
 		
 		if(submit != null){
-			String hidden = request.getParameter("hidden");
+			String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
 			String pw = request.getParameter("password");
-			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("gestionUtilisateuriddenString")) )
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING)) )
 			{
 				return mapping.findForward("AccessDenied");
 			}	
-			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("Username"), pw, null) !=null;
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute(SessionAttributeIdentificator.USERNAME), pw, null) !=null;
 			if (reauthentification) {
 				if ("Ajouter".equals(submit)) {
 						String username = request.getParameter("username");
@@ -68,7 +69,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						
 						boolean check = dtp.CreateUser(username, tpw,
 								userlevel, salt,
-								(String) session.getAttribute("Username"));
+								(String) session.getAttribute(SessionAttributeIdentificator.USERNAME));
 
 						if (check)
 							request.setAttribute("ajoutMessage",
@@ -106,10 +107,9 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 
 				else if (submit.equals("Supprimer")) {
 						//TODO: vérifier que le user et le userid correspondent
-						String username = request.getParameter("user");
-						if (!session.getAttribute("Username").equals(username)) {
-							User user = dtp.GetAllUsersFromAUserName(username)
-									.get(0);
+						int userID = Integer.parseInt(request.getParameter("user"));
+						if (!session.getAttribute(SessionAttributeIdentificator.IDUSER).equals(userID)) {
+							User user = dtp.GetUser(userID);
 							dtp.RemoveUser(user.idUser);
 
 							request.setAttribute("suppMessage",
@@ -132,8 +132,8 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 		}
 		
 		String randomString = generateHiddenRandomString();
-		request.setAttribute("hidden", randomString);
-		session.setAttribute("gestionUtilisateuriddenString", randomString);
+		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		session.setAttribute(SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING, randomString);
 		return mapping.findForward(SUCCESS);
 	}
 	

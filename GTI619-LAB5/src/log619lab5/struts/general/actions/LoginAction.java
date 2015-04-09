@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -22,18 +23,18 @@ public class LoginAction extends AbstractAction {
 	
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("Page", PAGE);
+		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		String randomString = generateHiddenRandomString();
-		request.setAttribute("hidden", randomString);
+		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
 		HttpSession session = request.getSession();
 		// Ne pas invalider! J'en ai besoin pour gérer le bruteforce session.invalidate();
 		session = request.getSession();
-		session.setAttribute("loginHiddenString", randomString);
-		session.setAttribute("Username", "");
-		session.setAttribute("Role", "");
-		session.setAttribute("idUser", "");
-		session.setAttribute("LastLoggedInActionTime", "");
-		request.getSession().setAttribute("from", "Login");
+		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, randomString);
+		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
+		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
+		session.setAttribute(SessionAttributeIdentificator.IDUSER, "");
+		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, "");
+		request.getSession().setAttribute(SessionAttributeIdentificator.FROM, "Login");
 		return mapping.findForward(SUCCESS);
     }
 

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpSession;
 
+import log619lab5.struts.SessionAttributeIdentificator;
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.Log;
@@ -60,7 +61,7 @@ public class SecurityModuleCore {
 		dtp = new DataProvider(false);
 		
 		try {	
-			session.setAttribute("failedLoginCount", "0");
+			session.setAttribute(SessionAttributeIdentificator.FAILEDLOGINCOUNT, "0");
 			dbComm.UpdateUserInfo(userID, false, true, false);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -24,7 +25,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("Page", PAGE);
+		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		HttpSession session = request.getSession();
 		
 		DataProvider dp = new DataProvider(false);
@@ -34,7 +35,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 			Objects.PasswordLoginPolitic pwp = bob.new PasswordLoginPolitic();
 			
 			String hidden = request.getParameter("hidden");
-			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING)))
 			{
 				return mapping.findForward(FAILURE);
 			}
@@ -70,9 +71,9 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 		
 		
 		String randomString = generateHiddenRandomString();
-		request.setAttribute("hidden", randomString);
-		session.setAttribute("adminHiddenString", randomString);
-		session.setAttribute("from", "AdminPage");
+		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		session.setAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING, randomString);
+		session.setAttribute(SessionAttributeIdentificator.FROM, "AdminPage");
 		
 		return mapping.findForward(SUCCESS);
     }

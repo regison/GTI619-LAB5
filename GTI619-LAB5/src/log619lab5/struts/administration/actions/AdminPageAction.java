@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -24,9 +25,9 @@ public class AdminPageAction extends AbstractAdminAction {
 		
 		
 		String randomString = generateHiddenRandomString();
-		request.setAttribute("hidden", randomString);
-		request.getSession().setAttribute("adminHiddenString", randomString);
-		request.getSession().setAttribute("from", "AdminPage");
+		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		request.getSession().setAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING, randomString);
+		request.getSession().setAttribute(SessionAttributeIdentificator.FROM, "AdminPage");
 		return mapping.findForward("success");
 	}
 }
