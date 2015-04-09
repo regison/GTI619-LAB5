@@ -22,7 +22,7 @@ public class QueryFactory {
 	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part1 = "SELECT * FROM (SELECT * FROM log619lab5.previousPasswords WHERE userID = ? ORDER BY idpreviousPasswords DESC LIMIT ";
 	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part2 = " ) AS t WHERE userID = ?";
 	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_Part1 = "SELECT * FROM (SELECT * FROM log619lab5.previousPasswords WHERE userID = ? ORDER BY idpreviousPasswords DESC LIMIT ";
-	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_Part2 = " ) AS t WHERE userID = ? AND previousPassword = ";
+	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_Part2 = " ) AS t WHERE userID = ? AND previousPassword = SHA2(";
 	
 	public static final String SELECT_PASSWORDPOLITIC = "SELECT * FROM PaswordPolitic WHERE idPasswordPolitic = '1';";
 	
@@ -32,7 +32,7 @@ public class QueryFactory {
 	public static final String UPDATE_USER_ROLELVEL = "UPDATE RoleLevel SET caneEditOwnAccount=? , canChangeMdp=? , canEditAll=?, canModifyDelay=?, canModifynbTentative=?, canModifyBlocage=?, canModifyComplexiteMdp=?   WHERE idRoleLevel=? ;";
 	public static final String UPDAE_PASSWORDPOLITIC = "UPDATE PaswordPolitic SET complexity = ? , max = ? , min = ? , changementOublié = ? , changementDepassement = ? , changementBloquage = ? , lastPasswords = ? , maxTentative = ? , delais = ? , bloquage2Tentatives = ? WHERE idPasswordPolitic = '1';";
 	public static final String UPDATE_USER = "UPDATE `log619lab5`.`User` SET `name`= ? , `roleId`= ? , `ndMd5Iteration`= ? , `ModifiedDate`= ? , `ModifiedBy`= ? , `CreateDate`= ? , `CreateBy`= ? , `saltNumber`= ? , `saltCounter`= ? , `enabled`= ? , `cryptVersion`= ?  WHERE `idUser`= ? ;";
-	public static final String UPDATE_USER_PASSWORD_PART1 = "UPDATE `log619lab5`.`User` SET `saltPassword`= ";
+	public static final String UPDATE_USER_PASSWORD_PART1 = "UPDATE `log619lab5`.`User` SET `saltPassword`= SHA2(";
 	public static final String UPDATE_USER_PASSWORD_PART2 = " WHERE `idUser`= ? ;";
 	
 	//INSERT SECTION	

@@ -268,7 +268,7 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		cnx.update(QueryFactory.UPDATE_USER, 
 				new String[] {user.name, user.roleId + "", user.nbCryptIteration + "", 
-				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled + "", user.crypVersion + "", user.idUser + ""});
+				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled == true ? "1" : "0", user.crypVersion + "", user.idUser + ""});
 		cnx.Close();
 		return false;
 	}
