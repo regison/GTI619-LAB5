@@ -711,24 +711,23 @@ public class DataMapping implements IDataMapping {
 			result = cnx.Select(query, new String[] {userid + "", userid + "", oldPassword}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
 			cnx.Close();
 			
-			if (result.size() <= 0)
-				 return null;
-			
-			pPwd = null ;
-			
-			for(ArrayList<Object> obj2 : result){
-				pPwd = new Objects().new PreviousPassword();
+			if (result.size() > 0){
+				pPwd = null ;
 				
-				pPwd.idPreviousPassword = Integer.parseInt(obj2.get(0).toString());
-				pPwd.userID = Integer.parseInt(obj2.get(1).toString());
-				pPwd.previousPassword = obj2.get(2).toString();
-				pPwd.ModifiedDate = obj2.get(3).toString();
-				pPwd.nbCryptIteration = Integer.parseInt(obj2.get(4).toString());
-				pPwd.salt = obj2.get(5).toString();
-				pPwd.saltCounter = Integer.parseInt(obj2.get(6).toString());
-				pPwd.cryptVersion = Integer.parseInt(obj2.get(7).toString());
-				
-				upp.add(pPwd);
+				for(ArrayList<Object> obj2 : result){
+					pPwd = new Objects().new PreviousPassword();
+					
+					pPwd.idPreviousPassword = Integer.parseInt(obj2.get(0).toString());
+					pPwd.userID = Integer.parseInt(obj2.get(1).toString());
+					pPwd.previousPassword = obj2.get(2).toString();
+					pPwd.ModifiedDate = obj2.get(3).toString();
+					pPwd.nbCryptIteration = Integer.parseInt(obj2.get(4).toString());
+					pPwd.salt = obj2.get(5).toString();
+					pPwd.saltCounter = Integer.parseInt(obj2.get(6).toString());
+					pPwd.cryptVersion = Integer.parseInt(obj2.get(7).toString());
+					
+					upp.add(pPwd);
+				}
 			}
 		}
 		return upp;

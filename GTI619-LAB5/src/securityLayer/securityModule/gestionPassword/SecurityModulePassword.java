@@ -60,14 +60,14 @@ public class SecurityModulePassword {
 		//TODO
 	}
 	
-	public boolean updatePassword(int userid, String currenUserName, String oldPassword, String newPassword){
+	public boolean updatePassword(int userid, String currenUserName, String newPassword){
 		
 		DataProvider dp = new DataProvider(false);
 		User u = dp.GetUser(userid);
 	
-		ArrayList<PreviousPassword> allpp = dp.selectAllPreviousPasswordsUnauthorised(u.idUser, oldPassword);
+		ArrayList<PreviousPassword> allpp = dp.selectAllPreviousPasswordsUnauthorised(u.idUser, newPassword);
 		
-		if(allpp != null && allpp.size() > 1)
+		if(allpp != null && allpp.size() > 0)
 			return false;
 		
 		Objects obj = new Objects();
