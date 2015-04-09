@@ -3,6 +3,7 @@ package communication.DataMapping;
 import java.util.ArrayList;
 
 import securityLayer.securityModule.Core.SecurityModuleCore;
+import communication.DataObjects.Objects.PasswordLoginPolitic;
 import communication.DataObjects.Objects.*;
 
 public interface IDataMapping{	
@@ -30,5 +31,6 @@ public interface IDataMapping{
 	
 	
 	boolean RemoveUser(int userid);
+	boolean UpdatePolitics(PasswordLoginPolitic pwp);
 	
 }

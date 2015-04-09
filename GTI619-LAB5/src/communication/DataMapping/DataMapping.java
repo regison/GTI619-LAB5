@@ -10,6 +10,7 @@ import log619lab5.domain.enumType.Section;
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.LoginLog;
+import communication.DataObjects.Objects.PasswordLoginPolitic;
 import communication.DataObjects.Objects.PreviousPassword;
 import communication.DataObjects.Objects.User;
 import communication.DataObjects.QueryFactory;
@@ -554,16 +555,13 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean RemoveUser(int userid) {
 
-	
-		
 		User user = GetUserByID(userid);
 		
 		if (user != null)
 		{
 			System.out.println("user exists");
-			//Un utilisateur connecté ne doit pas se supprimer lui-meme
-			if (user.isAuthenticated)
-				return false;
+			
+			//Un utilisateur peu être connecté et se faire disable. À ce moment là, il faut vérifier dans abstract action.
 	
 			cnx.Open();
 			//int value = cnx.delete(QueryFactory.DELETE_USER, new String[] { userid + ""});
@@ -575,5 +573,18 @@ public class DataMapping implements IDataMapping {
 		return false;
 	}
 
-	
+	@Override
+	public boolean UpdatePolitics(PasswordLoginPolitic pwp){
+		try{
+			cnx.Open();
+			System.out.println(cnx.delete(QueryFactory.UPDAE_PASSWORDPOLITIC, new String[] { pwp.complexity + "", pwp.max + "", pwp.min + "", 
+					pwp.changementOublie == true ? "1" : "0", pwp.changementDepassement == true ? "1" : "0", pwp.changementBloquage == true ? "1" : "0", pwp.lastPasswords + "", pwp.maxTentative + ""
+							, pwp.delais + "", pwp.bloquage2tentatives == true ? "1" : "0" }));
+			cnx.Close();
+		}
+		catch(Exception ex){
+			return false;
+		}
+		return true;
+	}
 }

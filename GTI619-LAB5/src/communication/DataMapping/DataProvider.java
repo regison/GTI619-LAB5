@@ -103,9 +103,7 @@ public class DataProvider {
 	}
 	
 	public boolean UpdatePolitics(PasswordLoginPolitic pwp){
-		//TODO
-		return true;
-		
+		return data.UpdatePolitics(pwp);
 	}
 	public boolean RemoveUser(int userid){
 		return data.RemoveUser(userid);

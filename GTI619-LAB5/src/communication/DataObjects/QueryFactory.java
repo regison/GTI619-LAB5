@@ -22,6 +22,7 @@ public class QueryFactory {
 	public static final String UPDATE_LOGING_lOG = "UPDATE log619lab5.LoginLogs SET FailedTriesCount=? , LoggedIn=? , LogoutNeeded=? WHERE idUser=? ;";
 	public static final String UDPATE_USER_LAST_LOGIN_TIME = "UPDATE log619lab5. SET LastLoginTime= ? WHERE userID= ? ;";
 	public static final String UPDATE_USER_ROLELVEL = "UPDATE RoleLevel SET caneEditOwnAccount=? , canChangeMdp=? , canEditAll=?, canModifyDelay=?, canModifynbTentative=?, canModifyBlocage=?, canModifyComplexiteMdp=?   WHERE idRoleLevel=? ;";
+	public static final String UPDAE_PASSWORDPOLITIC = "UPDATE PaswordPolitic SET complexity = ? , max = ? , min = ? , changementOublié = ? , changementDepassement = ? , changementBloquage = ? , lastPasswords = ? , maxTentative = ? , delais = ? , bloquage2Tentatives = ? WHERE idPasswordPolitic = '1';";
 	
 	//INSERT SECTION	
 	public static final String INSERT_USER = "INSERT INTO User (name, roleId, ndMd5Iteration, ModifiedDate, ModifiedBy, CreateDate, CreateBy, saltNumber, saltCounter, enabled, cryptVersion, saltPassword) Values ( ? ,? ,? , ? ,? ,? ,? ,? ,? ,? ,?, ";
