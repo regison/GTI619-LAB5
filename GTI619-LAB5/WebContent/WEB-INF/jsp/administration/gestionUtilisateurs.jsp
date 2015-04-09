@@ -21,8 +21,8 @@
               <input type="text" id="username" name="username" value="" size="60" maxlength="60" />
               <br />
               
-              <label for="tpassword">Mot de passe temporaire</label>
-              <input type="password" id="tpassword" name="tpassword" value="" size="20" maxlength="20" />
+              <label for="courriel">Courriel</label>
+              <input type="text" id="courriel" name="courriel" value="" size="20" maxlength="20" />
               <br />
               <label for="acces">Type d'utilisateur</label>
               <select id="acces" name="acces">
@@ -58,8 +58,8 @@
               	%>
               </select>
               	 <br />
-             	<label for="tpassword">Mot de passe temporaire</label>
-              <input type="password" id="tpassword" name="tpassword" value="" size="20" maxlength="20" />
+             	<label for="courriel">Courriel</label>
+              <input type="text" id="courriel" name="courriel" value="" size="20" maxlength="20" />
               <br />
               <label for="password">Entrez votre mot de passe pour confirmer l'action</label>
               <input type="password" id="password" name="password" value="" size="20" maxlength="20" />

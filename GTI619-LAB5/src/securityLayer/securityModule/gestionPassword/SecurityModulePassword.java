@@ -61,12 +61,13 @@ public class SecurityModulePassword {
 		//TODO
 	}
 	
-	public boolean updatePassword(int userid, String currenUserName,String oldPassword, String newPassword){
+	public boolean updatePassword(int userid, String currenUserName, String newPassword){
 		
 		DataProvider dp = new DataProvider(false);
 		User u = dp.GetUser(userid);
 		//Dependement du user on va lui set un saltcounter
 		u.saltCounter = 0;
+		u.changepw=false;
 		//on va salter sur le nouveau password (selon le rolelevel)
 		u.saltPassword = newPassword;
 		

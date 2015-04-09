@@ -53,7 +53,8 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 					
 					if(errors.size()==0){
 						//On va passer le id au lieu du username
-						if(sPass.updatePassword((int) request.getSession().getAttribute("userId"), (String) request.getSession().getAttribute("Username"), oldPassword, newPassword)){
+						if(sPass.updatePassword((int) request.getSession().getAttribute("userId"), (String) request.getSession().getAttribute("Username"), newPassword)){
+							
 							request.setAttribute("message", "ca  a marché");
 						}
 						else{

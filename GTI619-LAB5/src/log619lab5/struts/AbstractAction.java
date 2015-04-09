@@ -4,10 +4,12 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import javax.mail.Session;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +23,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import communication.DataObjects.Objects;
-
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 
 public abstract class AbstractAction extends Action {
@@ -38,7 +39,13 @@ public abstract class AbstractAction extends Action {
 		setSessionWithCookies(request, response, "Language");
 		//setSessionWithCookies(request, response, "UserName");
 		setPageSection();
-		if(validatePageAccess(request, response))
+		if(request.getSession().getAttribute("lastactivity") == null)
+			request.getSession().setAttribute("lastActivity",new Date().getTime());
+		if(new Date().getTime() - (long) request.getSession().getAttribute("lastActivity") >= 20*60*1000){
+			request.getSession().invalidate();
+			redirectPage(request, response, "Login.do");
+		}
+		else if(validatePageAccess(request, response))
 			action = directive(mapping, form, request, response);
 		else
 			redirectPage(request, response, "AccessDenied.do");
@@ -94,29 +101,6 @@ public abstract class AbstractAction extends Action {
 		}
 		
 		return validate;
-		
-//		if (pageSection != null) {
-//			if (pageSection.equals(Section.LOGIN) 
-//					&& session.getAttribute("Username") != null
-//					&& session.getAttribute("Role") != null) {
-//				redirectPage(request, response, "Login.do");
-//			} else {
-//				if (pageSection.equals(Section.CARRE)
-//						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
-//								|| session.getAttribute("Role").equals(Objects.Role.SquareRoleName)))) {
-//					redirectPage(request, response, "AccessDenied.do");
-//				} else if (pageSection.equals(Section.CERCLE)
-//						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
-//								|| session.getAttribute("Role").equals(Objects.Role.CercleRoleName)))){
-//					redirectPage(request, response, "AccessDenied.do");
-//				} else if (pageSection.equals(Section.ADMIN) 
-//						&& (session.getAttribute("Role") == null || !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName))){
-//					redirectPage(request, response, "AccessDenied.do");
-//				}
-//			}
-//		} else {
-//			redirectPage(request, response, "Login.do");
-//		}
 		
 	}
 	

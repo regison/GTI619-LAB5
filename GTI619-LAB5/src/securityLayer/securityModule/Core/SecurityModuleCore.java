@@ -50,9 +50,9 @@ public class SecurityModuleCore {
 		return true;
 	}
 	
-	public boolean identifiedUserCanContinueAction(){
+	public boolean identifiedUserMustLogOut(){
 		
-		return true;
+		return user == null ? true : user.isLogOutNeeded;
 	}
 	
 	public void updateSuccessfullLoginTime(int userID){

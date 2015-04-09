@@ -80,7 +80,9 @@ public class ExecuteLoginAction extends AbstractAction {
 				pageSection = Section.GENERAL;
 				return mapping.findForward("failure");
 			}
-
+			if(_currentUser.changepw){
+				return mapping.findForward("changepw");
+			}
 			_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 			_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);	
 
