@@ -88,9 +88,6 @@ public class SecurityModulePassword {
 		dp.UpdateUser(u);
 		dp.UpdateUserPassword(u, newPassword);
 		
-		u.ModifiedBy = currenUserName;
-		u.ModifiedDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());		
-		
 		return true;
 		 
 	}
