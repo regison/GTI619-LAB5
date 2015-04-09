@@ -131,7 +131,9 @@ public abstract class AbstractAction extends Action {
 	
 	protected void generateCookies(HttpServletRequest request, HttpServletResponse response, String p_name, String p_value) {
 		Cookie cook = new Cookie(p_name, p_value);
-		cook.setMaxAge(2147483647);
+		int totalValidityMinutes = 30;
+		cook.setMaxAge(totalValidityMinutes * 60);
+		cook.setHttpOnly(true);
 		response.addCookie(cook); 
 	}
 	
