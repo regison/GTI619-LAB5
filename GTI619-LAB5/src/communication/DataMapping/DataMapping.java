@@ -226,7 +226,7 @@ public class DataMapping implements IDataMapping {
 	public User GetUserByID(int userid) {
 		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BYID, new String[] {userid + ""}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
-		 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
+		 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded", "cryptVersion");
 		User user = null;
 		if (result.size() == 1){
 			user = new Objects().new User();
@@ -244,6 +244,7 @@ public class DataMapping implements IDataMapping {
 			user.enabled = Boolean.valueOf(result.get(0).get(11).toString());	
 			user.isAuthenticated =  Boolean.valueOf(result.get(0).get(12).toString());
 			user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
+			user.crypVersion = Integer.parseInt(result.get(0).get(14).toString());
 		}
 		cnx.Close();
 		return user;
