@@ -19,7 +19,10 @@ public class QueryFactory {
 	public static final String SELECT_USER_ROLELEVEL = "SELECT * FROM RoleLevel WHERE idRoleLevel = ? ;";
 	public static final String SELECT_USER_LOGINLOGS_BY_USERID = "SELECT * FROM LoginLogs WHERE idUser= ? ;"; 
 	public static final String SELECT_ALL_USER_PREVIOUS_PASSWORDS = "SELECT * FROM previousPasswords WHERE userID= ? ;";
-	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS = "SELECT * FROM (SELECT * FROM log619lab5.previousPasswords WHERE userID = ? ORDER BY idpreviousPasswords DESC LIMIT ?) WHERE userID = ? AND previousPassword = ?;";
+	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part1 = "SELECT * FROM (SELECT * FROM log619lab5.previousPasswords WHERE userID = ? ORDER BY idpreviousPasswords DESC LIMIT ";
+	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part2 = " ) AS t WHERE userID = ?";
+	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_Part1 = "SELECT * FROM (SELECT * FROM log619lab5.previousPasswords WHERE userID = ? ORDER BY idpreviousPasswords DESC LIMIT ";
+	public static final String SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_Part2 = " ) AS t WHERE userID = ? AND previousPassword = ";
 	
 	public static final String SELECT_PASSWORDPOLITIC = "SELECT * FROM PaswordPolitic WHERE idPasswordPolitic = '1';";
 	

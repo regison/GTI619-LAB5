@@ -233,7 +233,7 @@ public class DataMapping implements IDataMapping {
 			user.idUser = Integer.parseInt(result.get(0).get(0).toString());
 			user.name = result.get(0).get(1).toString();
 			user.roleId = Integer.parseInt(result.get(0).get(2).toString());
-			user.saltPassword = result.get(0).get(3).toString();
+			user.saltPassword = (String) result.get(0).get(3);
 			user.nbCryptIteration = Integer.parseInt(result.get(0).get(4).toString());
 			user.ModifiedDate = result.get(0).get(5).toString();
 			user.ModifiedBy = result.get(0).get(6).toString();
@@ -268,7 +268,7 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		cnx.update(QueryFactory.UPDATE_USER, 
 				new String[] {user.name, user.roleId + "", user.nbCryptIteration + "", 
-				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled + "", user.crypVersion + ""});
+				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled + "", user.crypVersion + "", user.idUser + ""});
 		cnx.Close();
 		return false;
 	}
@@ -666,31 +666,69 @@ public class DataMapping implements IDataMapping {
 	
 	public ArrayList<PreviousPassword> selectAllPreviousPasswordsUnauthorised(int userid, String oldPassword){
 		PasswordLoginPolitic plp = getPasswordLoginPolitic();
+		
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS, new String[] {userid + "", plp.lastPasswords + "", userid + "", oldPassword}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
+		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part1 + plp.lastPasswords + QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part2, new String[] {userid + "", userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
 		cnx.Close();
 		 if (result.size() <= 0)
 			 return null;
 		 
-		 ArrayList<PreviousPassword> upp = new ArrayList<PreviousPassword>();
-		 	if (result.size() > 0){
+		PreviousPassword pPwd = null ;
+		ArrayList<PreviousPassword> upp = new ArrayList<PreviousPassword>();
+		
+		for(ArrayList<Object> obj : result){
+			pPwd = new Objects().new PreviousPassword();
+			
+			pPwd.idPreviousPassword = Integer.parseInt(obj.get(0).toString());
+			pPwd.userID = Integer.parseInt(obj.get(1).toString());
+			pPwd.previousPassword = obj.get(2).toString();
+			pPwd.ModifiedDate = obj.get(3).toString();
+			pPwd.nbCryptIteration = Integer.parseInt(obj.get(4).toString());
+			pPwd.salt = obj.get(5).toString();
+			pPwd.saltCounter = Integer.parseInt(obj.get(6).toString());
+			pPwd.cryptVersion = Integer.parseInt(obj.get(7).toString());
+			
+			String query = QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_Part1 + plp.lastPasswords + QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_Part2;
+			for (int i = 1; i < pPwd.nbCryptIteration; i++) {
+				query += "SHA2(";
+			}
+			query += "'";
+			for (int i = 0; i < pPwd.saltCounter; i++) {
+				query += pPwd.salt;
+			}
+			query += "'?'";
+			for (int i = 0; i < pPwd.saltCounter; i++) {
+				query += pPwd.salt;
+			}
+			query += "'";
+			for (int i = 1; i < pPwd.nbCryptIteration; i++) {
+				query += ", 512)";
+			}
+			query += ", 512);";
+			
+			cnx.Open();
+			result = cnx.Select(query, new String[] {userid + "", userid + "", oldPassword}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
+			cnx.Close();
+			
+			if (result.size() <= 0)
+				 return null;
+			
+			pPwd = null ;
+			
+			for(ArrayList<Object> obj2 : result){
+				pPwd = new Objects().new PreviousPassword();
 				
-				PreviousPassword pPwd = null ;
+				pPwd.idPreviousPassword = Integer.parseInt(obj2.get(0).toString());
+				pPwd.userID = Integer.parseInt(obj2.get(1).toString());
+				pPwd.previousPassword = obj2.get(2).toString();
+				pPwd.ModifiedDate = obj2.get(3).toString();
+				pPwd.nbCryptIteration = Integer.parseInt(obj2.get(4).toString());
+				pPwd.salt = obj2.get(5).toString();
+				pPwd.saltCounter = Integer.parseInt(obj2.get(6).toString());
+				pPwd.cryptVersion = Integer.parseInt(obj2.get(7).toString());
 				
-				for(ArrayList<Object> obj : result){
-					pPwd = new Objects().new PreviousPassword();
-					
-					pPwd.idPreviousPassword = Integer.parseInt(obj.get(0).toString());
-					pPwd.userID = Integer.parseInt(obj.get(1).toString());
-					pPwd.previousPassword = obj.get(2).toString();
-					pPwd.ModifiedDate = obj.get(3).toString();
-					pPwd.nbCryptIteration = Integer.parseInt(obj.get(4).toString());
-					pPwd.salt = obj.get(5).toString();
-					pPwd.saltCounter = Integer.parseInt(obj.get(6).toString());
-					pPwd.cryptVersion = Integer.parseInt(obj.get(7).toString());
-					
-					upp.add(pPwd);
-				}	
+				upp.add(pPwd);
+			}
 		}
 		return upp;
 	}

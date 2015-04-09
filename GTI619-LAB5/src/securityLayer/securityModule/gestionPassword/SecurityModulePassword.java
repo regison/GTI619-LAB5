@@ -34,7 +34,7 @@ public class SecurityModulePassword {
 			if(!(password.length() >= pwp.min && password.length() <= pwp.max))
 				errors.add("Doit contenir entre "+ pwp.min + " et " + pwp.max + "caractères.");
 			if((complexity & lowerCase) == lowerCase){
-				if(!password.matches(".*[a-z]"))
+				if(!password.matches(".*[a-z]+.*"))
 					errors.add("Doit contenir minuscules.");
 			}
 			if((complexity & upperCase) == upperCase){
@@ -42,11 +42,11 @@ public class SecurityModulePassword {
 					errors.add("Doit contenir majuscules.");
 			}
 			if((complexity & special) == special){
-				if(!password.matches(".*(?=[^a-z])(?=[^A-Z])(?=[^0-9])"))
+				if(!password.matches(".*(?=[^a-z])(?=[^A-Z])(?=[^0-9])+.*"))
 					errors.add("Doit contenir caractères speciaux.");
 			}
 			if((complexity & chiffre) == chiffre){
-				if(!password.matches(".*[0-9]"))
+				if(!password.matches(".*[0-9]+.*"))
 					errors.add("Doit contenir chiffres.");
 			}
 		}
@@ -65,7 +65,9 @@ public class SecurityModulePassword {
 		DataProvider dp = new DataProvider(false);
 		User u = dp.GetUser(userid);
 	
-		if(dp.selectAllPreviousPasswordsUnauthorised(u.idUser, oldPassword).size() > 1)
+		ArrayList<PreviousPassword> allpp = dp.selectAllPreviousPasswordsUnauthorised(u.idUser, oldPassword);
+		
+		if(allpp != null && allpp.size() > 1)
 			return false;
 		
 		Objects obj = new Objects();
