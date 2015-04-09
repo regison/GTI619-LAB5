@@ -65,7 +65,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						String salt = new HiddenStringGenerator()
 								.generateRandomString();
 
-						//TODO: Vérifier avec la politique de mot de passe
+						
 						boolean check = dtp.CreateUser(username, tpw,
 								userlevel, salt,
 								(String) session.getAttribute("Username"));
@@ -143,7 +143,8 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 	 * @return
 	 */
 	private String sendNewPassWord(String courriel){
-		return new HiddenStringGenerator().generateRandomString().substring(3,23);
+		//on met test pour connaitre le mot de passe pour tester.
+		return "test"; //new HiddenStringGenerator().generateRandomString().substring(3,23);
 	}
 	
 	

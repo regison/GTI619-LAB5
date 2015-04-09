@@ -59,8 +59,7 @@ public class SecurityModuleCore {
 		
 		dtp = new DataProvider(false);
 		
-		try {
-					
+		try {	
 			session.setAttribute("failedLoginCount", "0");
 			dbComm.UpdateUserInfo(userID, false, true, false);
 		} catch (Exception e) {

@@ -37,7 +37,7 @@
                  	List<String> errors = (List<String>) request.getAttribute("error");
 	                 if(errors!=null){
 	                	 for(String err : errors){
-	                		 out.print("<p color=\"RED\">" +request.getAttribute("message") + "</p>");
+	                		 out.print("<p color=\"RED\">" + err + "</p>");
 	                	 }
 	                 }
                  %>

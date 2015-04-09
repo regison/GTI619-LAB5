@@ -94,12 +94,11 @@ public class ExecuteLoginAction extends AbstractAction {
 			pageSection = Section.GENERAL;
 			return mapping.findForward("failure");
 		}
+		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);
 		
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
-		session = request.getSession();
-
-		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);	
+		session = request.getSession();	
 
 		session.setAttribute("Username", _currentUser.name);
 		session.setAttribute("Role", _currentUser.role.roleName);

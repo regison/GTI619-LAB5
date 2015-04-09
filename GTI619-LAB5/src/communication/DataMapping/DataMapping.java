@@ -500,12 +500,12 @@ public class DataMapping implements IDataMapping {
 	
 	@Override
 	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser) {
-		boolean isUserNameExist = true;
+		boolean isUserNameExist = false;
 		cnx.Open();
 		User sameUsernameUser = GetUserByUsername(username);
 		
 		if (sameUsernameUser != null)
-			isUserNameExist = false;
+			isUserNameExist = true;
 		
 		cnx.Close();
 		
