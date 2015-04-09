@@ -45,7 +45,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 				return mapping.findForward("OperationDenied");
 			}
 			
-			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("usernae"), oldPassword) !=null;
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("usernae"), oldPassword, null) !=null;
 			if(reauthentification){
 				if(newPassword.equals(copynewPassword))
 				{

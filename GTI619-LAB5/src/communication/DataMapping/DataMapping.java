@@ -5,11 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import securityLayer.securityModule.Core.SecurityModuleCore;
 import log619lab5.domain.enumType.Section;
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.LoginLog;
 import communication.DataObjects.Objects.PreviousPassword;
+import communication.DataObjects.Objects.User;
 import communication.DataObjects.QueryFactory;
 import database.mysql.Mysql;
 
@@ -93,7 +95,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<Role> Roles() {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idog", "LogAction", "LogDate", "LogUserId");
+		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idRole", "roleLevelId", "roleName", "timeConnexion");
 		ArrayList<Role> roles = null;
 		
 		if (rolesMapping.size() > 0 || rolesMapping != null){
@@ -359,11 +361,13 @@ public class DataMapping implements IDataMapping {
 	}
 
 	@Override
-	public User AuthenticateUser(String uname, String pwd) {
+	public User AuthenticateUser(String uname, String pwd, SecurityModuleCore secMod) {
 		
 		Objects.User user = GetUserByUsername(uname);
 		
 		if (user != null){
+			if(secMod != null)
+				secMod.setUser(user);
 			String query = QueryFactory.SELECT_USER_BY_UNAME_PWD;
 			for (int i = 1; i < user.nbCryptIteration; i++) {
 				query += "SHA2(";
@@ -441,7 +445,7 @@ public class DataMapping implements IDataMapping {
 	}	
 	
 	@Override
-	public boolean CreateUser(String username, String password, int userType, String salt) {
+	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser) {
 		boolean isUserNameExist = true;
 		cnx.Open();
 		User sameUsernameUser = GetUserByUsername(username);
@@ -479,9 +483,9 @@ public class DataMapping implements IDataMapping {
 			}
 			saltPwdBuilder += ", 512));";
 			
-			user.CreateBy = "currentUser";
+			user.CreateBy = actualUser;
 			user.CreateDate = new SimpleDateFormat().format(new Date());
-			user.ModifiedBy = "currentUSer";
+			user.ModifiedBy = actualUser;
 			user.ModifiedDate = new SimpleDateFormat().format(new Date());
 			user.isAuthenticated = false;
 			user.enabled = true;
@@ -568,7 +572,6 @@ public class DataMapping implements IDataMapping {
 			cnx.Close();
 			return true;
 		}
-		cnx.Close();
 		return false;
 	}
 

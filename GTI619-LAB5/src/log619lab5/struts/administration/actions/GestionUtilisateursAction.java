@@ -41,7 +41,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			{
 				return mapping.findForward("AccessDenied");
 			}	
-			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("Username"), pw) !=null;
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("Username"), pw, null) !=null;
 			if("Ajouter".equals(submit)){
 				if(reauthentification){
 					String username = request.getParameter("username");
@@ -62,7 +62,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 					String salt = new HiddenStringGenerator().generateRandomString();			
 					
 					//TODO: Vérifier avec la politique de mot de passe
-					boolean check = dtp.CreateUser(username, tpw, userlevel, salt);
+					boolean check = dtp.CreateUser(username, tpw, userlevel, salt, (String) session.getAttribute("Username"));
 					
 					if (check)			
 						request.setAttribute("ajoutMessage", "Operation réuisse");

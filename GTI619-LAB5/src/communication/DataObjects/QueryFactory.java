@@ -5,7 +5,7 @@ public class QueryFactory {
 	//SELECT SECTION
 	public static final String SELECT_ALL_USERS = "SELECT u.*, ll.LoggedIn, ll.LogoutNeeded FROM User u LEFT JOIN LoginLogs ll ON u.idUser = ll.idUser";
 	public static final String SELECT_ALL_ROLELEVEL = "SELECT * FROM RoleLevel";
-	public static final String SELECT_ALL_ROLES = "SELECT * FROM RoleLevel";
+	public static final String SELECT_ALL_ROLES = "SELECT * FROM Role";
 	public static final String SELECT_ALL_LOGS = "SELECT * FROM Log";
 	public static final String SELECT_ALL_LOGINLOGS = "SELECT * FROM LoginLog";
 	public static final String SELECT_ALL_PREVIOUS_PASSWORDS = "SELECT * FROM previousPasswords";

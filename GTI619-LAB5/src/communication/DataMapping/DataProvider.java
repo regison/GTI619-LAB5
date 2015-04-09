@@ -2,6 +2,7 @@ package communication.DataMapping;
 
 import java.util.ArrayList;
 
+import securityLayer.securityModule.Core.SecurityModuleCore;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 /**
@@ -60,8 +61,8 @@ public class DataProvider {
 		return data.GetUserByUsername(userName);
 	}
 	
-	public User Authenticate(String uname, String pwd) {
-		return data.AuthenticateUser(uname, pwd);
+	public User Authenticate(String uname, String pwd, SecurityModuleCore secMod) {
+		return data.AuthenticateUser(uname, pwd, secMod);
 	}
 
 	
@@ -97,8 +98,8 @@ public class DataProvider {
 		return data.CreateLoginLog(incrementFailedLoginTriesCount, llog);
 	}
 
-	public boolean CreateUser(String username, String password, int userType, String salt){
-		return data.CreateUser(username, password, userType, salt);		
+	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser){
+		return data.CreateUser(username, password, userType, salt, actualUser);		
 	}
 	
 	public boolean UpdatePolitics(PasswordLoginPolitic pwp){

@@ -73,7 +73,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		try {
 			//User _currentUsertest = dtP.G
-			_currentUser = dtP.Authenticate(userName, password);			
+			_currentUser = dtP.Authenticate(userName, password, securityModule);			
 			 
 			if(_currentUser == null || !_currentUser.enabled){
 				loginFailedLogic();
@@ -93,8 +93,6 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		
-		securityModule.setUser(_currentUser);
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);	
 
 		session.setAttribute("Username", _currentUser.name);
