@@ -138,7 +138,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 							request.setAttribute("privMessage", "Operation réussie");
 						else
 							request.setAttribute("privMessage", "Operation échouée");
-				} else if(submit.equals("Activer") || submit.equals("D&eacute;sactiver") ){
+				} else if(submit.equals("Activer") || submit.equals("Désactiver") ){
 					String username = request.getParameter("username");
 					User user = dtp.GetUserByUsername(username);
 					user.crypVersion = submit.equals("Activer") ? 2 : 1;
