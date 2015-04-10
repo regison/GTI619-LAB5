@@ -52,8 +52,8 @@
              </fieldset>
              <input type="hidden" name="updatePassword" value="true">
              <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
-             <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='
-             <% if(session.getAttribute("from")!=null)
+             <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='<% 
+             if(session.getAttribute("from")!=null)
              	out.print(session.getAttribute("from") + ".do");
              else
             	 out.print("Login.do");
