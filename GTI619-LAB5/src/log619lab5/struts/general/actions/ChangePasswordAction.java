@@ -23,7 +23,7 @@ import database.mysql.Mysql;
 
 public class ChangePasswordAction extends AbstractAction {
 
-	private final String PAGE = "Login";
+	private final String PAGE = "ChangePassword";
 	
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {

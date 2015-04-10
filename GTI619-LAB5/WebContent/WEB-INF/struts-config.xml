@@ -36,7 +36,7 @@
         
         <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">
         	<forward name="failure" path="/WEB-INF/jsp/LoginFailed.jsp" />
-        	<forward name="changepw" path="/WEB-INF/jsp/general/changePassword.jsp" />
+        	<forward name="changepw" path="/ChangePassword.do" />
         	<forward name="bloque" path="/WEB-INF/jsp/general/CompteBarrer.jsp" />
         	<forward name="secondLogin" path="/WEB-INF/jsp/general/SecondLogin.jsp" />
         </action>

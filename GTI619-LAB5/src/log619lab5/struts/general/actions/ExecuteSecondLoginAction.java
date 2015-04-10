@@ -1,9 +1,5 @@
 package log619lab5.struts.general.actions;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
-import log619lab5.struts.AbstractForm;
 import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
@@ -20,8 +15,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import securityLayer.securityModule.Core.SecurityModuleCore;
-import database.IDatabase;
-import database.mysql.Mysql;
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
@@ -62,13 +55,10 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		
 		int[] in = (int[]) session.getAttribute("indexes");
 		
-		
-		//TODO
-//		if(!getString(_currentUser.idUser,in).equals(password)){
-//			loginFailedLogic();
-//			pageSection = Section.GENERAL;	
-//			return mapping.findForward("failure");
-//		}
+		String text = "";
+		for(int i=0;i<in.length;i++){
+			text += _currentUser.secondFactorPW.charAt(in[i]);
+		}
 		
 		session.removeAttribute("indexes");
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());

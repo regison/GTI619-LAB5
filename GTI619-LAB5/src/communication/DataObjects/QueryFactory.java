@@ -37,7 +37,7 @@ public class QueryFactory {
 	public static final String UPDATE_USER_LOGINLOG = "UPDATE `log619lab5`.`LoginLogs` SET `LoggedIn`=?, `LogoutNeeded`=? WHERE `idUser`=?;";
 	
 	//INSERT SECTION	
-	public static final String INSERT_USER = "INSERT INTO User (name, roleId, ndMd5Iteration, ModifiedDate, ModifiedBy, CreateDate, CreateBy, saltNumber, saltCounter, enabled, cryptVersion, saltPassword) Values ( ? ,? ,? , ? ,? ,? ,? ,? ,? ,? ,?, ";
+	public static final String INSERT_USER = "INSERT INTO User (name, roleId, ndMd5Iteration, ModifiedDate, ModifiedBy, CreateDate, CreateBy, saltNumber, saltCounter, enabled, cryptVersion, changepw, saltPassword) Values ( ? ,? ,? , ? ,? ,? ,? ,? ,? ,? ,?, ?, ";
 	public static final String INSERT_LOG = "INSERT INTO Log Values (?, ?, ?, ?)";
 	public static final String INSERT_LOGINLOG = "INSERT INTO LoginLogs (idUser, FailedTriesCount, LoggedIn, LogoutNeeded) VALUES ( ? , ? , ? , ? );";
 	public static final String INSERT_PREVIOUS_PASSWORD = "INSERT INTO `log619lab5`.`previousPasswords` (`userID`, `previousPassword`, `dateModified`, `nbCryptIteration`, `salt`, `saltCounter`, `cryptVersion`) VALUES (?, ?, ?, ?, ?, ?, ?);";

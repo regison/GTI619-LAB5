@@ -98,7 +98,7 @@ public class ExecuteLoginAction extends AbstractAction {
 				Random rnd = new Random();
 				int[] indexes = new int[rnd.nextInt(11)+10];
 				for(int i=0;i<indexes.length;i++){
-					indexes[i] = rnd.nextInt(100);
+					indexes[i] = rnd.nextInt(50);
 				}
 				String randomString = generateHiddenRandomString();
 				request.setAttribute("hidden", randomString);
@@ -109,7 +109,9 @@ public class ExecuteLoginAction extends AbstractAction {
 			}
 			 
 			if(_currentUser.changepw){
-				pageSection = Section.GENERAL;
+				session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
+				session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
+				pageSection = Section.CONNECTED;
 				return mapping.findForward("changepw");
 			}
 			_currentUser.role = dtP.GetRole(_currentUser.roleId);			

@@ -282,7 +282,7 @@ public class DataMapping implements IDataMapping {
 		cnx.update(QueryFactory.UPDATE_USER_LOGINLOG, 
 				new String[] {user.isAuthenticated == true ? "1" : "0", user.isLogOutNeeded == true ? "1" : "0", user.idUser + ""});
 		cnx.Close();
-		return false;
+		return true;
 	}
 	
 	public boolean UpdateUserPassword(User user, String password) {
@@ -308,7 +308,7 @@ public class DataMapping implements IDataMapping {
 		cnx.update(query, 
 				new String[] { password, user.idUser + "" });
 		cnx.Close();
-		return false;
+		return true;
 	}
 
 		
@@ -378,7 +378,8 @@ public class DataMapping implements IDataMapping {
 						.toString());
 				user.enabled = Boolean
 						.valueOf(result.get(i).get(10).toString());
-				user.secondFactorPW = result.get(11).toString();
+				if(result.get(11)!=null)
+					user.secondFactorPW = result.get(11).toString();
 				user.crypVersion = Integer.parseInt(result.get(13).toString());
 				
 				allUsers.add(user);
@@ -423,10 +424,10 @@ public class DataMapping implements IDataMapping {
 					.toString());
 			user.enabled = Boolean
 					.valueOf(result.get(10).toString());
-			user.crypVersion = Integer.parseInt(result.get(11).toString());
 			user.changepw = Boolean
 					.valueOf(result.get(11).toString());
-			user.secondFactorPW = result.get(12).toString();
+			if(result.get(12)!=null)
+				user.secondFactorPW = result.get(12).toString();
 			user.crypVersion = Integer.parseInt(result.get(13).toString());
 		}
 			
@@ -518,7 +519,7 @@ public class DataMapping implements IDataMapping {
 	}	
 	
 	@Override
-	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser) {
+	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser, Boolean changePw) {
 		boolean isUserNameExist = false;
 		cnx.Open();
 		User sameUsernameUser = GetUserByUsername(username);
@@ -566,11 +567,12 @@ public class DataMapping implements IDataMapping {
 			user.roleId = userType;
 			user.saltPassword = password;
 			user.crypVersion = 1;
+			user.changepw = changePw;
 			
 			cnx.Open();
 			int row = cnx.insert(QueryFactory.INSERT_USER + saltPwdBuilder, new String[] {  user.name, String.valueOf(user.roleId) , user.nbCryptIteration +"",
 															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled ? "1" : "0", 
-															String.valueOf( user.crypVersion), user.saltPassword});
+															String.valueOf( user.crypVersion), user.changepw ? "1" : "0", user.saltPassword});
 			cnx.Close();
 			if(row > -1)
 				return true;

@@ -48,6 +48,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						String username = request.getParameter("username");
 						String tpw = sendNewPassWord(request.getParameter("courriel"));
 						String type = request.getParameter("acces");
+						PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
 
 						int newUserRole = 0;
 						int userlevel = 0;
@@ -69,7 +70,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						
 						boolean check = dtp.CreateUser(username, tpw,
 								userlevel, salt,
-								(String) session.getAttribute(SessionAttributeIdentificator.USERNAME));
+								(String) session.getAttribute(SessionAttributeIdentificator.USERNAME), pwp.changementNouveau);
 
 						if (check)
 							request.setAttribute("ajoutMessage",
