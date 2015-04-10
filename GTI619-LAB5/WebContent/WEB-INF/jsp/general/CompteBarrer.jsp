@@ -7,7 +7,7 @@
 <title>Acc&egrave;s refus&eacute;!</title>
 </head>
 <body>
-	<h1>Votre compte a &Eacute;t&Eacute; d&Eacute;sactiver par mesure de s&Eacute;curit&Eacute;</h1>
-	<h2>Veuillez contactez un administrateur pour le r&Eacute;activer</h2>
+	<h1>Votre compte a &eacute;t&eacute; d&eacute;sactiver par mesure de s&eacute;curit&eacute;</h1>
+	<h2>Veuillez contactez un administrateur pour le r&eacute;activer</h2>
 </body>
 </html>

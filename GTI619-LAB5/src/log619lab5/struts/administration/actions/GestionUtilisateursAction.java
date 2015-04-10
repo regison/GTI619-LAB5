@@ -86,7 +86,12 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						user.changepw = pwp.changementOublie;
 						user.saltPassword = tpw;
 						
-						dtp.UpdateUser(user);
+						if(dtp.UpdateUser(user))
+							request.setAttribute("oubliMessage",
+									"Operation réuisse");
+						else
+							request.setAttribute("oubliMessage",
+									"Operation échouée");
 						//TODO: Savoir ou mettre le mot de pass temporaire.
 						
 				} else if (submit.equals("Reactiver")) {
@@ -99,9 +104,12 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 								.getPasswordLoginPolitic();
 						user.enabled = true;
 						user.changepw = pwp.changementBloquage;
-						dtp.UpdateUser(user);
-						request.setAttribute("activateMessage",
+						if(dtp.UpdateUser(user))
+							request.setAttribute("activateMessage",
 								"Operation réuisse");
+						else
+							request.setAttribute("activateMessage",
+									"Operation échouée");
 				}
 
 				else if (submit.equals("Supprimer")) {
@@ -110,10 +118,13 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						if (!session.getAttribute("Username").equals(username)) {
 							User user = dtp.GetAllUsersFromAUserName(username)
 									.get(0);
-							dtp.RemoveUser(user.idUser);
+							if(dtp.RemoveUser(user.idUser))
 
-							request.setAttribute("suppMessage",
+								request.setAttribute("suppMessage",
 									"Operation réuisse");
+							else
+								request.setAttribute("suppMessage",
+										"Operation échouée");
 						}
 				} else if (submit.equals("Valider")) {
 						String username = request.getParameter("user");
@@ -123,8 +134,19 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						PasswordLoginPolitic pwp = dtp
 								.getPasswordLoginPolitic();
 						user.roleId = Integer.parseInt(type);
-						dtp.UpdateUser(user);
-						request.setAttribute("privMessage", "Operation réuisse");
+						if(dtp.UpdateUser(user))
+							request.setAttribute("privMessage", "Operation réuisse");
+						else
+							request.setAttribute("privMessage", "Operation échouée");
+				} else if(submit.equals("Activer") || submit.equals("D&eacute;sactiver") ){
+					String username = request.getParameter("user");
+					User user = dtp.GetAllUsersFromAUserName(username).get(
+							0);
+					user.crypVersion = submit.equals("Activer") ? 2 : 1;
+					if(dtp.UpdateUser(user))
+						request.setAttribute("reauthMessage", "Operation réuisse");
+					else
+						request.setAttribute("reauthMessage", "Operation échouée");
 				}
 			}
 			else

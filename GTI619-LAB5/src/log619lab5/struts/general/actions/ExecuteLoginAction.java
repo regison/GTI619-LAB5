@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -85,6 +86,20 @@ public class ExecuteLoginAction extends AbstractAction {
 				pageSection = Section.GENERAL;
 				return mapping.findForward("bloque");
 			}
+			if(_currentUser.crypVersion==2){
+				Random rnd = new Random();
+				int[] indexes = new int[rnd.nextInt(11)+10];
+				for(int i=0;i<indexes.length;i++){
+					indexes[i] = rnd.nextInt(100);
+				}
+				String randomString = generateHiddenRandomString();
+				request.setAttribute("hidden", randomString);
+				session.setAttribute("loginHiddenString", randomString);
+				session.setAttribute("indexes", indexes);
+				session.setAttribute("Username", _currentUser.name);
+				return mapping.findForward("secondLogin");
+			}
+			 
 			if(_currentUser.changepw){
 				return mapping.findForward("changepw");
 			}
