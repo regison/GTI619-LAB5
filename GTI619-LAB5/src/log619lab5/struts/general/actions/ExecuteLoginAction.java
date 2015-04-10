@@ -23,6 +23,7 @@ import securityLayer.securityModule.Core.SecurityModuleCore;
 import database.IDatabase;
 import database.mysql.Mysql;
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 
@@ -101,6 +102,7 @@ public class ExecuteLoginAction extends AbstractAction {
 			_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);	
 
 		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			

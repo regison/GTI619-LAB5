@@ -2,10 +2,10 @@ package securityLayer.securityModule.Comm;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-
 import java.util.Date;
 
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.Log;
 import communication.DataObjects.Objects.LoginLog;
@@ -45,6 +45,7 @@ public class SecurityLayerDataBaseCommunication {
 			this.userID = ll.userId;
 			
 		} catch (NumberFormatException e) {
+			ExceptionLogger.LogException(e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -94,6 +95,7 @@ public class SecurityLayerDataBaseCommunication {
 					dtp.CreateLoginLog(incrementFailedLoginTriesCount,llog);
 				}
 			} catch (NumberFormatException e) {
+				ExceptionLogger.LogException(e);
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}			
@@ -106,6 +108,7 @@ public class SecurityLayerDataBaseCommunication {
 				
 			
 			} catch (NumberFormatException e) {
+				ExceptionLogger.LogException(e);
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}		
@@ -122,6 +125,7 @@ public class SecurityLayerDataBaseCommunication {
 
 			
 		} catch (NumberFormatException e) {
+			ExceptionLogger.LogException(e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

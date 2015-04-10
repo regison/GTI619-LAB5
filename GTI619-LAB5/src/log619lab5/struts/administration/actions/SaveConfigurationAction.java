@@ -16,6 +16,7 @@ import org.apache.struts.action.ActionMapping;
 import database.IDatabase;
 import database.mysql.Mysql;
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 
@@ -65,6 +66,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 					request.setAttribute("message", "Operation Echouée");
 			}	
 			catch(Exception e){
+				ExceptionLogger.LogException(e);
 				request.setAttribute("message", "Operation Echouée");
 			}
 		}

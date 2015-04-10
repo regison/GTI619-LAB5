@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 
 import log619lab5.struts.SessionAttributeIdentificator;
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.Log;
 import communication.DataObjects.Objects.Role;
@@ -70,6 +71,7 @@ public class SecurityModuleCore {
 			session.setAttribute(SessionAttributeIdentificator.FAILEDLOGINCOUNT, "0");
 			dbComm.UpdateUserInfo(userID, false, true, false);
 		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -82,6 +84,7 @@ public class SecurityModuleCore {
 		try {
 			dbComm.UpdateUserInfo(user.idUser, true, false, false);
 		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

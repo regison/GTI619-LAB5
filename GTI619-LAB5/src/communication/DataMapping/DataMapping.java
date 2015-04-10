@@ -55,6 +55,7 @@ public class DataMapping implements IDataMapping {
 					toAdd.isAuthenticated =  Boolean.valueOf(user.get(12).toString());
 					toAdd.isLogOutNeeded = Boolean.valueOf(user.get(13).toString());
 				} catch (Exception e) {
+					ExceptionLogger.LogException(e);
 					toAdd.isAuthenticated =  false;
 					toAdd.isLogOutNeeded = false;
 				}				
@@ -670,6 +671,7 @@ public class DataMapping implements IDataMapping {
 			cnx.Close();
 		}
 		catch(Exception ex){
+			ExceptionLogger.LogException(ex);
 			return false;
 		}
 		return true;

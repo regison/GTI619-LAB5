@@ -6,6 +6,7 @@ import log619lab5.struts.SessionAttributeIdentificator;
 import communication.DataObjects.Objects.PasswordLoginPolitic;
 import communication.DataObjects.Objects.User;
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 
 public class BruteForceProtection {
 	
@@ -24,6 +25,7 @@ public class BruteForceProtection {
 				try {
 					Thread.sleep((long) (1000 * (Math.pow((count - lp.maxTentative), lp.delais)))); //Attente exponentielle
 				} catch (InterruptedException e) {
+					ExceptionLogger.LogException(e);
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
