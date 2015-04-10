@@ -59,7 +59,10 @@ public class SecurityModuleCore {
 	public void updateSuccessfullLoginTime(int userID){
 		
 		dtp = new DataProvider(false);
-		
+		Objects obj = new Objects();
+		Log event = obj.new Log();
+		event.logName = "Successfull Login Try For User " + dtp.GetUser(userID).name;
+		dtp.CreateLog(event, false);
 		try {	
 			session.setAttribute(SessionAttributeIdentificator.FAILEDLOGINCOUNT, "0");
 			dbComm.UpdateUserInfo(userID, false, true, false);
@@ -85,6 +88,11 @@ public class SecurityModuleCore {
 		if(user != null){
 			incrementUnsuccessfullLogin();
 		}
+		dtp = new DataProvider(false);
+		Objects obj = new Objects();
+		Log event = obj.new Log();
+		event.logName = "Failed Login Try For " + user == null ? "no existing user" : user.name;
+		dtp.CreateLog(event, false);
 		BruteForceProtection bruteProtect = new BruteForceProtection();
 		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount(), user);
 	}
