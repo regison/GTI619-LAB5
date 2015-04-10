@@ -126,7 +126,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		}
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
 		
-		// Login successful, instantiate old session and create a new one
+		// Login successful, invalidate old session and create a new one
 		session.invalidate();
 		session = request.getSession();	
 
