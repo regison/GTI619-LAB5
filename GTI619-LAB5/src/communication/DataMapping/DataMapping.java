@@ -28,7 +28,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<User> Users() {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> usersMapping =  cnx.Select(QueryFactory.SELECT_ALL_USERS, null, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
+		ArrayList<ArrayList<Object>> usersMapping =  cnx.Select(false, QueryFactory.SELECT_ALL_USERS, null, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded");
 		cnx.Close();
 		ArrayList<User> usersToShow = new ArrayList<User>();
@@ -72,7 +72,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<Log> Logs() {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_ALL_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
+		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(false, QueryFactory.SELECT_ALL_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Log> systemLogs = null;
 		cnx.Close();
 		if (systemLogMappingObject.size() > 0 || systemLogMappingObject != null){
@@ -97,7 +97,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<Log> mostRecentLogs() {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(QueryFactory.SELECT_10_MOST_RECENT_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
+		ArrayList<ArrayList<Object>> systemLogMappingObject =  cnx.Select(false, QueryFactory.SELECT_10_MOST_RECENT_LOGS, null, "idLog", "LogAction", "LogDate", "LogUserId");
 		ArrayList<Log> systemLogs = null;
 		cnx.Close();
 		if (systemLogMappingObject.size() > 0 || systemLogMappingObject != null){
@@ -122,7 +122,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<Role> Roles() {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(QueryFactory.SELECT_ALL_ROLES, null, "idRole", "roleLevelId", "roleName", "timeConnexion");
+		ArrayList<ArrayList<Object>> rolesMapping =  cnx.Select(false, QueryFactory.SELECT_ALL_ROLES, null, "idRole", "roleLevelId", "roleName", "timeConnexion");
 		ArrayList<Role> roles = null;
 		
 		if (rolesMapping.size() > 0 || rolesMapping != null){
@@ -147,7 +147,7 @@ public class DataMapping implements IDataMapping {
 	 */
 	public ArrayList<RoleLevel> RoleLevels() {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result =  cnx.Select(QueryFactory.SELECT_ALL_ROLELEVEL, null, 
+		ArrayList<ArrayList<Object>> result =  cnx.Select(false, QueryFactory.SELECT_ALL_ROLELEVEL, null, 
 															"idRoleLevel", "canEditOwnAccount", "canChangeMdp", 
 															"canEditAll", "canModifyDelay","canModifynbTentative",
 															"canModifyBlocage","canModifyComplexiteMdp");
@@ -180,7 +180,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public Role GetRole(int roleid) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_ROLE, new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_USER_ROLE, new String[] {roleid + ""}, "idRole", "roleLevelId", "roleName", "timeConnexion");
 		Role role = null;
 		
 		if (result.size() == 1 && result != null){
@@ -202,7 +202,7 @@ public class DataMapping implements IDataMapping {
 	public RoleLevel GetRoleLevel(int roleLevelId) {
 		cnx.Open();
 
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_ROLELEVEL, new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_USER_ROLELEVEL, new String[] {roleLevelId + ""}, "idRoleLevel", "caneEditOwnAccount", "canChangeMdp", "canEditAll", 
 				"canModifyDelay", "canModifynbTentative", "canModifyBlocage", "canModifyComplexiteMdp");
 
 		RoleLevel userRL = null;
@@ -226,7 +226,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public User GetUserByID(int userid) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BYID, new String[] {userid + ""}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_USER_BYID, new String[] {userid + ""}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
 		 							"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded", "cryptVersion", "changepw");
 		User user = null;
 		if (result.size() == 1){
@@ -262,7 +262,7 @@ public class DataMapping implements IDataMapping {
 	public boolean CreateLog(Log event, boolean byPass) {
 	
 		cnx.Open();
-		int value = cnx.insert(QueryFactory.INSERT_LOG, 
+		int value = cnx.insert(false, QueryFactory.INSERT_LOG, 
 						new String[] { String.valueOf(event.logId), event.logName, String.valueOf(event.logDate), String.valueOf(event.userLogId) });
 		cnx.Close();
 		if (value == 1)
@@ -275,11 +275,11 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean UpdateUser(User user) {
 		cnx.Open();
-		cnx.update(QueryFactory.UPDATE_USER, 
+		cnx.update(false, QueryFactory.UPDATE_USER, 
 				new String[] {user.name, user.roleId + "", user.nbCryptIteration + "", 
 				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, 
 				user.saltCounter + "", user.enabled == true ? "1" : "0", user.crypVersion + "", user.changepw == true ? "1" : "0", user.idUser + ""});
-		cnx.update(QueryFactory.UPDATE_USER_LOGINLOG, 
+		cnx.update(false, QueryFactory.UPDATE_USER_LOGINLOG, 
 				new String[] {user.isAuthenticated == true ? "1" : "0", user.isLogOutNeeded == true ? "1" : "0", user.idUser + ""});
 		cnx.Close();
 		return false;
@@ -305,7 +305,7 @@ public class DataMapping implements IDataMapping {
 		query += ", 512)";
 		query += QueryFactory.UPDATE_USER_PASSWORD_PART2;
 		cnx.Open();
-		cnx.update(query, 
+		cnx.update(true, query, 
 				new String[] { password, user.idUser + "" });
 		cnx.Close();
 		return false;
@@ -328,7 +328,7 @@ public class DataMapping implements IDataMapping {
 	public boolean UpdateUserRoleLevel(RoleLevel rlevel) {
 		cnx.Open();
 
-		int toreturn = cnx.update(QueryFactory.UPDATE_USER_ROLELVEL, 
+		int toreturn = cnx.update(false, QueryFactory.UPDATE_USER_ROLELVEL, 
 				new String[] {rlevel.caneEditOwnAccount ? "1"  : "0",
 							  rlevel.canChangeMdp ? "1"  : "0", 
 							  rlevel.canEditAll ? "1"  : "0", 
@@ -346,7 +346,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public ArrayList<Objects.User> GetAllUsersFromAUserName(String uname) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
 										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled", "secondFactorPW", "cryptVersion");
 		cnx.Close();
 		
@@ -390,7 +390,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public User GetUserByUsername(String uname) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> resultList = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
+		ArrayList<ArrayList<Object>> resultList = cnx.Select(false, QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
 										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled", "changepw", "secondFactorPW", "cryptVersion");
 		cnx.Close();
 		
@@ -458,7 +458,7 @@ public class DataMapping implements IDataMapping {
 			}
 			query += ", 512);";
 			cnx.Open();
-			ArrayList<ArrayList<Object>> result = cnx.Select(query,
+			ArrayList<ArrayList<Object>> result = cnx.Select(true, query,
 					new String[] { uname, pwd }, "idUser", "name",
 					"roleId", "enabled");
 			cnx.Close();
@@ -475,7 +475,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public LoginLog GetLoginLogsByUserId(int userID) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_LOGINLOGS_BY_USERID, new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_USER_LOGINLOGS_BY_USERID, new String[] {userID + ""}, "idUser", "LastLoginTime", "FailedTriesCount", "LoggedIn", "LogoutNeeded");
 		LoginLog loginLog = null;
 		if (result.size() == 1 && result != null){
 			loginLog = new Objects().new LoginLog();
@@ -496,7 +496,7 @@ public class DataMapping implements IDataMapping {
 			boolean loggedIn, long userFailedTriesCount, boolean LogoutNeeded, int userID) {
 		cnx.Open();
 		
-		int toreturn = cnx.update(QueryFactory.UPDATE_LOGING_lOG, 
+		int toreturn = cnx.update(false, QueryFactory.UPDATE_LOGING_lOG, 
 				new String[] {((incrementFailedLoginTriesCount ? userFailedTriesCount + 1 : (loggedIn ? 0 : userFailedTriesCount)) + ""), 
 							   (loggedIn ? "1" : "0"), (LogoutNeeded ? "1" : "0"), userID + ""});
 		cnx.Close();
@@ -506,7 +506,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean CreateLoginLog(boolean incrementFailedLoginTriesCount,LoginLog llog) {
 		cnx.Open();
-		int value = cnx.insert(QueryFactory.INSERT_LOGINLOG, 
+		int value = cnx.insert(false, QueryFactory.INSERT_LOGINLOG, 
 						new String[] {llog.userId + "", (incrementFailedLoginTriesCount ? "1" : "0"), 
 														(llog.loggedIn ? "1" : "0"), (llog.logoutNeeded ? "1" : "0") });
 		cnx.Close();
@@ -567,7 +567,7 @@ public class DataMapping implements IDataMapping {
 			user.crypVersion = 1;
 			
 			cnx.Open();
-			int row = cnx.insert(QueryFactory.INSERT_USER + saltPwdBuilder, new String[] {  user.name, String.valueOf(user.roleId) , user.nbCryptIteration +"",
+			int row = cnx.insert(true, QueryFactory.INSERT_USER + saltPwdBuilder, new String[] {  user.name, String.valueOf(user.roleId) , user.nbCryptIteration +"",
 															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled ? "1" : "0", 
 															String.valueOf( user.crypVersion), user.saltPassword});
 			cnx.Close();
@@ -581,7 +581,7 @@ public class DataMapping implements IDataMapping {
 		PasswordLoginPolitic pwp =  new Objects().new PasswordLoginPolitic();
 
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_PASSWORDPOLITIC, null, "complexity","max","min","changementOublie", 
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_PASSWORDPOLITIC, null, "complexity","max","min","changementOublie", 
 				"changementDepassement", "changementBloquage", "lastPasswords", "maxTentative", "delais", "bloquage2tentatives");
 		cnx.Close();
 		 if (result.size() <= 0)
@@ -605,7 +605,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public ArrayList<PreviousPassword> GetUserPreviousPasswordByID(int userid) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_ALL_USER_PREVIOUS_PASSWORDS, new String[] {userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_ALL_USER_PREVIOUS_PASSWORDS, new String[] {userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
 		cnx.Close();
 		 if (result.size() <= 0)
 			 return null;
@@ -635,7 +635,7 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public boolean CreatePreviousPasswordHistory(PreviousPassword pp) {
 		cnx.Open();
-		int value = cnx.insert(QueryFactory.INSERT_PREVIOUS_PASSWORD, 
+		int value = cnx.insert(false, QueryFactory.INSERT_PREVIOUS_PASSWORD, 
 				new String[] { String.valueOf(pp.userID), pp.previousPassword, pp.ModifiedDate, pp.nbCryptIteration + "", pp.salt, pp.saltCounter + "", pp.cryptVersion + "" });
 		cnx.Close();
 
@@ -659,7 +659,7 @@ public class DataMapping implements IDataMapping {
 	
 			cnx.Open();
 			//int value = cnx.delete(QueryFactory.DELETE_USER, new String[] { userid + ""});
-			System.out.println(cnx.delete(QueryFactory.DELETE_USER, new String[] { userid + ""}));
+			System.out.println(cnx.delete(false, QueryFactory.DELETE_USER, new String[] { userid + ""}));
 			//if (value == 0)
 			cnx.Close();
 			return true;
@@ -671,7 +671,7 @@ public class DataMapping implements IDataMapping {
 	public boolean UpdatePolitics(PasswordLoginPolitic pwp){
 		try{
 			cnx.Open();
-			System.out.println(cnx.delete(QueryFactory.UPDAE_PASSWORDPOLITIC, new String[] { pwp.complexity + "", pwp.max + "", pwp.min + "", 
+			System.out.println(cnx.delete(false, QueryFactory.UPDAE_PASSWORDPOLITIC, new String[] { pwp.complexity + "", pwp.max + "", pwp.min + "", 
 					pwp.changementOublie == true ? "1" : "0", pwp.changementDepassement == true ? "1" : "0", pwp.changementBloquage == true ? "1" : "0", pwp.lastPasswords + "", pwp.maxTentative + ""
 							, pwp.delais + "", pwp.bloquage2tentatives == true ? "1" : "0" }));
 			cnx.Close();
@@ -687,7 +687,7 @@ public class DataMapping implements IDataMapping {
 		PasswordLoginPolitic plp = getPasswordLoginPolitic();
 		
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part1 + plp.lastPasswords + QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part2, new String[] {userid + "", userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
+		ArrayList<ArrayList<Object>> result = cnx.Select(true, QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part1 + plp.lastPasswords + QueryFactory.SELECT_UNAUTHORISED_USER_PREVIOUS_PASSWORDS_SETTINGS_Part2, new String[] {userid + "", userid + ""}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
 		cnx.Close();
 		 if (result.size() <= 0)
 			 return null;
@@ -726,7 +726,7 @@ public class DataMapping implements IDataMapping {
 			query += ", 512);";
 			
 			cnx.Open();
-			result = cnx.Select(query, new String[] {userid + "", userid + "", oldPassword}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
+			result = cnx.Select(true, query, new String[] {userid + "", userid + "", oldPassword}, "idpreviousPasswords","userID","previousPassword","dateModified", "nbCryptIteration", "salt", "saltCounter", "cryptVersion");
 			cnx.Close();
 			
 			if (result.size() > 0){
@@ -753,13 +753,13 @@ public class DataMapping implements IDataMapping {
 	
 	public boolean IpIsBlackListed(String ipAddress){
 		cnx.Open();
-		ArrayList<ArrayList<Object>> result = cnx.Select("SELECT * FROM log619lab5.BlackListIp WHERE IPAdress = ? ;", new String[] {ipAddress}, "idBlackListIp", "IPAdress", "enabled", "tries");
+		ArrayList<ArrayList<Object>> result = cnx.Select(false, "SELECT * FROM log619lab5.BlackListIp WHERE IPAdress = ? ;", new String[] {ipAddress}, "idBlackListIp", "IPAdress", "enabled", "tries");
 		cnx.Close();
 		if(result.size() == 0)
 			return false;
 		else{
 			cnx.Open();
-			int toreturn = cnx.update("UPDATE `log619lab5`.`BlackListIp` SET `tries`= ? WHERE `idBlackListIp`= ? ;", 
+			int toreturn = cnx.update(false, "UPDATE `log619lab5`.`BlackListIp` SET `tries`= ? WHERE `idBlackListIp`= ? ;", 
 					new String[] {(Integer.parseInt(result.get(0).get(3).toString()) + 1) + "", result.get(0).get(0).toString()});
 			cnx.Close();
 			if(Boolean.parseBoolean(result.get(0).get(2).toString()))
