@@ -48,6 +48,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 				pwp.bloquage2tentatives = request.getParameter("bloquage").equals("true");
 				pwp.changementOublie = request.getParameter("changementOublie")!=null;
 				pwp.changementDepassement = request.getParameter("changementDepassement")!=null;
+				pwp.changementNouveau = request.getParameter("changementNouveau")!=null;
 				pwp.min = Integer.parseInt(request.getParameter("lmin"));
 				pwp.max = Integer.parseInt(request.getParameter("lmax"));
 				pwp.complexity = 0;
