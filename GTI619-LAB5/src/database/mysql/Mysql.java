@@ -135,7 +135,7 @@ public class Mysql implements IDatabase {
 				
 				Log event = new Objects().new Log();
 				event.logDate = new SimpleDateFormat().format(new Date());
-				
+				event.userLogId = 1;
 				event.logName = p_request;
 				//System.out.println("even.logName, longeur =" + event.logName.length());
 				event.CreateLog(event, true);
