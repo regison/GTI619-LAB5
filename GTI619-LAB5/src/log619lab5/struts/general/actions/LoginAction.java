@@ -25,6 +25,7 @@ public class LoginAction extends AbstractAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		System.out.println("LoginAction");
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		String randomString = generateHiddenRandomString();
 		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);

@@ -139,8 +139,9 @@ public abstract class AbstractAction extends Action {
 	}
 	
 	public String generateHiddenRandomString(){
+		System.out.println("GenerationRandom");
 		HiddenStringGenerator hiddenGenerator = new HiddenStringGenerator();
-		return hiddenGenerator.generateRandomString();
+		return hiddenGenerator.generateRandomString().replace("", "");
 	}
 	
 	public abstract void setPageSection();
