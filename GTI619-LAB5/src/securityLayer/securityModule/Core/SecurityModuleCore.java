@@ -1,6 +1,7 @@
 package securityLayer.securityModule.Core;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.servlet.http.HttpSession;
@@ -62,6 +63,8 @@ public class SecurityModuleCore {
 		Objects obj = new Objects();
 		Log event = obj.new Log();
 		event.logName = "Successfull Login Try For User " + dtp.GetUser(userID).name;
+		event.userLogId = 1;
+		event.logDate = new SimpleDateFormat().format(new Date());
 		dtp.CreateLog(event, false);
 		try {	
 			session.setAttribute(SessionAttributeIdentificator.FAILEDLOGINCOUNT, "0");
@@ -92,6 +95,8 @@ public class SecurityModuleCore {
 		Objects obj = new Objects();
 		Log event = obj.new Log();
 		event.logName = "Failed Login Try For " + user == null ? "no existing user" : user.name;
+		event.userLogId = 1;
+		event.logDate = new SimpleDateFormat().format(new Date());
 		dtp.CreateLog(event, false);
 		BruteForceProtection bruteProtect = new BruteForceProtection();
 		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount(), user);
@@ -101,6 +106,13 @@ public class SecurityModuleCore {
 		if(user != null){
 			incrementUnsuccessfullLogin();
 		}
+		dtp = new DataProvider(false);
+		Objects obj = new Objects();
+		Log event = obj.new Log();
+		event.logName = "Failed Login Try For " + user == null ? "no existing user" : user.name;
+		event.userLogId = 1;
+		event.logDate = new SimpleDateFormat().format(new Date());
+		dtp.CreateLog(event, false);
 		BruteForceProtection bruteProtect = new BruteForceProtection();
 		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount(), user);
 	}
