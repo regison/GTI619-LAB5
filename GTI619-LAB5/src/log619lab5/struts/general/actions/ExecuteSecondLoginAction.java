@@ -68,12 +68,18 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		session.removeAttribute("indexes");
-		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
+		if(_currentUser.changepw){
+			System.out.println("Change pw");
+			System.out.println("End second login --------------------- ");
+			return mapping.findForward("changepw");
+		}
 		
 		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
 		
+		session.removeAttribute("indexes");
+		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
+				
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
 		session = request.getSession(true);	
@@ -83,12 +89,6 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, Calendar.getInstance().getTimeInMillis());
 		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 		
-		if(_currentUser.changepw){
-			System.out.println("Change pw");
-			System.out.println("End second login --------------------- ");
-			return mapping.findForward("changepw");
-		}
-
 		System.out.println("Role selectionlogin --------------------- ");
 		System.out.println("End second login --------------------- ");
 		if(_currentUser.role == null){
