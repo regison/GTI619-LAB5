@@ -31,7 +31,7 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	
+		System.out.println("Start second login --------------------- ");
 		String password = (String) request.getParameter("password");
 		dtP = new DataProvider();
 		HttpSession session = request.getSession(true);
@@ -46,6 +46,8 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
 		
 		if(hidden.equals("") || !hidden.equals(random)){
+			System.out.println("Start second login failed. Hidden not the same.");
+			System.out.println("End second login --------------------- ");
 			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
@@ -73,12 +75,16 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 		
 		if(_currentUser.changepw){
+			System.out.println("Change pw");
+			System.out.println("End second login --------------------- ");
 			return mapping.findForward("changepw");
 		}
 		
 		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
 
+		System.out.println("Role selectionlogin --------------------- ");
+		System.out.println("End second login --------------------- ");
 		if(_currentUser.role == null){
 			pageSection = Section.GENERAL;
 			return mapping.findForward("norole");
