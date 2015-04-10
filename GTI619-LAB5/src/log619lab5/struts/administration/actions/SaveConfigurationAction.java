@@ -38,9 +38,10 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 			String hidden = request.getParameter("hidden");
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING)))
 			{
+				session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.ADMINHIDDENSTRING, "");
 				return mapping.findForward(FAILURE);
 			}
-			
+			session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.ADMINHIDDENSTRING, "");
 			try{
 				pwp.maxTentative = Integer.parseInt(request.getParameter("tentativeMax"));
 				pwp.delais = Integer.parseInt(request.getParameter("delais"));
@@ -73,8 +74,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 		
 		
 		String randomString = generateHiddenRandomString();
-		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		session.setAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING, randomString);
+		handleHidden(request, SessionAttributeIdentificator.ADMINHIDDENSTRING);
 		session.setAttribute(SessionAttributeIdentificator.FROM, "AdminPage");
 		
 		return mapping.findForward(SUCCESS);

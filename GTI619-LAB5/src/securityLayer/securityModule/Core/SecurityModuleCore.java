@@ -97,7 +97,7 @@ public class SecurityModuleCore {
 		dtp = new DataProvider(false);
 		Objects obj = new Objects();
 		Log event = obj.new Log();
-		event.logName = "Failed Login Try For " + (user == null ? "no existing user" : user.name) + " from IP " + remoteIP;
+		event.logName = "Failed Login Try For " + (user == null ? "no existing user" : user.name) + " from IP " + (remoteIP == null ? "" : remoteIP);
 		event.userLogId = 1;
 		event.logDate = new SimpleDateFormat().format(new Date());
 		dtp.CreateLog(event, false);

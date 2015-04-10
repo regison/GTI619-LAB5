@@ -40,8 +40,10 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			String pw = request.getParameter("password");
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING)) )
 			{
+				session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING, "");
 				return mapping.findForward("AccessDenied");
 			}	
+			session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING, "");
 			boolean reauthentification = dtp.Authenticate((String) session.getAttribute(SessionAttributeIdentificator.USERNAME), pw, null) !=null;
 			if (reauthentification) {
 				if ("Ajouter".equals(submit)) {
@@ -157,9 +159,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			}
 		}
 		
-		String randomString = generateHiddenRandomString();
-		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		session.setAttribute(SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING, randomString);
+		handleHidden(request, SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING);
 		return mapping.findForward(SUCCESS);
 	}
 	

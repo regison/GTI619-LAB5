@@ -47,15 +47,8 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
 		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
-		
+
 		securityModule = new SecurityModuleCore(null, session);
-		
-		if(userName == null || password == null || userName.equals("") || password.equals("")){
-			System.out.println("Username or password: null or empty");
-			loginFailedLogic(request.getRemoteAddr());
-			pageSection = Section.GENERAL;	
-			return mapping.findForward("failure");
-		}
 		
 		if(session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING) == null){
 			System.out.println("hidden string null");
@@ -65,11 +58,19 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
-		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
-		
 		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
 		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
 		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
+		session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
+		
+		if(userName == null || password == null || userName.equals("") || password.equals("")){
+			System.out.println("Username or password: null or empty");
+			loginFailedLogic(request.getRemoteAddr());
+			pageSection = Section.GENERAL;	
+			return mapping.findForward("failure");
+		}
+		
+		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		
 		if(hidden.equals("") || !hidden.equals(random)){
 			System.out.println("hidden is not the same as in session or is null. hidden: " + hidden + " random : " + random);
@@ -108,9 +109,7 @@ public class ExecuteLoginAction extends AbstractAction {
 				for(int i=0;i<indexes.length;i++){
 					indexes[i] = rnd.nextInt(50);
 				}
-				String randomString = generateHiddenRandomString();
-				request.setAttribute("hidden", randomString);
-				session.setAttribute("loginHiddenString", randomString);
+				handleHidden(request, SessionAttributeIdentificator.LOGINHIDDENSTRING);
 				session.setAttribute("indexes", indexes);
 				session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
 				
@@ -178,7 +177,8 @@ public class ExecuteLoginAction extends AbstractAction {
 	}
 
 	private void loginFailedLogic(String remoteIP){
-		securityModule.manageUnsuccessfullLogin(remoteIP);
+		if(securityModule != null)
+			securityModule.manageUnsuccessfullLogin(remoteIP);
 	}
 	
 	@Override

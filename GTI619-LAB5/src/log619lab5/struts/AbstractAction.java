@@ -54,8 +54,9 @@ public abstract class AbstractAction extends Action {
 				request.getSession(true).invalidate();
 				redirectPage(request, response, "Login.do");
 			}
-			else if(validatePageAccess(request, response))
+			else if(validatePageAccess(request, response)){
 				action = directive(mapping, form, request, response);
+			}
 			else
 				redirectPage(request, response, "AccessDenied.do");
 		} catch (Exception e) {
@@ -142,6 +143,25 @@ public abstract class AbstractAction extends Action {
 		System.out.println("GenerationRandom");
 		HiddenStringGenerator hiddenGenerator = new HiddenStringGenerator();
 		return hiddenGenerator.generateRandomString().replace("", "");
+	}
+	
+	public void handleHidden(HttpServletRequest request, String identificator){
+		String randomString = generateHiddenRandomString();
+		HttpSession session = request.getSession(true);
+		if(session.getAttribute("WaitingForAuth" + identificator) == null || session.getAttribute("WaitingForAuth" + identificator).equals("")){
+			session.setAttribute(identificator, randomString);
+			session.setAttribute("WaitingForAuth" + identificator, 0);
+			request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		}
+		else{
+			session.setAttribute("WaitingForAuth" + identificator, Integer.parseInt(session.getAttribute("WaitingForAuth" + identificator).toString()) + 1);
+			request.setAttribute(SessionAttributeIdentificator.HIDDEN, session.getAttribute(identificator));
+			if(Integer.parseInt(session.getAttribute("WaitingForAuth" + identificator).toString()) == 15){
+				session.setAttribute(identificator, randomString);
+				request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+				session.setAttribute("WaitingForAuth" + identificator, "0");
+			}
+		}
 	}
 	
 	public abstract void setPageSection();

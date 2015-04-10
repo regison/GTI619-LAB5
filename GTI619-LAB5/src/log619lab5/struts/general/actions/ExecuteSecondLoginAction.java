@@ -44,6 +44,7 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
 		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
 		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
+		session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
 		
 		if(hidden.equals("") || !hidden.equals(random)){
 			System.out.println("Start second login failed. Hidden not the same.");

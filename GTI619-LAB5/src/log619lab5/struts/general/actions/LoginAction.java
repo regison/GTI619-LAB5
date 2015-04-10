@@ -27,8 +27,7 @@ public class LoginAction extends AbstractAction {
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		System.out.println("LoginAction");
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
-		String randomString = generateHiddenRandomString();
-		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		
 		HttpSession session = request.getSession(true);
 		// Ne pas invalider! J'en ai besoin pour gérer le bruteforce session.invalidate();
 		session = request.getSession(true);
@@ -40,7 +39,7 @@ public class LoginAction extends AbstractAction {
 			u.isAuthenticated = false;
 			dtp.UpdateUser(u);
 		}
-		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, randomString);
+		handleHidden(request, SessionAttributeIdentificator.LOGINHIDDENSTRING);
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
 		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
 		session.setAttribute(SessionAttributeIdentificator.IDUSER, "");

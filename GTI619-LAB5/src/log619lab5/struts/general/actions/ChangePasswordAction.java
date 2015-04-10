@@ -43,9 +43,10 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.UPDATEPWHIDDENSTRING)))
 			{
+				session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.UPDATEPWHIDDENSTRING, "");
 				return mapping.findForward("OperationDenied");
 			}
-			
+			session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.UPDATEPWHIDDENSTRING, "");
 			boolean reauthentification = dtp.Authenticate((String) session.getAttribute(SessionAttributeIdentificator.USERNAME), oldPassword, null) !=null;
 			if(reauthentification){
 				if(newPassword.equals(copynewPassword))
@@ -79,9 +80,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			request.setAttribute("error", sPass.getPasswordConstraintMessage());
 		}
 		
-		String randomString = generateHiddenRandomString();
-		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		session.setAttribute(SessionAttributeIdentificator.UPDATEPWHIDDENSTRING, randomString);
+		handleHidden(request, SessionAttributeIdentificator.UPDATEPWHIDDENSTRING);
 		return mapping.findForward("success");
     }
 
