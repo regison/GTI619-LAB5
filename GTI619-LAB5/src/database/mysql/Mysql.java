@@ -138,7 +138,7 @@ public class Mysql implements IDatabase {
 				
 				event.logName = p_request;
 				//System.out.println("even.logName, longeur =" + event.logName.length());
-				//event.CreateLog(event, byPassLog);
+				event.CreateLog(event, true);
 			};
 			prepStmt.close();
 			return row;
