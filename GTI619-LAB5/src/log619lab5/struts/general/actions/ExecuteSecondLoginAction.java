@@ -61,7 +61,24 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		for(int i=0;i<in.length;i++){
 			text += _currentUser.secondFactorPW.charAt(in[i]);
 		}
+		System.out.println("Checking second password...");
+		if(password.equals("") || !password.equals(text)){
+			System.out.println("Start second login failed. password not the same.");
+			System.out.println("End second login --------------------- ");
+			loginFailedLogic(request.getRemoteAddr());
+			pageSection = Section.GENERAL;	
+			return mapping.findForward("failure");
+		}
 		
+		if(_currentUser.changepw){
+			System.out.println("Change pw");
+			System.out.println("End second login --------------------- ");
+			return mapping.findForward("changepw");
+		}
+		
+		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
+		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
+
 		session.removeAttribute("indexes");
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
 		
@@ -74,15 +91,6 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, Calendar.getInstance().getTimeInMillis());
 		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 		
-		if(_currentUser.changepw){
-			System.out.println("Change pw");
-			System.out.println("End second login --------------------- ");
-			return mapping.findForward("changepw");
-		}
-		
-		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
-		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
-
 		System.out.println("Role selectionlogin --------------------- ");
 		System.out.println("End second login --------------------- ");
 		if(_currentUser.role == null){

@@ -74,9 +74,9 @@ public abstract class AbstractAction extends Action {
     	boolean validate = true;
 		if (pageSection != null) {
 			if(!pageSection.equals(Section.GENERAL)){
-				if(!pageSection.equals(Section.CONNECTED) && session.getAttribute(SessionAttributeIdentificator.IDUSER) == null || session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("") 
+				if(!pageSection.equals(Section.CONNECTED) && (session.getAttribute(SessionAttributeIdentificator.IDUSER) == null || session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("") 
 						|| !dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).enabled
-						|| dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).isLogOutNeeded){
+						|| dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).isLogOutNeeded)){
 					validate = false;
 					if (session.getAttribute(SessionAttributeIdentificator.IDUSER) != null && !session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("")) {
 						User u = dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString()));
