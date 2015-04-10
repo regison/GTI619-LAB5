@@ -22,7 +22,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
+import communication.DataObjects.Objects.User;
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 
 public abstract class AbstractAction extends Action {
@@ -78,10 +80,22 @@ public abstract class AbstractAction extends Action {
 	
 	private boolean validatePageAccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(true);
+		DataProvider dtp = new DataProvider();
     	boolean validate = true;
 		if (pageSection != null) {
 			if(!pageSection.equals(Section.GENERAL)){
-				if (pageSection.equals(Section.CARRE)
+				if(!pageSection.equals(Section.CONNECTED) && session.getAttribute(SessionAttributeIdentificator.IDUSER) == null || session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("") 
+						|| !dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).enabled
+						|| dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).isLogOutNeeded){
+					validate = false;
+					if (session.getAttribute(SessionAttributeIdentificator.IDUSER) != null && !session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("")) {
+						User u = dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString()));
+						u.isAuthenticated = false;
+						dtp.UpdateUser(u);
+					}
+					session.invalidate();
+				}
+				else if (pageSection.equals(Section.CARRE)
 						&& (session.getAttribute(SessionAttributeIdentificator.ROLE) == null || !(session.getAttribute(SessionAttributeIdentificator.ROLE).equals(Objects.Role.AdministratorRoleName) 
 								|| session.getAttribute(SessionAttributeIdentificator.ROLE).equals(Objects.Role.SquareRoleName)))) {
 					validate = false;

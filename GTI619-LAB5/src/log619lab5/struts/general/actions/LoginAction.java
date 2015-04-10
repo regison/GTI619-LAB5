@@ -13,6 +13,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import communication.DataMapping.DataProvider;
+import communication.DataObjects.Objects.User;
 import database.IDatabase;
 import database.mysql.Mysql;
 
@@ -29,12 +31,21 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		HttpSession session = request.getSession();
 		// Ne pas invalider! J'en ai besoin pour gérer le bruteforce session.invalidate();
 		session = request.getSession();
+
+		if (session.getAttribute(SessionAttributeIdentificator.IDUSER) != null && !session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("")) {
+			DataProvider dtp = new DataProvider();
+			User u = dtp.GetUser(Integer.parseInt(session.getAttribute(
+					SessionAttributeIdentificator.IDUSER).toString()));
+			u.isAuthenticated = false;
+			dtp.UpdateUser(u);
+		}
 		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, randomString);
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
 		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
 		session.setAttribute(SessionAttributeIdentificator.IDUSER, "");
 		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, "");
-		request.getSession().setAttribute(SessionAttributeIdentificator.FROM, "Login");
+		session.setAttribute(SessionAttributeIdentificator.FROM, "Login");
+		
 		return mapping.findForward(SUCCESS);
     }
 

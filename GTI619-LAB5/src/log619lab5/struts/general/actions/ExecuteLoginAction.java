@@ -55,6 +55,12 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("failure");
 		}
 		
+		if(session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING) == null){
+			loginFailedLogic();
+			pageSection = Section.GENERAL;	
+			return mapping.findForward("failure");
+		}
+		
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		
 		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
@@ -86,7 +92,9 @@ public class ExecuteLoginAction extends AbstractAction {
 				pageSection = Section.GENERAL;
 				return mapping.findForward("bloque");
 			}
+			session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
 			if(_currentUser.changepw){
+				pageSection = Section.GENERAL;
 				return mapping.findForward("changepw");
 			}
 			_currentUser.role = dtP.GetRole(_currentUser.roleId);			

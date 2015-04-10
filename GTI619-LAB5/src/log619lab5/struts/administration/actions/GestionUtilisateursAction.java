@@ -73,22 +73,24 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 
 						if (check)
 							request.setAttribute("ajoutMessage",
-									"Operation réuisse");
+									"Operation réussie");
 						else
 							request.setAttribute("ajoutMessage",
 									"Cet utilisateur existe déjà");
 				}
 				else if (submit.equals("Modifier")) {
-						String username = request.getParameter("username");
+						int userID = Integer.parseInt(request.getParameter("user"));
 						String tpw = sendNewPassWord(request.getParameter("courriel"));
 						PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
 
-						User user = dtp.GetAllUsersFromAUserName(username).get(0);
+						User user = dtp.GetUser(userID);
 						user.changepw = pwp.changementOublie;
 						user.saltPassword = tpw;
+						user.isLogOutNeeded = true;
 						
 						dtp.UpdateUser(user);
-						//TODO: Savoir ou mettre le mot de pass temporaire.
+						request.setAttribute("oubMessage",
+								"Operation réussie");
 						
 				} else if (submit.equals("Reactiver")) {
 					
@@ -101,7 +103,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						user.changepw = pwp.changementBloquage;
 						dtp.UpdateUser(user);
 						request.setAttribute("activateMessage",
-								"Operation réuisse");
+								"Operation réussie");
 				}
 
 				else if (submit.equals("Supprimer")) {
@@ -109,10 +111,12 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						int userID = Integer.parseInt(request.getParameter("user"));
 						if (!session.getAttribute(SessionAttributeIdentificator.IDUSER).equals(userID)) {
 							User user = dtp.GetUser(userID);
+							user.isLogOutNeeded = true;
+							dtp.UpdateUser(user);
 							dtp.RemoveUser(user.idUser);
 
 							request.setAttribute("suppMessage",
-									"Operation réuisse");
+									"Operation réussie");
 						}
 				} else if (submit.equals("Valider")) {
 						int userID = Integer.parseInt(request.getParameter("user"));
@@ -122,11 +126,18 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 								.getPasswordLoginPolitic();
 						user.roleId = Integer.parseInt(type);
 						dtp.UpdateUser(user);
-						request.setAttribute("privMessage", "Operation réuisse");
+						request.setAttribute("privMessage", "Operation réussie");
 				}
 			}
-			else
+			else{
 				request.setAttribute("ajoutMessage", "Mauvais mot de Passe ");
+				request.setAttribute("privMessage", "Mauvais mot de Passe");
+				request.setAttribute("suppMessage", "Mauvais mot de Passe");
+				request.setAttribute("activateMessage",
+						"Mauvais mot de Passe");
+				request.setAttribute("oubMessage",
+						"Mauvais mot de Passe");
+			}
 		}
 		
 		String randomString = generateHiddenRandomString();

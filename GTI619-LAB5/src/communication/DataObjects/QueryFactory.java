@@ -31,9 +31,10 @@ public class QueryFactory {
 	public static final String UDPATE_USER_LAST_LOGIN_TIME = "UPDATE log619lab5. SET LastLoginTime= ? WHERE userID= ? ;";
 	public static final String UPDATE_USER_ROLELVEL = "UPDATE RoleLevel SET caneEditOwnAccount=? , canChangeMdp=? , canEditAll=?, canModifyDelay=?, canModifynbTentative=?, canModifyBlocage=?, canModifyComplexiteMdp=?   WHERE idRoleLevel=? ;";
 	public static final String UPDAE_PASSWORDPOLITIC = "UPDATE PaswordPolitic SET complexity = ? , max = ? , min = ? , changementOublié = ? , changementDepassement = ? , changementBloquage = ? , lastPasswords = ? , maxTentative = ? , delais = ? , bloquage2Tentatives = ? WHERE idPasswordPolitic = '1';";
-	public static final String UPDATE_USER = "UPDATE `log619lab5`.`User` SET `name`= ? , `roleId`= ? , `ndMd5Iteration`= ? , `ModifiedDate`= ? , `ModifiedBy`= ? , `CreateDate`= ? , `CreateBy`= ? , `saltNumber`= ? , `saltCounter`= ? , `enabled`= ? , `cryptVersion`= ?  WHERE `idUser`= ? ;";
+	public static final String UPDATE_USER = "UPDATE `log619lab5`.`User` SET `name`= ? , `roleId`= ? , `ndMd5Iteration`= ? , `ModifiedDate`= ? , `ModifiedBy`= ? , `CreateDate`= ? , `CreateBy`= ? , `saltNumber`= ? , `saltCounter`= ? , `enabled`= ? , `cryptVersion`= ?, `changepw`= ?  WHERE `idUser`= ? ;";
 	public static final String UPDATE_USER_PASSWORD_PART1 = "UPDATE `log619lab5`.`User` SET `saltPassword`= SHA2(";
 	public static final String UPDATE_USER_PASSWORD_PART2 = " WHERE `idUser`= ? ;";
+	public static final String UPDATE_USER_LOGINLOG = "UPDATE `log619lab5`.`LoginLogs` SET `LoggedIn`=?, `LogoutNeeded`=? WHERE `idUser`=?;";
 	
 	//INSERT SECTION	
 	public static final String INSERT_USER = "INSERT INTO User (name, roleId, ndMd5Iteration, ModifiedDate, ModifiedBy, CreateDate, CreateBy, saltNumber, saltCounter, enabled, cryptVersion, saltPassword) Values ( ? ,? ,? , ? ,? ,? ,? ,? ,? ,? ,?, ";
