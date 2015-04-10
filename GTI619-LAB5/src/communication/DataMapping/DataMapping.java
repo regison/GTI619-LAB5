@@ -423,7 +423,6 @@ public class DataMapping implements IDataMapping {
 					.toString());
 			user.enabled = Boolean
 					.valueOf(result.get(10).toString());
-			user.crypVersion = Integer.parseInt(result.get(11).toString());
 			user.changepw = Boolean
 					.valueOf(result.get(11).toString());
 			user.secondFactorPW = result.get(12).toString();
