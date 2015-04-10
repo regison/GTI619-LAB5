@@ -37,6 +37,11 @@ public abstract class AbstractAction extends Action {
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		DataProvider dtp = new DataProvider();
+		if(dtp.IpIsBlackListed(request.getRemoteAddr())){
+			return null;
+		}
+		
 		ActionForward action = null;
 		setSessionWithCookies(request, response, "Language");
 		//setSessionWithCookies(request, response, "UserName");

@@ -742,4 +742,22 @@ public class DataMapping implements IDataMapping {
 		}
 		return upp;
 	}
+	
+	public boolean IpIsBlackListed(String ipAddress){
+		cnx.Open();
+		ArrayList<ArrayList<Object>> result = cnx.Select("SELECT * FROM log619lab5.BlackListIp WHERE IPAdress = ? ;", new String[] {ipAddress}, "idBlackListIp", "IPAdress", "enabled", "tries");
+		cnx.Close();
+		if(result.size() == 0)
+			return false;
+		else{
+			cnx.Open();
+			int toreturn = cnx.update("UPDATE `log619lab5`.`BlackListIp` SET `tries`= ? WHERE `idBlackListIp`= ? ;", 
+					new String[] {(Integer.parseInt(result.get(0).get(3).toString()) + 1) + "", result.get(0).get(0).toString()});
+			cnx.Close();
+			if(Boolean.parseBoolean(result.get(0).get(2).toString()))
+				return false;
+			else
+				return true;	
+		}
+	}
 }

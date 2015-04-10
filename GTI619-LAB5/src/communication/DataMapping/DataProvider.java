@@ -126,5 +126,9 @@ public class DataProvider {
 	public boolean UpdateUserPassword(User user, String password){
 		return data.UpdateUserPassword(user, password);
 	}
+	
+	public boolean IpIsBlackListed(String ipAddress){
+		return data.IpIsBlackListed(ipAddress);
+	}
 }
 

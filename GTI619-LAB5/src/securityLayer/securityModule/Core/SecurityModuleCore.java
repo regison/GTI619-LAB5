@@ -57,12 +57,12 @@ public class SecurityModuleCore {
 		return user == null ? true : user.isLogOutNeeded;
 	}
 	
-	public void updateSuccessfullLoginTime(int userID){
+	public void updateSuccessfullLoginTime(int userID, String remoteIP){
 		
 		dtp = new DataProvider(false);
 		Objects obj = new Objects();
 		Log event = obj.new Log();
-		event.logName = "Successfull Login Try For User " + dtp.GetUser(userID).name;
+		event.logName = "Successfull Login Try For User " + dtp.GetUser(userID).name + " from IP " + remoteIP;
 		event.userLogId = 1;
 		event.logDate = new SimpleDateFormat().format(new Date());
 		dtp.CreateLog(event, false);
@@ -87,14 +87,14 @@ public class SecurityModuleCore {
 		}
 	}
 	
-	public void manageUnsuccessfullLogin(){
+	public void manageUnsuccessfullLogin(String remoteIP){
 		if(user != null){
 			incrementUnsuccessfullLogin();
 		}
 		dtp = new DataProvider(false);
 		Objects obj = new Objects();
 		Log event = obj.new Log();
-		event.logName = "Failed Login Try For " + user == null ? "no existing user" : user.name;
+		event.logName = "Failed Login Try For " + (user == null ? "no existing user" : user.name) + " from IP " + remoteIP;
 		event.userLogId = 1;
 		event.logDate = new SimpleDateFormat().format(new Date());
 		dtp.CreateLog(event, false);
@@ -102,14 +102,14 @@ public class SecurityModuleCore {
 		bruteProtect.manageLoginBruteForce(session, dbComm == null ? 0 : dbComm.UserFailedTriesCount(), user);
 	}
 	
-	public void manageUnsuccessfullLogin(String username){
+	public void manageUnsuccessfullLogin(String username, String remoteIP){
 		if(user != null){
 			incrementUnsuccessfullLogin();
 		}
 		dtp = new DataProvider(false);
 		Objects obj = new Objects();
 		Log event = obj.new Log();
-		event.logName = "Failed Login Try For " + user == null ? "no existing user" : user.name;
+		event.logName = "Failed Login Try For " + (user == null ? "no existing user" : user.name) + " from IP " + remoteIP;
 		event.userLogId = 1;
 		event.logDate = new SimpleDateFormat().format(new Date());
 		dtp.CreateLog(event, false);

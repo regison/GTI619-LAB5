@@ -50,13 +50,13 @@ public class ExecuteLoginAction extends AbstractAction {
 		securityModule = new SecurityModuleCore(null, session);
 		
 		if(userName == null || password == null || userName.equals("") || password.equals("")){
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 		
 		if(session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING) == null){
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
@@ -68,7 +68,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
 		
 		if(hidden.equals("") || !hidden.equals(random)){
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
@@ -83,12 +83,12 @@ public class ExecuteLoginAction extends AbstractAction {
 			_currentUser = dtP.Authenticate(userName, password, securityModule);			
 			 
 			if(_currentUser == null){
-				loginFailedLogic();
+				loginFailedLogic(request.getRemoteAddr());
 				pageSection = Section.GENERAL;
 				return mapping.findForward("failure");
 			}
 			if(!_currentUser.enabled){
-				loginFailedLogic();
+				loginFailedLogic(request.getRemoteAddr());
 				pageSection = Section.GENERAL;
 				return mapping.findForward("bloque");
 			}
@@ -104,11 +104,11 @@ public class ExecuteLoginAction extends AbstractAction {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;
 			return mapping.findForward("failure");
 		}
-		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);
+		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
 		
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
@@ -138,14 +138,14 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("carre");
 		}
 		else{
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 	}
 
-	private void loginFailedLogic(){
-		securityModule.manageUnsuccessfullLogin();
+	private void loginFailedLogic(String remoteIP){
+		securityModule.manageUnsuccessfullLogin(remoteIP);
 	}
 	
 	@Override
