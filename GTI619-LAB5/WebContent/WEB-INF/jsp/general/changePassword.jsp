@@ -19,7 +19,7 @@
       		 <fieldset>
                  <legend>Informations de l'utilisateur</legend>
  
-                 <label for="opassword">Ancien mot de passw </label>
+                 <label for="opassword">Ancien mot de passe </label>
                  <input type="password" id="opassword" name="opassword" value="" size="20" maxlength="20" />
                  <br />
                  
@@ -45,7 +45,12 @@
              </fieldset>
              <input type="hidden" name="updatePassword" value="true">
              <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
-             <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='<% out.print(session.getAttribute("from") + ".do"); %>'" />
+             <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='
+             <% if(session.getAttribute("from")!=null)
+             	out.print(session.getAttribute("from") + ".do");
+             else
+            	 out.print("Login.do");
+             %>'" />
      </form>
 </body>
 

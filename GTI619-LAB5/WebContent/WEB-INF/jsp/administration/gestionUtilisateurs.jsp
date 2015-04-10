@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1" import="communication.DataMapping.DataProvider,communication.DataObjects.*,database.mysql.Mysql"%>
+    pageEncoding="ISO-8859-1" import="communication.DataMapping.DataProvider,communication.DataObjects.Objects.*,database.mysql.Mysql"%>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
@@ -7,7 +7,7 @@
 
 <title>Administration</title>
 <%@include file="../style.jsp" %>
-<% DataProvider dp = new DataProvider();%>
+<% DataProvider dp = new DataProvider(true);%>
 </head>
 
 <body class="homepage">
@@ -47,12 +47,12 @@
           <fieldset>
               <legend>Oubli mot de passe</legend>
 
-              <label for="user">User name <span class="requis">*</span></label>
-              <select name="user">
+              <label for="username">User name <span class="requis">*</span></label>
+              <select name="username">
               	<% 
               		dp = new DataProvider();
-              		for(Objects.User data : dp.Users()){
-              			out.println("<option value=\"" + data.idUser + "\">" + data.name + "</option>");
+              		for(User data : dp.Users()){
+              			out.println("<option value=\"" + data.name + "\">" + data.name + "</option>");
               		}
               	
               	%>
@@ -72,22 +72,18 @@
      </form>
 	 <br />
     <br />
-   
-   
-   </form>
-           <br />
-       <br />
-       
+          
      	<form method="post" action="GestionUtilisateur.do">
           <fieldset>
               <legend>Reactivation et Suppression d'un utilisateur</legend>
 
-              <label for="user">User name <span class="requis">*</span></label>
-              <select name="user">
+              <label for="username">User name <span class="requis">*</span></label>
+              <select name="username">
               	<% 
               		dp = new DataProvider();
-              		for(Objects.User data : dp.Users()){
-              			out.println("<option value=\"" + data.idUser + "\">" + data.name + "</option>");
+              		for(User data : dp.Users()){
+              			if(!dp.GetRole(data.roleId).roleName.equals(Role.AdministratorRoleName))
+              				out.println("<option value=\"" + data.name + "\">" + data.name + "</option>");
               		}
               	
               	%>
@@ -112,10 +108,11 @@
               <legend>Changer privilege</legend>
 
               <label for="username">User name <span class="requis">*</span></label>
-              <select name="user">
+              <select name="username">
               	<% 
-              		for(Objects.User data : dp.Users()){
-              			out.println("<option value=\"" + data.idUser + "\">" + data.name + "</option>");
+              		for(User data : dp.Users()){
+              			if(!dp.GetRole(data.roleId).roleName.equals(Role.AdministratorRoleName))
+              				out.println("<option value=\"" + data.name + "\">" + data.name + "</option>");
               		}
               	
               	%>
@@ -124,7 +121,7 @@
               <label for="privilege">Nouveau Type</label>
               <select id="privilege" name="privilege">
               	<%    
-              		for(Objects.Role data : dp.Roles()){
+              		for(Role data : dp.Roles()){
               			out.println("<option value=\"" + data.idRole + "\">" + data.roleName + "</option>");
               		}
               	%>
@@ -138,6 +135,39 @@
           <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
           <input type="submit" name="submit" value="Valider"  />
           <input type="button" value="Retour" onclick="window.location.href='/GTI619-LAB5/AdminPage.do'" />      
+     </form>
+	 <br />
+    <br />
+    
+       </form>
+           <br />
+       <br />
+       
+     	<form method="post" action="GestionUtilisateur.do">
+          <fieldset>
+              <legend>Activer et Désactiver authentification Forte</legend>
+
+              <label for="username">User name <span class="requis">*</span></label>
+              <select name="username">
+              	<% 
+              		dp = new DataProvider();
+              		for(User data : dp.Users()){
+              			if(!dp.GetRole(data.roleId).roleName.equals(Role.AdministratorRoleName))
+              				out.println("<option value=\"" + data.name + "\">" + data.name + "</option>");
+              		}
+              	
+              	%>
+              </select>
+              	 <br />
+              <label for="password">Entrez votre mot de passe pour confirmer l'action</label>
+              <input type="password" id="password" name="password" value="" size="25" maxlength="25" />
+              	 <br />
+              <% if(request.getAttribute("reauthMessage")!=null){ out.print(request.getAttribute("reauthMessage"));} %>
+          </fieldset>
+          <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
+          <input type="submit" name="submit" value="Activer"  />
+          <input type="submit" name="submit" value="D&eacute;sactiver"  />
+                
      </form>
 	 <br />
     <br />

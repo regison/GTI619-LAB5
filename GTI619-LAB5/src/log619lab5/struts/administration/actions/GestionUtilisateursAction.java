@@ -79,54 +79,70 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 									"Cet utilisateur existe déjà");
 				}
 				else if (submit.equals("Modifier")) {
-						int userID = Integer.parseInt(request.getParameter("user"));
+						String username = request.getParameter("username");
 						String tpw = sendNewPassWord(request.getParameter("courriel"));
 						PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
 
-						User user = dtp.GetUser(userID);
+						User user = dtp.GetUserByUsername(username);
 						user.changepw = pwp.changementOublie;
 						user.saltPassword = tpw;
-						user.isLogOutNeeded = true;
 						
-						dtp.UpdateUser(user);
-						request.setAttribute("oubMessage",
-								"Operation réussie");
+						if(dtp.UpdateUser(user))
+							request.setAttribute("oubliMessage",
+									"Operation réussie");
+						else
+							request.setAttribute("oubliMessage",
+									"Operation échouée");
 						
 				} else if (submit.equals("Reactiver")) {
 					
 						//TODO: vérifier que le user et le userid correspondent
-					int userID = Integer.parseInt(request.getParameter("user"));
-					User user = dtp.GetUser(userID);
+						String username = request.getParameter("username");
+						User user = dtp.GetUserByUsername(username);
 						PasswordLoginPolitic pwp = dtp
 								.getPasswordLoginPolitic();
 						user.enabled = true;
 						user.changepw = pwp.changementBloquage;
-						dtp.UpdateUser(user);
-						request.setAttribute("activateMessage",
+						if(dtp.UpdateUser(user))
+							request.setAttribute("activateMessage",
 								"Operation réussie");
+						else
+							request.setAttribute("activateMessage",
+									"Operation échouée");
 				}
 
 				else if (submit.equals("Supprimer")) {
 						//TODO: vérifier que le user et le userid correspondent
-						int userID = Integer.parseInt(request.getParameter("user"));
-						if (!session.getAttribute(SessionAttributeIdentificator.IDUSER).equals(userID)) {
-							User user = dtp.GetUser(userID);
-							user.isLogOutNeeded = true;
-							dtp.UpdateUser(user);
-							dtp.RemoveUser(user.idUser);
+						String username = request.getParameter("username");
+						if (!session.getAttribute("Username").equals(username)) {
+							User user = dtp.GetUserByUsername(username);
+							if(dtp.RemoveUser(user.idUser))
 
-							request.setAttribute("suppMessage",
+								request.setAttribute("suppMessage",
 									"Operation réussie");
+							else
+								request.setAttribute("suppMessage",
+										"Operation échouée");
 						}
 				} else if (submit.equals("Valider")) {
-						int userID = Integer.parseInt(request.getParameter("user"));
+						String username = request.getParameter("username");
 						String type = request.getParameter("privilege");
-						User user = dtp.GetUser(userID);
+						User user = dtp.GetUserByUsername(username);
 						PasswordLoginPolitic pwp = dtp
 								.getPasswordLoginPolitic();
 						user.roleId = Integer.parseInt(type);
-						dtp.UpdateUser(user);
-						request.setAttribute("privMessage", "Operation réussie");
+						if(dtp.UpdateUser(user))
+							request.setAttribute("privMessage", "Operation réussie");
+						else
+							request.setAttribute("privMessage", "Operation échouée");
+				} else if(submit.equals("Activer") || submit.equals("D&eacute;sactiver") ){
+					String username = request.getParameter("username");
+					User user = dtp.GetUserByUsername(username);
+					user.crypVersion = submit.equals("Activer") ? 2 : 1;
+					if(dtp.UpdateUser(user))
+						request.setAttribute("reauthMessage", "Operation réuisse");
+					else
+						request.setAttribute("reauthMessage", "Operation échouée");
 				}
 			}
 			else{
