@@ -56,7 +56,6 @@ public class DataMapping implements IDataMapping {
 					toAdd.isAuthenticated =  Boolean.valueOf(user.get(12).toString());
 					toAdd.isLogOutNeeded = Boolean.valueOf(user.get(13).toString());
 				} catch (Exception e) {
-					ExceptionLogger.LogException(e);
 					toAdd.isAuthenticated =  false;
 					toAdd.isLogOutNeeded = false;
 				}				
