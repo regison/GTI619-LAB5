@@ -340,7 +340,7 @@ public class DataMapping implements IDataMapping {
 	public ArrayList<Objects.User> GetAllUsersFromAUserName(String uname) {
 		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
-																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled");
+										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled", "secondFactorPW", "cryptVersion");
 		cnx.Close();
 		
 		if(result == null)
@@ -371,6 +371,8 @@ public class DataMapping implements IDataMapping {
 						.toString());
 				user.enabled = Boolean
 						.valueOf(result.get(i).get(10).toString());
+				user.secondFactorPW = result.get(11).toString();
+				user.crypVersion = Integer.parseInt(result.get(13).toString());
 				
 				allUsers.add(user);
 			}
@@ -382,7 +384,7 @@ public class DataMapping implements IDataMapping {
 	public User GetUserByUsername(String uname) {
 		cnx.Open();
 		ArrayList<ArrayList<Object>> resultList = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
-																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled", "changepw");
+										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled", "changepw", "secondFactorPW", "cryptVersion");
 		cnx.Close();
 		
 		if(resultList == null)
@@ -416,6 +418,8 @@ public class DataMapping implements IDataMapping {
 					.valueOf(result.get(10).toString());
 			user.changepw = Boolean
 					.valueOf(result.get(11).toString());
+			user.secondFactorPW = result.get(12).toString();
+			user.crypVersion = Integer.parseInt(result.get(13).toString());
 		}
 			
 		return user;

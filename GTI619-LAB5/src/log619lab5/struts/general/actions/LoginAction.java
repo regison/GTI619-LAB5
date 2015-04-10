@@ -23,8 +23,8 @@ public class LoginAction extends AbstractAction {
 
 	private final String PAGE = "Login";
 	
-@Override
-public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	@Override
+	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		String randomString = generateHiddenRandomString();
 		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
