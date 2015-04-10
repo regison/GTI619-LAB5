@@ -45,19 +45,19 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 				pwp.delais = Integer.parseInt(request.getParameter("delais"));
 				pwp.bloquage2tentatives = request.getParameter("bloquage").equals("true");
 				pwp.changementOublie = request.getParameter("changementOublie")!=null;
-				pwp.changementDepassement = request.getParameter("changementTentatives")!=null;
+				pwp.changementDepassement = request.getParameter("changementDepassement")!=null;
 				pwp.min = Integer.parseInt(request.getParameter("lmin"));
 				pwp.max = Integer.parseInt(request.getParameter("lmax"));
 				pwp.complexity = 0;
-				if(request.getParameter("politiqueMaj")!=null);
+				if(request.getParameter("politiqueMaj")!=null)
 					pwp.complexity+=1;
-				if(request.getParameter("politiqueCarac")!=null);
+				if(request.getParameter("politiqueCarac")!=null)
 					pwp.complexity+=2;
-				if(request.getParameter("politiqueChiffres")!=null);
+				if(request.getParameter("politiqueChiffres")!=null)
 					pwp.complexity+=4;
-				if(request.getParameter("politiqueMin")!=null);
+				if(request.getParameter("politiqueMin")!=null)
 					pwp.complexity+=8;
-				pwp.lastPasswords = Integer.parseInt(request.getParameter("tentativeMax"));
+				pwp.lastPasswords = Integer.parseInt(request.getParameter("ancien"));
 				
 				if(dp.UpdatePolitics(pwp))
 					request.setAttribute("message", "Operation réussie");
