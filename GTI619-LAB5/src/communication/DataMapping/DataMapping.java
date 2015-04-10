@@ -585,7 +585,7 @@ public class DataMapping implements IDataMapping {
 
 		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_PASSWORDPOLITIC, null, "complexity","max","min","changementOublie", 
-				"changementDepassement", "changementBloquage", "lastPasswords", "maxTentative", "delais", "bloquage2tentatives");
+				"changementDepassement", "changementBloquage", "changementNouveau","lastPasswords", "maxTentative", "delais", "bloquage2tentatives");
 		cnx.Close();
 		 if (result.size() <= 0)
 			 return null;
@@ -597,6 +597,7 @@ public class DataMapping implements IDataMapping {
 		 pwp.changementOublie = Boolean.parseBoolean(result.get(0).get(index++).toString());
 		 pwp.changementDepassement = Boolean.parseBoolean(result.get(0).get(index++).toString());
 		 pwp.changementBloquage = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.changementNouveau = Boolean.parseBoolean(result.get(0).get(index++).toString());
 		 pwp.lastPasswords = Integer.parseInt(result.get(0).get(index++).toString());
 		 pwp.maxTentative = Integer.parseInt(result.get(0).get(index++).toString());
 		 pwp.delais = Integer.parseInt(result.get(0).get(index++).toString());
@@ -675,7 +676,7 @@ public class DataMapping implements IDataMapping {
 		try{
 			cnx.Open();
 			System.out.println(cnx.delete(false, QueryFactory.UPDAE_PASSWORDPOLITIC, new String[] { pwp.complexity + "", pwp.max + "", pwp.min + "", 
-					pwp.changementOublie == true ? "1" : "0", pwp.changementDepassement == true ? "1" : "0", pwp.changementBloquage == true ? "1" : "0", pwp.lastPasswords + "", pwp.maxTentative + ""
+					pwp.changementOublie == true ? "1" : "0", pwp.changementDepassement == true ? "1" : "0", pwp.changementBloquage == true ? "1" : "0", pwp.changementNouveau == true ? "1" : "0" , pwp.lastPasswords + "", pwp.maxTentative + ""
 							, pwp.delais + "", pwp.bloquage2tentatives == true ? "1" : "0" }));
 			cnx.Close();
 		}
