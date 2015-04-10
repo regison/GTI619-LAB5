@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -26,7 +27,7 @@ public class ChangePasswordAction extends AbstractAction {
 	
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("Page", "ChangePassword");
+		request.setAttribute(SessionAttributeIdentificator.PAGE, "ChangePassword");
 
 		HttpSession session = request.getSession();
 		SecurityModulePassword sPass = new SecurityModulePassword();
@@ -37,15 +38,15 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			String oldPassword = request.getParameter("opassword");
 			String newPassword = request.getParameter("npassword");
 			String copynewPassword = request.getParameter("cnpassword");
-			String hidden = request.getParameter("hidden");
+			String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
 			DataProvider dtp =  new DataProvider(false);
 			
-			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("updatePWHiddenString")))
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.UPDATEPWHIDDENSTRING)))
 			{
 				return mapping.findForward("OperationDenied");
 			}
 			
-			boolean reauthentification = dtp.Authenticate((String) session.getAttribute("Username"), oldPassword, null) !=null;
+			boolean reauthentification = dtp.Authenticate((String) session.getAttribute(SessionAttributeIdentificator.USERNAME), oldPassword, null) !=null;
 			if(reauthentification){
 				if(newPassword.equals(copynewPassword))
 				{
@@ -53,7 +54,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 					
 					if(errors.size()==0){
 						//On va passer le id au lieu du username
-						if(sPass.updatePassword((int) request.getSession().getAttribute("idUser"), (String) request.getSession().getAttribute("Username"), newPassword)){
+						if(sPass.updatePassword((int) request.getSession().getAttribute(SessionAttributeIdentificator.IDUSER), (String) request.getSession().getAttribute(SessionAttributeIdentificator.USERNAME), newPassword)){
 							
 							request.setAttribute("message", "ca  a marché");
 						}
@@ -79,8 +80,8 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 		}
 		
 		String randomString = generateHiddenRandomString();
-		request.setAttribute("hidden", randomString);
-		session.setAttribute("updatePWHiddenString", randomString);
+		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		session.setAttribute(SessionAttributeIdentificator.UPDATEPWHIDDENSTRING, randomString);
 		return mapping.findForward("success");
     }
 

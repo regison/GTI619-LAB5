@@ -22,7 +22,9 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
+import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
+import communication.DataObjects.Objects.User;
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 
 public abstract class AbstractAction extends Action {
@@ -35,13 +37,18 @@ public abstract class AbstractAction extends Action {
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		DataProvider dtp = new DataProvider();
+		if(dtp.IpIsBlackListed(request.getRemoteAddr())){
+			return null;
+		}
+		
 		ActionForward action = null;
 		setSessionWithCookies(request, response, "Language");
 		//setSessionWithCookies(request, response, "UserName");
 		setPageSection();
-		if(request.getSession().getAttribute("lastactivity") == null)
-			request.getSession().setAttribute("lastActivity",new Date().getTime());
-		if(new Date().getTime() - (long) request.getSession().getAttribute("lastActivity") >= 20*60*1000){
+		if(request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
+			request.getSession().setAttribute(SessionAttributeIdentificator.LASTACTIVITY,new Date().getTime());
+		if(new Date().getTime() - (long) request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) >= 20*60*1000){
 			request.getSession().invalidate();
 			redirectPage(request, response, "Login.do");
 		}
@@ -78,21 +85,33 @@ public abstract class AbstractAction extends Action {
 	
 	private boolean validatePageAccess(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession session = request.getSession(true);
+		DataProvider dtp = new DataProvider();
     	boolean validate = true;
 		if (pageSection != null) {
 			if(!pageSection.equals(Section.GENERAL)){
-				if (pageSection.equals(Section.CARRE)
-						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
-								|| session.getAttribute("Role").equals(Objects.Role.SquareRoleName)))) {
+				if(!pageSection.equals(Section.CONNECTED) && session.getAttribute(SessionAttributeIdentificator.IDUSER) == null || session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("") 
+						|| !dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).enabled
+						|| dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).isLogOutNeeded){
+					validate = false;
+					if (session.getAttribute(SessionAttributeIdentificator.IDUSER) != null && !session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("")) {
+						User u = dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString()));
+						u.isAuthenticated = false;
+						dtp.UpdateUser(u);
+					}
+					session.invalidate();
+				}
+				else if (pageSection.equals(Section.CARRE)
+						&& (session.getAttribute(SessionAttributeIdentificator.ROLE) == null || !(session.getAttribute(SessionAttributeIdentificator.ROLE).equals(Objects.Role.AdministratorRoleName) 
+								|| session.getAttribute(SessionAttributeIdentificator.ROLE).equals(Objects.Role.SquareRoleName)))) {
 					validate = false;
 				} else if (pageSection.equals(Section.CERCLE)
-						&& (session.getAttribute("Role") == null || !(session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName) 
-								|| session.getAttribute("Role").equals(Objects.Role.CercleRoleName)))){
+						&& (session.getAttribute(SessionAttributeIdentificator.ROLE) == null || !(session.getAttribute(SessionAttributeIdentificator.ROLE).equals(Objects.Role.AdministratorRoleName) 
+								|| session.getAttribute(SessionAttributeIdentificator.ROLE).equals(Objects.Role.CercleRoleName)))){
 					validate = false;
 				} else if (pageSection.equals(Section.ADMIN) 
-						&& (session.getAttribute("Role") == null || !session.getAttribute("Role").equals(Objects.Role.AdministratorRoleName))){
+						&& (session.getAttribute(SessionAttributeIdentificator.ROLE) == null || !session.getAttribute(SessionAttributeIdentificator.ROLE).equals(Objects.Role.AdministratorRoleName))){
 					validate = false;
-				} else if (pageSection.equals(Section.CONNECTED) && (session.getAttribute("Username") == null || session.getAttribute("Username").equals("")))
+				} else if (pageSection.equals(Section.CONNECTED) && (session.getAttribute(SessionAttributeIdentificator.USERNAME) == null || session.getAttribute(SessionAttributeIdentificator.USERNAME).equals("")))
 					validate = false;
 				
 			}
@@ -105,7 +124,7 @@ public abstract class AbstractAction extends Action {
 	}
 	
 	private void redirectPage(HttpServletRequest request, HttpServletResponse response, String p_page) throws IOException {		
-		request.setAttribute("Page", p_page); 
+		request.setAttribute(SessionAttributeIdentificator.PAGE, p_page); 
 		response.sendRedirect(p_page);
 	}
 	

@@ -8,6 +8,7 @@ import java.util.List;
 
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 import database.mysql.Mysql;
@@ -51,6 +52,7 @@ public class SecurityModulePassword {
 			}
 		}
 		catch(Exception e){
+			ExceptionLogger.LogException(e);
 			errors.add("configuration pas trouvée");
 		}
 		return errors;
@@ -84,6 +86,7 @@ public class SecurityModulePassword {
 		u.saltCounter = (int) Math.floor (Math.random() * (1 + 10 - 1)) + 1;
 		u.nbCryptIteration = (int) Math.floor (Math.random() * (1 + 10 - 5)) + 5;
 		u.salt = generateHiddenRandomString();
+		u.changepw = false;
 		
 		dp.UpdateUser(u);
 		dp.UpdateUserPassword(u, newPassword);

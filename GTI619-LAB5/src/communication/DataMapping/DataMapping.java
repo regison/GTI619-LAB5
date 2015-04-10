@@ -55,6 +55,7 @@ public class DataMapping implements IDataMapping {
 					toAdd.isAuthenticated =  Boolean.valueOf(user.get(12).toString());
 					toAdd.isLogOutNeeded = Boolean.valueOf(user.get(13).toString());
 				} catch (Exception e) {
+					ExceptionLogger.LogException(e);
 					toAdd.isAuthenticated =  false;
 					toAdd.isLogOutNeeded = false;
 				}				
@@ -226,7 +227,7 @@ public class DataMapping implements IDataMapping {
 	public User GetUserByID(int userid) {
 		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BYID, new String[] {userid + ""}, "idUser","name","roleId","saltPassword","ndMd5Iteration", 
-		 																								"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded", "cryptVersion");
+		 							"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","LoggedIn","LogoutNeeded", "cryptVersion", "changepw");
 		User user = null;
 		if (result.size() == 1){
 			user = new Objects().new User();
@@ -245,6 +246,7 @@ public class DataMapping implements IDataMapping {
 			user.isAuthenticated =  Boolean.valueOf(result.get(0).get(12).toString());
 			user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
 			user.crypVersion = Integer.parseInt(result.get(0).get(14).toString());
+			user.changepw = Boolean.valueOf(result.get(0).get(15).toString());
 		}
 		cnx.Close();
 		return user;
@@ -269,7 +271,10 @@ public class DataMapping implements IDataMapping {
 		cnx.Open();
 		cnx.update(QueryFactory.UPDATE_USER, 
 				new String[] {user.name, user.roleId + "", user.nbCryptIteration + "", 
-				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled == true ? "1" : "0", user.crypVersion + "", user.idUser + ""});
+				user.ModifiedDate,user.ModifiedBy, user.CreateDate, user.CreateBy, user.salt, 
+				user.saltCounter + "", user.enabled == true ? "1" : "0", user.crypVersion + "", user.changepw == true ? "1" : "0", user.idUser + ""});
+		cnx.update(QueryFactory.UPDATE_USER_LOGINLOG, 
+				new String[] {user.isAuthenticated == true ? "1" : "0", user.isLogOutNeeded == true ? "1" : "0", user.idUser + ""});
 		cnx.Close();
 		return false;
 	}
@@ -336,7 +341,7 @@ public class DataMapping implements IDataMapping {
 	public ArrayList<Objects.User> GetAllUsersFromAUserName(String uname) {
 		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
-																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled");
+										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled", "secondFactorPW", "cryptVersion");
 		cnx.Close();
 		
 		if(result == null)
@@ -367,6 +372,8 @@ public class DataMapping implements IDataMapping {
 						.toString());
 				user.enabled = Boolean
 						.valueOf(result.get(i).get(10).toString());
+				user.secondFactorPW = result.get(11).toString();
+				user.crypVersion = Integer.parseInt(result.get(13).toString());
 				
 				allUsers.add(user);
 			}
@@ -377,8 +384,8 @@ public class DataMapping implements IDataMapping {
 	@Override
 	public User GetUserByUsername(String uname) {
 		cnx.Open();
-		ArrayList<ArrayList<Object>> resultList = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration", 
-																										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled","cryptVersion");
+		ArrayList<ArrayList<Object>> resultList = cnx.Select(QueryFactory.SELECT_USER_BY_UNAME, new String[] {uname}, "idUser","name","roleId","ndMd5Iteration",
+										"ModifiedDate", "ModifiedBy","CreateDate","CreateBy","saltNumber", "saltCounter","enabled", "changepw", "secondFactorPW", "cryptVersion");
 		cnx.Close();
 		
 		if(resultList == null)
@@ -411,6 +418,10 @@ public class DataMapping implements IDataMapping {
 			user.enabled = Boolean
 					.valueOf(result.get(10).toString());
 			user.crypVersion = Integer.parseInt(result.get(11).toString());
+			user.changepw = Boolean
+					.valueOf(result.get(11).toString());
+			user.secondFactorPW = result.get(12).toString();
+			user.crypVersion = Integer.parseInt(result.get(13).toString());
 		}
 			
 		return user;
@@ -661,6 +672,7 @@ public class DataMapping implements IDataMapping {
 			cnx.Close();
 		}
 		catch(Exception ex){
+			ExceptionLogger.LogException(ex);
 			return false;
 		}
 		return true;
@@ -732,5 +744,23 @@ public class DataMapping implements IDataMapping {
 			}
 		}
 		return upp;
+	}
+	
+	public boolean IpIsBlackListed(String ipAddress){
+		cnx.Open();
+		ArrayList<ArrayList<Object>> result = cnx.Select("SELECT * FROM log619lab5.BlackListIp WHERE IPAdress = ? ;", new String[] {ipAddress}, "idBlackListIp", "IPAdress", "enabled", "tries");
+		cnx.Close();
+		if(result.size() == 0)
+			return false;
+		else{
+			cnx.Open();
+			int toreturn = cnx.update("UPDATE `log619lab5`.`BlackListIp` SET `tries`= ? WHERE `idBlackListIp`= ? ;", 
+					new String[] {(Integer.parseInt(result.get(0).get(3).toString()) + 1) + "", result.get(0).get(0).toString()});
+			cnx.Close();
+			if(Boolean.parseBoolean(result.get(0).get(2).toString()))
+				return false;
+			else
+				return true;	
+		}
 	}
 }

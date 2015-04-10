@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -23,6 +24,7 @@ import securityLayer.securityModule.Core.SecurityModuleCore;
 import database.IDatabase;
 import database.mysql.Mysql;
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 
@@ -44,25 +46,31 @@ public class ExecuteLoginAction extends AbstractAction {
 
 		HttpSession session = request.getSession();
 		
-		session.setAttribute("Username", "");
-		session.setAttribute("Role", "");
+		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
+		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
 		
 		securityModule = new SecurityModuleCore(null, session);
 		
 		if(userName == null || password == null || userName.equals("") || password.equals("")){
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 		
-		request.setAttribute("Page", PAGE);
+		if(session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING) == null){
+			loginFailedLogic(request.getRemoteAddr());
+			pageSection = Section.GENERAL;	
+			return mapping.findForward("failure");
+		}
 		
-		String hidden = request.getParameter("hidden");
-		String random = session.getAttribute("loginHiddenString").toString();
-		session.setAttribute("loginHiddenString", "");
+		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
+		
+		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
+		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
+		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
 		
 		if(hidden.equals("") || !hidden.equals(random)){
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
@@ -77,12 +85,12 @@ public class ExecuteLoginAction extends AbstractAction {
 			_currentUser = dtP.Authenticate(userName, password, securityModule);			
 			 
 			if(_currentUser == null){
-				loginFailedLogic();
+				loginFailedLogic(request.getRemoteAddr());
 				pageSection = Section.GENERAL;
 				return mapping.findForward("failure");
 			}
 			if(!_currentUser.enabled){
-				loginFailedLogic();
+				loginFailedLogic(request.getRemoteAddr());
 				pageSection = Section.GENERAL;
 				return mapping.findForward("bloque");
 			}
@@ -96,34 +104,36 @@ public class ExecuteLoginAction extends AbstractAction {
 				request.setAttribute("hidden", randomString);
 				session.setAttribute("loginHiddenString", randomString);
 				session.setAttribute("indexes", indexes);
-				session.setAttribute("Username", _currentUser.name);
+				session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
 				return mapping.findForward("secondLogin");
 			}
 			 
 			if(_currentUser.changepw){
+				pageSection = Section.GENERAL;
 				return mapping.findForward("changepw");
 			}
 			_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 			_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);	
 
 		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;
 			return mapping.findForward("failure");
 		}
-		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);
+		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
 		
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
 		session = request.getSession();	
 
-		session.setAttribute("Username", _currentUser.name);
-		session.setAttribute("Role", _currentUser.role.roleName);
-		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
-		session.setAttribute("idUser", _currentUser.idUser);
+		session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
+		session.setAttribute(SessionAttributeIdentificator.ROLE, _currentUser.role.roleName);
+		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, Calendar.getInstance().getTimeInMillis());
+		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 		
 		if(_currentUser.role == null){
 			pageSection = Section.GENERAL;
@@ -144,14 +154,14 @@ public class ExecuteLoginAction extends AbstractAction {
 			return mapping.findForward("carre");
 		}
 		else{
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 	}
 
-	private void loginFailedLogic(){
-		securityModule.manageUnsuccessfullLogin();
+	private void loginFailedLogic(String remoteIP){
+		securityModule.manageUnsuccessfullLogin(remoteIP);
 	}
 	
 	@Override

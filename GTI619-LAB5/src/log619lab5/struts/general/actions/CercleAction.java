@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -21,8 +22,8 @@ public class CercleAction extends AbstractAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("Page", "Cercle");
-		request.getSession().setAttribute("from", "Cercle");
+		request.setAttribute(SessionAttributeIdentificator.PAGE, "Cercle");
+		request.getSession().setAttribute(SessionAttributeIdentificator.FROM, "Cercle");
 		return mapping.findForward("success");
 	}
 	

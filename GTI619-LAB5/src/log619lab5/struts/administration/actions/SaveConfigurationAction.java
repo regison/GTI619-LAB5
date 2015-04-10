@@ -7,6 +7,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -15,6 +16,7 @@ import org.apache.struts.action.ActionMapping;
 import database.IDatabase;
 import database.mysql.Mysql;
 import communication.DataMapping.DataProvider;
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
 
@@ -24,7 +26,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		request.setAttribute("Page", PAGE);
+		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		HttpSession session = request.getSession();
 		
 		DataProvider dp = new DataProvider(false);
@@ -34,7 +36,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 			Objects.PasswordLoginPolitic pwp = bob.new PasswordLoginPolitic();
 			
 			String hidden = request.getParameter("hidden");
-			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute("adminHiddenString")))
+			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING)))
 			{
 				return mapping.findForward(FAILURE);
 			}
@@ -44,19 +46,19 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 				pwp.delais = Integer.parseInt(request.getParameter("delais"));
 				pwp.bloquage2tentatives = request.getParameter("bloquage").equals("true");
 				pwp.changementOublie = request.getParameter("changementOublie")!=null;
-				pwp.changementDepassement = request.getParameter("changementTentatives")!=null;
+				pwp.changementDepassement = request.getParameter("changementDepassement")!=null;
 				pwp.min = Integer.parseInt(request.getParameter("lmin"));
 				pwp.max = Integer.parseInt(request.getParameter("lmax"));
 				pwp.complexity = 0;
-				if(request.getParameter("politiqueMaj")!=null);
+				if(request.getParameter("politiqueMaj")!=null)
 					pwp.complexity+=1;
-				if(request.getParameter("politiqueCarac")!=null);
+				if(request.getParameter("politiqueCarac")!=null)
 					pwp.complexity+=2;
-				if(request.getParameter("politiqueChiffres")!=null);
+				if(request.getParameter("politiqueChiffres")!=null)
 					pwp.complexity+=4;
-				if(request.getParameter("politiqueMin")!=null);
+				if(request.getParameter("politiqueMin")!=null)
 					pwp.complexity+=8;
-				pwp.lastPasswords = Integer.parseInt(request.getParameter("tentativeMax"));
+				pwp.lastPasswords = Integer.parseInt(request.getParameter("ancien"));
 				
 				if(dp.UpdatePolitics(pwp))
 					request.setAttribute("message", "Operation réussie");
@@ -64,15 +66,16 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 					request.setAttribute("message", "Operation Echouée");
 			}	
 			catch(Exception e){
+				ExceptionLogger.LogException(e);
 				request.setAttribute("message", "Operation Echouée");
 			}
 		}
 		
 		
 		String randomString = generateHiddenRandomString();
-		request.setAttribute("hidden", randomString);
-		session.setAttribute("adminHiddenString", randomString);
-		session.setAttribute("from", "AdminPage");
+		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		session.setAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING, randomString);
+		session.setAttribute(SessionAttributeIdentificator.FROM, "AdminPage");
 		
 		return mapping.findForward(SUCCESS);
     }

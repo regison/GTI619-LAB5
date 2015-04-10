@@ -76,7 +76,7 @@
                     <input type="checkbox" name="changePassPage" value="changePassPage" />Majuscules <br />
                     <br />-->
                     <label>Impossibilite d'utiliser un mot de passe parmis les </label>
-                    <input type="text" id="ancien" name="ancien" value="0" onkeyup="validate('ancien',20)"/>derniers (20 maximum)<br />
+                    <input type="text" id="ancien" name="ancien" value="<% out.print(pwp.lastPasswords); %>" onkeyup="validate('ancien',20)"/>derniers (20 maximum)<br />
                     <br />
                 </fieldset>
                 <% if(request.getAttribute("message")!=null){ out.print(request.getAttribute("message") + "<br />");} %>

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -22,9 +23,9 @@ public class CarreAction extends AbstractAction {
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-		request.setAttribute("Page", "Carre");
+		request.setAttribute(SessionAttributeIdentificator.PAGE, "Carre");
 
-		request.getSession().setAttribute("from", "Carre");
+		request.getSession().setAttribute(SessionAttributeIdentificator.FROM, "Carre");
 		return mapping.findForward("success");
 	}
 

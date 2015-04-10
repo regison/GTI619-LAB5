@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
 import log619lab5.struts.AbstractForm;
+import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -47,12 +48,12 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		
 		request.setAttribute("Page", PAGE);
 		
-		String hidden = request.getParameter("hidden");
-		String random = session.getAttribute("loginHiddenString").toString();
-		session.setAttribute("loginHiddenString", "");
+		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
+		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
+		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
 		
 		if(hidden.equals("") || !hidden.equals(random)){
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
@@ -70,22 +71,24 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 //		}
 		
 		session.removeAttribute("indexes");
-		securityModule.updateSuccessfullLoginTime(_currentUser.idUser);
+		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
 		
+		// Login successful, instantiate old session and create a new one
 		session.invalidate();
 		session = request.getSession();	
-		
-		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
-		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);	
-		
-		session.setAttribute("Username", _currentUser.name);
-		session.setAttribute("Role", _currentUser.role.roleName);
-		session.setAttribute("LastLoggedInActionTime", Calendar.getInstance().getTimeInMillis());
-		session.setAttribute("idUser", _currentUser.idUser);
+
+		session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
+		session.setAttribute(SessionAttributeIdentificator.ROLE, _currentUser.role.roleName);
+		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, Calendar.getInstance().getTimeInMillis());
+		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 		
 		if(_currentUser.changepw){
 			return mapping.findForward("changepw");
 		}
+		
+		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
+		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
+
 		if(_currentUser.role == null){
 			pageSection = Section.GENERAL;
 			return mapping.findForward("norole");
@@ -105,14 +108,14 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 			return mapping.findForward("carre");
 		}
 		else{
-			loginFailedLogic();
+			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 	}
 
-	private void loginFailedLogic(){
-		securityModule.manageUnsuccessfullLogin();
+	private void loginFailedLogic(String remoteIP){
+		securityModule.manageUnsuccessfullLogin(remoteIP);
 	}
 	
 	@Override

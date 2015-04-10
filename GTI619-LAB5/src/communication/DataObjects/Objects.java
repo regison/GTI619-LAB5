@@ -33,6 +33,7 @@ public class Objects {
 	    public Date blockTime;
 	    public boolean isChangePassword;
 		public boolean changepw;
+		public String secondFactorPW;
 	    
 	    
 	    public User(){

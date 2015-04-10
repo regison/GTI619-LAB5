@@ -47,8 +47,8 @@
           <fieldset>
               <legend>Oubli mot de passe</legend>
 
-              <label for="user">User name <span class="requis">*</span></label>
-              <select name="user">
+              <label for="username">User name <span class="requis">*</span></label>
+              <select name="username">
               	<% 
               		dp = new DataProvider();
               		for(User data : dp.Users()){
@@ -77,8 +77,8 @@
           <fieldset>
               <legend>Reactivation et Suppression d'un utilisateur</legend>
 
-              <label for="user">User name <span class="requis">*</span></label>
-              <select name="user">
+              <label for="username">User name <span class="requis">*</span></label>
+              <select name="username">
               	<% 
               		dp = new DataProvider();
               		for(User data : dp.Users()){
@@ -108,7 +108,7 @@
               <legend>Changer privilege</legend>
 
               <label for="username">User name <span class="requis">*</span></label>
-              <select name="user">
+              <select name="username">
               	<% 
               		for(User data : dp.Users()){
               			if(!dp.GetRole(data.roleId).roleName.equals(Role.AdministratorRoleName))
@@ -147,8 +147,8 @@
           <fieldset>
               <legend>Activer et Désactiver authentification Forte</legend>
 
-              <label for="user">User name <span class="requis">*</span></label>
-              <select name="user">
+              <label for="username">User name <span class="requis">*</span></label>
+              <select name="username">
               	<% 
               		dp = new DataProvider();
               		for(User data : dp.Users()){

@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import communication.DataMapping.ExceptionLogger;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.Log;
 import database.IDatabase;
@@ -54,6 +55,7 @@ public class Mysql implements IDatabase {
 					this.password);
 
 		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
 			e.printStackTrace();
 		}
 	}
@@ -63,6 +65,7 @@ public class Mysql implements IDatabase {
 		try {
 			conn.close();
 		} catch (SQLException e) {
+			ExceptionLogger.LogException(e);
 			e.printStackTrace();
 		}
 	}
@@ -111,6 +114,7 @@ public class Mysql implements IDatabase {
 			prepStmt.close();
 			return data;
 		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
 			e.printStackTrace();
 		}
 		return null;
@@ -134,11 +138,12 @@ public class Mysql implements IDatabase {
 				
 				event.logName = p_request;
 				//System.out.println("even.logName, longeur =" + event.logName.length());
-				//event.CreateLog(event, byPassLog);
+				event.CreateLog(event, true);
 			};
 			prepStmt.close();
 			return row;
 		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
 			e.printStackTrace();
 		}
 		return -1;
