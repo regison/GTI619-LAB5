@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import securityLayer.securityModule.Core.SecurityModuleCore;
+import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 import log619lab5.domain.enumType.Section;
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
@@ -568,11 +569,19 @@ public class DataMapping implements IDataMapping {
 			user.saltPassword = password;
 			user.crypVersion = 1;
 			user.changepw = changePw;
+			user.secondFactorPW = new HiddenStringGenerator().generateRandomString();
+			
+			if(user.secondFactorPW.length() < 50)
+				user.secondFactorPW += new HiddenStringGenerator().generateRandomString();
+			
+			if(user.secondFactorPW.length() > 50)
+				user.secondFactorPW = user.secondFactorPW.substring(0, 50);
+			
 			
 			cnx.Open();
 			int row = cnx.insert(true, QueryFactory.INSERT_USER + saltPwdBuilder, new String[] {  user.name, String.valueOf(user.roleId) , user.nbCryptIteration +"",
 															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled ? "1" : "0", 
-															String.valueOf( user.crypVersion), user.changepw ? "1" : "0", user.saltPassword});
+															String.valueOf( user.crypVersion), user.changepw ? "1" : "0", user.secondFactorPW , user.saltPassword});
 			cnx.Close();
 			if(row > -1)
 				return true;
