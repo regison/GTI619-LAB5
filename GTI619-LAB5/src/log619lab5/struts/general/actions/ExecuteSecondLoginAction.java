@@ -34,7 +34,7 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 	
 		String password = (String) request.getParameter("password");
 		dtP = new DataProvider();
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		
 		User _currentUser = dtP.GetUserByUsername(session.getAttribute("Username").toString());
 		securityModule = new SecurityModuleCore(_currentUser, session);
@@ -65,7 +65,7 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
-		session = request.getSession();	
+		session = request.getSession(true);	
 
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
 		session.setAttribute(SessionAttributeIdentificator.ROLE, _currentUser.role.roleName);

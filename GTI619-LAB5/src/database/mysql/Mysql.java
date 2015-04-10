@@ -71,7 +71,7 @@ public class Mysql implements IDatabase {
 	}
 
 	@Override
-	public ArrayList<ArrayList<Object>> Select(String p_request,String[] params, 
+	public ArrayList<ArrayList<Object>> Select(boolean hideParameters, String p_request,String[] params, 
 			String... p_parameters) {
 		try {
 			ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
@@ -102,11 +102,11 @@ public class Mysql implements IDatabase {
 			
 			if (!byPassLog){
 				
-				System.out.println("SELECT " + prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
+				//System.out.println("SELECT " + prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
 				
 				Log event = new Objects().new Log();
 				event.logDate = new SimpleDateFormat().format(new Date());
-				event.logName = p_request;
+				event.logName = (hideParameters ? p_request : prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
 				event.userLogId = 1;
 				//System.out.println("even.logName, longeur =" + event.logName.length());
 				event.CreateLog(event, true);
@@ -120,7 +120,7 @@ public class Mysql implements IDatabase {
 		return null;
 	}
 	
-	private int executeUpdate(String p_request,String[] params) {
+	private int executeUpdate(boolean hideParameters, String p_request,String[] params) {
 		try {
 			PreparedStatement prepStmt = conn.prepareStatement(p_request);
 			if (params != null){
@@ -131,12 +131,12 @@ public class Mysql implements IDatabase {
 			int row = prepStmt.executeUpdate();
 			
 			if (!byPassLog){
-				System.out.println("OTHER " + prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
+				//System.out.println("OTHER " + prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
 				
 				Log event = new Objects().new Log();
 				event.logDate = new SimpleDateFormat().format(new Date());
 				event.userLogId = 1;
-				event.logName = p_request;
+				event.logName = (hideParameters ? p_request : prepStmt.toString().substring( prepStmt.toString().indexOf(": ") + 2));
 				//System.out.println("even.logName, longeur =" + event.logName.length());
 				event.CreateLog(event, true);
 			};
@@ -150,17 +150,17 @@ public class Mysql implements IDatabase {
 	}
 
 	@Override
-	public int insert(String p_request,String[] params) {
-		return executeUpdate(p_request, params);
+	public int insert(boolean hideParameters, String p_request,String[] params) {
+		return executeUpdate(hideParameters, p_request, params);
 	}
 
 	@Override
-	public int update(String p_request,String[] params) {
-		return executeUpdate(p_request, params);
+	public int update(boolean hideParameters, String p_request,String[] params) {
+		return executeUpdate(hideParameters, p_request, params);
 	}
 
 	@Override
-	public int delete(String p_request,String[] params) {
-		return executeUpdate(p_request, params);
+	public int delete(boolean hideParameters, String p_request,String[] params) {
+		return executeUpdate(hideParameters, p_request, params);
 	}
 }

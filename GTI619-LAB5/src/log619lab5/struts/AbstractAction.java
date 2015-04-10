@@ -45,14 +45,13 @@ public abstract class AbstractAction extends Action {
 				return null;
 			}
 			
-			action = null;
-			setSessionWithCookies(request, response, "Language");
+			//setSessionWithCookies(request, response, "Language");
 			//setSessionWithCookies(request, response, "UserName");
 			setPageSection();
-			if(request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
-				request.getSession().setAttribute(SessionAttributeIdentificator.LASTACTIVITY,new Date().getTime());
-			if(new Date().getTime() - (long) request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) >= 20*60*1000){
-				request.getSession().invalidate();
+			if(request.getSession(true).getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
+				request.getSession(true).setAttribute(SessionAttributeIdentificator.LASTACTIVITY,new Date().getTime());
+			if(new Date().getTime() - (long) request.getSession(true).getAttribute(SessionAttributeIdentificator.LASTACTIVITY) >= 20*60*1000){
+				request.getSession(true).invalidate();
 				redirectPage(request, response, "Login.do");
 			}
 			else if(validatePageAccess(request, response))

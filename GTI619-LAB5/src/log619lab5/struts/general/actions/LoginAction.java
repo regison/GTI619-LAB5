@@ -28,9 +28,9 @@ public class LoginAction extends AbstractAction {
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		String randomString = generateHiddenRandomString();
 		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		// Ne pas invalider! J'en ai besoin pour gérer le bruteforce session.invalidate();
-		session = request.getSession();
+		session = request.getSession(true);
 
 		if (session.getAttribute(SessionAttributeIdentificator.IDUSER) != null && !session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("")) {
 			DataProvider dtp = new DataProvider();

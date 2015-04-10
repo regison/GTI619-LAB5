@@ -16,7 +16,7 @@ public class ExceptionLogger {
 		ex.printStackTrace(pw);
 		Mysql cnx = new Mysql(Mysql.MYSQL_DATABASE_LOG619LAB5, true);
 		cnx.Open();
-		cnx.insert("INSERT INTO `log619lab5`.`ExceptionLogs` (`ExceptionLogs`) VALUES ( ? );", 
+		cnx.insert(false, "INSERT INTO `log619lab5`.`ExceptionLogs` (`ExceptionLogs`) VALUES ( ? );", 
 				new String[] { new SimpleDateFormat().format(new Date()) + " " + sw.toString() });
 		cnx.Close();
 	}

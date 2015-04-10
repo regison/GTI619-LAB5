@@ -30,7 +30,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		String submit= request.getParameter("submit");
 		
 		dtp = new DataProvider(false);
