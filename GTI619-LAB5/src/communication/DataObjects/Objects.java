@@ -91,7 +91,7 @@ public class Objects {
 		public boolean changementOublie;
 		public boolean changementDepassement;
 		public boolean changementBloquage;
-		public boolean changementNouveau = true;
+		public boolean changementNouveau;
 		public int lastPasswords;
 		public int maxTentative;
 		public int delais;
