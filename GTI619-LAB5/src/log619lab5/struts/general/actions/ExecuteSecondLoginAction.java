@@ -62,6 +62,12 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 			text += _currentUser.secondFactorPW.charAt(in[i]);
 		}
 		
+		if(!text.equals(password)){
+			loginFailedLogic(request.getRemoteAddr());
+			pageSection = Section.GENERAL;	
+			return mapping.findForward("failure");
+		}
+		
 		session.removeAttribute("indexes");
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
 		
