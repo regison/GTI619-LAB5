@@ -52,6 +52,7 @@
                     <label>Changement de mot de passe apres :</label><br/>
                     <input type="checkbox" name="changementOublie" value="Oublie" <% if(pwp.changementOublie) out.print("checked"); %>/>Oubli<br/>
                     <input type="checkbox" name="changementDepassement" value="Depassement" <% if(pwp.changementDepassement) out.print("checked"); %>/>Depassement de la limite de tentatives
+                    <input type="checkbox" name="changementNouveau" value="Depassement" <% if(pwp.changementNouveau) out.print("checked"); %>/>Nouvel utilisateur
                     <br />
                     <br/>
                     

@@ -1,9 +1,5 @@
 package log619lab5.struts.general.actions;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import log619lab5.domain.enumType.Section;
 import log619lab5.struts.AbstractAction;
-import log619lab5.struts.AbstractForm;
 import log619lab5.struts.SessionAttributeIdentificator;
 
 import org.apache.struts.action.ActionForm;
@@ -20,8 +15,6 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 
 import securityLayer.securityModule.Core.SecurityModuleCore;
-import database.IDatabase;
-import database.mysql.Mysql;
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.*;
@@ -38,10 +31,10 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	
+		System.out.println("Start second login --------------------- ");
 		String password = (String) request.getParameter("password");
 		dtP = new DataProvider();
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		
 		User _currentUser = dtP.GetUserByUsername(session.getAttribute("Username").toString());
 		securityModule = new SecurityModuleCore(_currentUser, session);
@@ -51,8 +44,11 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
 		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
 		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
+		session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
 		
 		if(hidden.equals("") || !hidden.equals(random)){
+			System.out.println("Start second login failed. Hidden not the same.");
+			System.out.println("End second login --------------------- ");
 			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
@@ -62,33 +58,40 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		
 		int[] in = (int[]) session.getAttribute("indexes");
 		
+		String text = "";
+		for(int i=0;i<in.length;i++){
+			text += _currentUser.secondFactorPW.charAt(in[i]);
+		}
 		
-		//TODO
-//		if(!getString(_currentUser.idUser,in).equals(password)){
-//			loginFailedLogic();
-//			pageSection = Section.GENERAL;	
-//			return mapping.findForward("failure");
-//		}
+		if(!text.equals(password)){
+			loginFailedLogic(request.getRemoteAddr());
+			pageSection = Section.GENERAL;	
+			return mapping.findForward("failure");
+		}
+		
+		if(_currentUser.changepw){
+			System.out.println("Change pw");
+			System.out.println("End second login --------------------- ");
+			return mapping.findForward("changepw");
+		}
+		
+		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
+		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
 		
 		session.removeAttribute("indexes");
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
-		
+				
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
-		session = request.getSession();	
+		session = request.getSession(true);	
 
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
 		session.setAttribute(SessionAttributeIdentificator.ROLE, _currentUser.role.roleName);
 		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, Calendar.getInstance().getTimeInMillis());
 		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 		
-		if(_currentUser.changepw){
-			return mapping.findForward("changepw");
-		}
-		
-		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
-		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
-
+		System.out.println("Role selectionlogin --------------------- ");
+		System.out.println("End second login --------------------- ");
 		if(_currentUser.role == null){
 			pageSection = Section.GENERAL;
 			return mapping.findForward("norole");

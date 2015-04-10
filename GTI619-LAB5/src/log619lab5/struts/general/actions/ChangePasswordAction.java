@@ -23,13 +23,13 @@ import database.mysql.Mysql;
 
 public class ChangePasswordAction extends AbstractAction {
 
-	private final String PAGE = "Login";
+	private final String PAGE = "ChangePassword";
 	
 @Override
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute(SessionAttributeIdentificator.PAGE, "ChangePassword");
 
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		SecurityModulePassword sPass = new SecurityModulePassword();
 		
 		if(request.getParameter("updatePassword") != null){
@@ -43,9 +43,10 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.UPDATEPWHIDDENSTRING)))
 			{
+				session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.UPDATEPWHIDDENSTRING, "");
 				return mapping.findForward("OperationDenied");
 			}
-			
+			session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.UPDATEPWHIDDENSTRING, "");
 			boolean reauthentification = dtp.Authenticate((String) session.getAttribute(SessionAttributeIdentificator.USERNAME), oldPassword, null) !=null;
 			if(reauthentification){
 				if(newPassword.equals(copynewPassword))
@@ -54,7 +55,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 					
 					if(errors.size()==0){
 						//On va passer le id au lieu du username
-						if(sPass.updatePassword((int) request.getSession().getAttribute(SessionAttributeIdentificator.IDUSER), (String) request.getSession().getAttribute(SessionAttributeIdentificator.USERNAME), newPassword)){
+						if(sPass.updatePassword((int) request.getSession(true).getAttribute(SessionAttributeIdentificator.IDUSER), (String) request.getSession(true).getAttribute(SessionAttributeIdentificator.USERNAME), newPassword)){
 							
 							request.setAttribute("message", "ca  a marché");
 						}
@@ -79,9 +80,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 			request.setAttribute("error", sPass.getPasswordConstraintMessage());
 		}
 		
-		String randomString = generateHiddenRandomString();
-		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		session.setAttribute(SessionAttributeIdentificator.UPDATEPWHIDDENSTRING, randomString);
+		handleHidden(request, SessionAttributeIdentificator.UPDATEPWHIDDENSTRING);
 		return mapping.findForward("success");
     }
 

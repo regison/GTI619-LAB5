@@ -27,7 +27,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		
 		DataProvider dp = new DataProvider(false);
 		
@@ -38,15 +38,17 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 			String hidden = request.getParameter("hidden");
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING)))
 			{
+				session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.ADMINHIDDENSTRING, "");
 				return mapping.findForward(FAILURE);
 			}
-			
+			session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.ADMINHIDDENSTRING, "");
 			try{
 				pwp.maxTentative = Integer.parseInt(request.getParameter("tentativeMax"));
 				pwp.delais = Integer.parseInt(request.getParameter("delais"));
 				pwp.bloquage2tentatives = request.getParameter("bloquage").equals("true");
 				pwp.changementOublie = request.getParameter("changementOublie")!=null;
 				pwp.changementDepassement = request.getParameter("changementDepassement")!=null;
+				pwp.changementNouveau = request.getParameter("changementNouveau")!=null;
 				pwp.min = Integer.parseInt(request.getParameter("lmin"));
 				pwp.max = Integer.parseInt(request.getParameter("lmax"));
 				pwp.complexity = 0;
@@ -73,8 +75,7 @@ public class SaveConfigurationAction extends AbstractAdminAction {
 		
 		
 		String randomString = generateHiddenRandomString();
-		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		session.setAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING, randomString);
+		handleHidden(request, SessionAttributeIdentificator.ADMINHIDDENSTRING);
 		session.setAttribute(SessionAttributeIdentificator.FROM, "AdminPage");
 		
 		return mapping.findForward(SUCCESS);

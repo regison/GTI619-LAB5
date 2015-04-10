@@ -40,24 +40,31 @@ public class ExecuteLoginAction extends AbstractAction {
 	
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-	
+		System.out.println("Start Execute Login section ------------------------------------------------ ");
 		String userName = (String) request.getParameter("username");
 		String password = (String) request.getParameter("password");
-
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
 		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
-		
+
 		securityModule = new SecurityModuleCore(null, session);
 		
-		if(userName == null || password == null || userName.equals("") || password.equals("")){
+		if(session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING) == null){
+			System.out.println("hidden string null");
+			System.out.println("End Login section ------------------------------------------------ ");
 			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
 		}
 		
-		if(session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING) == null){
+		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
+		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
+		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
+		session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
+		
+		if(userName == null || password == null || userName.equals("") || password.equals("")){
+			System.out.println("Username or password: null or empty");
 			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
@@ -65,11 +72,9 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
 		
-		String hidden = request.getParameter(SessionAttributeIdentificator.HIDDEN);
-		String random = session.getAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING).toString();
-		session.setAttribute(SessionAttributeIdentificator.LOGINHIDDENSTRING, "");
-		
 		if(hidden.equals("") || !hidden.equals(random)){
+			System.out.println("hidden is not the same as in session or is null. hidden: " + hidden + " random : " + random);
+			System.out.println("End Login section ------------------------------------------------ ");
 			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
@@ -85,11 +90,15 @@ public class ExecuteLoginAction extends AbstractAction {
 			_currentUser = dtP.Authenticate(userName, password, securityModule);			
 			 
 			if(_currentUser == null){
+				System.out.println("Currrent user is null");
+				System.out.println("End Login section ------------------------------------------------ ");
 				loginFailedLogic(request.getRemoteAddr());
 				pageSection = Section.GENERAL;
 				return mapping.findForward("failure");
 			}
 			if(!_currentUser.enabled){
+				System.out.println("Current user disabled");
+				System.out.println("End Login section ------------------------------------------------ ");
 				loginFailedLogic(request.getRemoteAddr());
 				pageSection = Section.GENERAL;
 				return mapping.findForward("bloque");
@@ -98,18 +107,24 @@ public class ExecuteLoginAction extends AbstractAction {
 				Random rnd = new Random();
 				int[] indexes = new int[rnd.nextInt(11)+10];
 				for(int i=0;i<indexes.length;i++){
-					indexes[i] = rnd.nextInt(100);
+					indexes[i] = rnd.nextInt(50);
 				}
-				String randomString = generateHiddenRandomString();
-				request.setAttribute("hidden", randomString);
-				session.setAttribute("loginHiddenString", randomString);
+				handleHidden(request, SessionAttributeIdentificator.LOGINHIDDENSTRING);
 				session.setAttribute("indexes", indexes);
 				session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
+				session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
+				
+				System.out.println("Second login needed");
+				System.out.println("End Login section ------------------------------------------------ ");
 				return mapping.findForward("secondLogin");
 			}
 			 
 			if(_currentUser.changepw){
-				pageSection = Section.GENERAL;
+				System.out.println("Password change needed");
+				System.out.println("End Login section ------------------------------------------------ ");
+				session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
+				session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
+				pageSection = Section.CONNECTED;
 				return mapping.findForward("changepw");
 			}
 			_currentUser.role = dtP.GetRole(_currentUser.roleId);			
@@ -119,7 +134,8 @@ public class ExecuteLoginAction extends AbstractAction {
 			ExceptionLogger.LogException(e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			
+			System.out.println("Exception Cought");
+			System.out.println("End Login section ------------------------------------------------ ");
 			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;
 			return mapping.findForward("failure");
@@ -128,13 +144,14 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		// Login successful, invalidate old session and create a new one
 		session.invalidate();
-		session = request.getSession();	
+		session = request.getSession(true);	
 
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
 		session.setAttribute(SessionAttributeIdentificator.ROLE, _currentUser.role.roleName);
 		session.setAttribute(SessionAttributeIdentificator.LASTLOGGEDINACTIONTIME, Calendar.getInstance().getTimeInMillis());
 		session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
-		
+
+		System.out.println("End Login section ------------------------------------------------ ");
 		if(_currentUser.role == null){
 			pageSection = Section.GENERAL;
 			return mapping.findForward("norole");
@@ -161,7 +178,8 @@ public class ExecuteLoginAction extends AbstractAction {
 	}
 
 	private void loginFailedLogic(String remoteIP){
-		securityModule.manageUnsuccessfullLogin(remoteIP);
+		if(securityModule != null)
+			securityModule.manageUnsuccessfullLogin(remoteIP);
 	}
 	
 	@Override

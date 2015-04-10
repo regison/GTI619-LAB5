@@ -104,8 +104,8 @@ public class DataProvider {
 		return data.CreateLoginLog(incrementFailedLoginTriesCount, llog);
 	}
 
-	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser){
-		return data.CreateUser(username, password, userType, salt, actualUser);		
+	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser, Boolean changePw){
+		return data.CreateUser(username, password, userType, salt, actualUser, changePw);		
 	}
 	
 	public boolean UpdatePolitics(PasswordLoginPolitic pwp){

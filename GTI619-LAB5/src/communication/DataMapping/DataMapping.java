@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import securityLayer.securityModule.Core.SecurityModuleCore;
+import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 import log619lab5.domain.enumType.Section;
 import communication.DataObjects.Objects.*;
 import communication.DataObjects.Objects;
@@ -55,7 +56,6 @@ public class DataMapping implements IDataMapping {
 					toAdd.isAuthenticated =  Boolean.valueOf(user.get(12).toString());
 					toAdd.isLogOutNeeded = Boolean.valueOf(user.get(13).toString());
 				} catch (Exception e) {
-					ExceptionLogger.LogException(e);
 					toAdd.isAuthenticated =  false;
 					toAdd.isLogOutNeeded = false;
 				}				
@@ -282,7 +282,7 @@ public class DataMapping implements IDataMapping {
 		cnx.update(false, QueryFactory.UPDATE_USER_LOGINLOG, 
 				new String[] {user.isAuthenticated == true ? "1" : "0", user.isLogOutNeeded == true ? "1" : "0", user.idUser + ""});
 		cnx.Close();
-		return false;
+		return true;
 	}
 	
 	public boolean UpdateUserPassword(User user, String password) {
@@ -308,7 +308,7 @@ public class DataMapping implements IDataMapping {
 		cnx.update(true, query, 
 				new String[] { password, user.idUser + "" });
 		cnx.Close();
-		return false;
+		return true;
 	}
 
 		
@@ -378,7 +378,8 @@ public class DataMapping implements IDataMapping {
 						.toString());
 				user.enabled = Boolean
 						.valueOf(result.get(i).get(10).toString());
-				user.secondFactorPW = result.get(11).toString();
+				if(result.get(11)!=null)
+					user.secondFactorPW = result.get(11).toString();
 				user.crypVersion = Integer.parseInt(result.get(13).toString());
 				
 				allUsers.add(user);
@@ -425,7 +426,8 @@ public class DataMapping implements IDataMapping {
 					.valueOf(result.get(10).toString());
 			user.changepw = Boolean
 					.valueOf(result.get(11).toString());
-			user.secondFactorPW = result.get(12).toString();
+			if(result.get(12)!=null)
+				user.secondFactorPW = result.get(12).toString();
 			user.crypVersion = Integer.parseInt(result.get(13).toString());
 		}
 			
@@ -517,7 +519,7 @@ public class DataMapping implements IDataMapping {
 	}	
 	
 	@Override
-	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser) {
+	public boolean CreateUser(String username, String password, int userType, String salt, String actualUser, Boolean changePw) {
 		boolean isUserNameExist = false;
 		cnx.Open();
 		User sameUsernameUser = GetUserByUsername(username);
@@ -565,11 +567,20 @@ public class DataMapping implements IDataMapping {
 			user.roleId = userType;
 			user.saltPassword = password;
 			user.crypVersion = 1;
+			user.changepw = changePw;
+			user.secondFactorPW = new HiddenStringGenerator().generateRandomString();
+			
+			if(user.secondFactorPW.length() < 50)
+				user.secondFactorPW += new HiddenStringGenerator().generateRandomString();
+			
+			if(user.secondFactorPW.length() > 50)
+				user.secondFactorPW = user.secondFactorPW.substring(0, 50);
+			
 			
 			cnx.Open();
 			int row = cnx.insert(true, QueryFactory.INSERT_USER + saltPwdBuilder, new String[] {  user.name, String.valueOf(user.roleId) , user.nbCryptIteration +"",
 															user.ModifiedDate,user.ModifiedBy,user.CreateDate, user.CreateBy, user.salt, user.saltCounter + "", user.enabled ? "1" : "0", 
-															String.valueOf( user.crypVersion), user.saltPassword});
+															String.valueOf( user.crypVersion), user.changepw ? "1" : "0", user.secondFactorPW , user.saltPassword});
 			cnx.Close();
 			if(row > -1)
 				return true;
@@ -582,7 +593,7 @@ public class DataMapping implements IDataMapping {
 
 		cnx.Open();
 		ArrayList<ArrayList<Object>> result = cnx.Select(false, QueryFactory.SELECT_PASSWORDPOLITIC, null, "complexity","max","min","changementOublie", 
-				"changementDepassement", "changementBloquage", "lastPasswords", "maxTentative", "delais", "bloquage2tentatives");
+				"changementDepassement", "changementBloquage", "changementNouveau","lastPasswords", "maxTentative", "delais", "bloquage2tentatives");
 		cnx.Close();
 		 if (result.size() <= 0)
 			 return null;
@@ -594,6 +605,7 @@ public class DataMapping implements IDataMapping {
 		 pwp.changementOublie = Boolean.parseBoolean(result.get(0).get(index++).toString());
 		 pwp.changementDepassement = Boolean.parseBoolean(result.get(0).get(index++).toString());
 		 pwp.changementBloquage = Boolean.parseBoolean(result.get(0).get(index++).toString());
+		 pwp.changementNouveau = Boolean.parseBoolean(result.get(0).get(index++).toString());
 		 pwp.lastPasswords = Integer.parseInt(result.get(0).get(index++).toString());
 		 pwp.maxTentative = Integer.parseInt(result.get(0).get(index++).toString());
 		 pwp.delais = Integer.parseInt(result.get(0).get(index++).toString());
@@ -672,7 +684,7 @@ public class DataMapping implements IDataMapping {
 		try{
 			cnx.Open();
 			System.out.println(cnx.delete(false, QueryFactory.UPDAE_PASSWORDPOLITIC, new String[] { pwp.complexity + "", pwp.max + "", pwp.min + "", 
-					pwp.changementOublie == true ? "1" : "0", pwp.changementDepassement == true ? "1" : "0", pwp.changementBloquage == true ? "1" : "0", pwp.lastPasswords + "", pwp.maxTentative + ""
+					pwp.changementOublie == true ? "1" : "0", pwp.changementDepassement == true ? "1" : "0", pwp.changementBloquage == true ? "1" : "0", pwp.changementNouveau == true ? "1" : "0" , pwp.lastPasswords + "", pwp.maxTentative + ""
 							, pwp.delais + "", pwp.bloquage2tentatives == true ? "1" : "0" }));
 			cnx.Close();
 		}

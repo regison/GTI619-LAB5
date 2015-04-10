@@ -30,7 +30,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 	@Override
 	public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute(SessionAttributeIdentificator.PAGE, PAGE);
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		String submit= request.getParameter("submit");
 		
 		dtp = new DataProvider(false);
@@ -40,14 +40,17 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			String pw = request.getParameter("password");
 			if(hidden==null || hidden.isEmpty() || !hidden.equals(session.getAttribute(SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING)) )
 			{
+				session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING, "");
 				return mapping.findForward("AccessDenied");
 			}	
+			session.setAttribute("WaitingForAuth" + SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING, "");
 			boolean reauthentification = dtp.Authenticate((String) session.getAttribute(SessionAttributeIdentificator.USERNAME), pw, null) !=null;
 			if (reauthentification) {
 				if ("Ajouter".equals(submit)) {
 						String username = request.getParameter("username");
 						String tpw = sendNewPassWord(request.getParameter("courriel"));
 						String type = request.getParameter("acces");
+						PasswordLoginPolitic pwp = dtp.getPasswordLoginPolitic();
 
 						int newUserRole = 0;
 						int userlevel = 0;
@@ -69,7 +72,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 						
 						boolean check = dtp.CreateUser(username, tpw,
 								userlevel, salt,
-								(String) session.getAttribute(SessionAttributeIdentificator.USERNAME));
+								(String) session.getAttribute(SessionAttributeIdentificator.USERNAME), pwp.changementNouveau);
 
 						if (check)
 							request.setAttribute("ajoutMessage",
@@ -135,7 +138,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 							request.setAttribute("privMessage", "Operation réussie");
 						else
 							request.setAttribute("privMessage", "Operation échouée");
-				} else if(submit.equals("Activer") || submit.equals("D&eacute;sactiver") ){
+				} else if(submit.equals("Activer") || submit.equals("Désactiver") ){
 					String username = request.getParameter("username");
 					User user = dtp.GetUserByUsername(username);
 					user.crypVersion = submit.equals("Activer") ? 2 : 1;
@@ -156,9 +159,7 @@ public class GestionUtilisateursAction extends AbstractAdminAction {
 			}
 		}
 		
-		String randomString = generateHiddenRandomString();
-		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		session.setAttribute(SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING, randomString);
+		handleHidden(request, SessionAttributeIdentificator.GESTIONUTILISATEURHIDDENSTRING);
 		return mapping.findForward(SUCCESS);
 	}
 	

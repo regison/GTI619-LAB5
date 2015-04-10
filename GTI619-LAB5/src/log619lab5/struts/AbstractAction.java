@@ -48,14 +48,15 @@ public abstract class AbstractAction extends Action {
 			//setSessionWithCookies(request, response, "Language");
 			//setSessionWithCookies(request, response, "UserName");
 			setPageSection();
-			if(request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
-				request.getSession().setAttribute(SessionAttributeIdentificator.LASTACTIVITY,new Date().getTime());
-			if(new Date().getTime() - (long) request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) >= 20*60*1000){
-				request.getSession().invalidate();
+			if(request.getSession(true).getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
+				request.getSession(true).setAttribute(SessionAttributeIdentificator.LASTACTIVITY,new Date().getTime());
+			if(new Date().getTime() - (long) request.getSession(true).getAttribute(SessionAttributeIdentificator.LASTACTIVITY) >= 20*60*1000){
+				request.getSession(true).invalidate();
 				redirectPage(request, response, "Login.do");
 			}
-			else if(validatePageAccess(request, response))
+			else if(validatePageAccess(request, response)){
 				action = directive(mapping, form, request, response);
+			}
 			else
 				redirectPage(request, response, "AccessDenied.do");
 		} catch (Exception e) {
@@ -74,9 +75,9 @@ public abstract class AbstractAction extends Action {
     	boolean validate = true;
 		if (pageSection != null) {
 			if(!pageSection.equals(Section.GENERAL)){
-				if(!pageSection.equals(Section.CONNECTED) && session.getAttribute(SessionAttributeIdentificator.IDUSER) == null || session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("") 
+				if(!pageSection.equals(Section.CONNECTED) && (session.getAttribute(SessionAttributeIdentificator.IDUSER) == null || session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("") 
 						|| !dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).enabled
-						|| dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).isLogOutNeeded){
+						|| dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString())).isLogOutNeeded)){
 					validate = false;
 					if (session.getAttribute(SessionAttributeIdentificator.IDUSER) != null && !session.getAttribute(SessionAttributeIdentificator.IDUSER).equals("")) {
 						User u = dtp.GetUser(Integer.parseInt(session.getAttribute(SessionAttributeIdentificator.IDUSER).toString()));
@@ -139,8 +140,28 @@ public abstract class AbstractAction extends Action {
 	}
 	
 	public String generateHiddenRandomString(){
+		System.out.println("GenerationRandom");
 		HiddenStringGenerator hiddenGenerator = new HiddenStringGenerator();
-		return hiddenGenerator.generateRandomString();
+		return hiddenGenerator.generateRandomString().replace("", "");
+	}
+	
+	public void handleHidden(HttpServletRequest request, String identificator){
+		String randomString = generateHiddenRandomString();
+		HttpSession session = request.getSession(true);
+		if(session.getAttribute("WaitingForAuth" + identificator) == null || session.getAttribute("WaitingForAuth" + identificator).equals("")){
+			session.setAttribute(identificator, randomString);
+			session.setAttribute("WaitingForAuth" + identificator, 0);
+			request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+		}
+		else{
+			session.setAttribute("WaitingForAuth" + identificator, Integer.parseInt(session.getAttribute("WaitingForAuth" + identificator).toString()) + 1);
+			request.setAttribute(SessionAttributeIdentificator.HIDDEN, session.getAttribute(identificator));
+			if(Integer.parseInt(session.getAttribute("WaitingForAuth" + identificator).toString()) == 15){
+				session.setAttribute(identificator, randomString);
+				request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
+				session.setAttribute("WaitingForAuth" + identificator, "0");
+			}
+		}
 	}
 	
 	public abstract void setPageSection();

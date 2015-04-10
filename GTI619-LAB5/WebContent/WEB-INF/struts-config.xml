@@ -26,7 +26,7 @@
     </global-forwards>
 
     <action-mappings>        
-        <action path="/AccessDenied" type="log619lab5.struts.general.actions.AccessDeniedAction" name="AbstractForm" scope="session">
+        <action path="/AccessDenied" type="log619lab5.struts.general.actions.AccessDeniedAction" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/AccessDenied.jsp" />
         </action>
         
@@ -36,7 +36,7 @@
         
         <action path="/ExecuteLogin" type="log619lab5.struts.general.actions.ExecuteLoginAction" scope="session">
         	<forward name="failure" path="/WEB-INF/jsp/LoginFailed.jsp" />
-        	<forward name="changepw" path="/WEB-INF/jsp/general/changePassword.jsp" />
+        	<forward name="changepw" path="/ChangePassword.do" />
         	<forward name="bloque" path="/WEB-INF/jsp/general/CompteBarrer.jsp" />
         	<forward name="secondLogin" path="/WEB-INF/jsp/general/SecondLogin.jsp" />
         </action>

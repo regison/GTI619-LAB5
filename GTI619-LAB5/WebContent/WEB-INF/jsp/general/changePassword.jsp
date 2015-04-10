@@ -11,7 +11,14 @@
 </head>
 
 <body class="homepage">
-	<%@include file="../tableheader.jsp" %>
+		<table class=common>
+		<tr>
+			<td class="name">Bonjour <% out.print(request.getSession().getAttribute("Username"));%></td>
+			<td class="last" ><a href="Login.do">Log out</a></td>
+		</tr>
+	
+	</table>
+	 <br />
 	
 	
 	<form method="post" action="ChangePassword.do">
@@ -45,8 +52,8 @@
              </fieldset>
              <input type="hidden" name="updatePassword" value="true">
              <input type="hidden" name="hidden" value="<% out.print(request.getAttribute("hidden"));%>">
-             <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='
-             <% if(session.getAttribute("from")!=null)
+             <input type="submit" value="Valider"  /><input type="button" value="Retour" onclick="window.location.href='<% 
+             if(session.getAttribute("from")!=null)
              	out.print(session.getAttribute("from") + ".do");
              else
             	 out.print("Login.do");
