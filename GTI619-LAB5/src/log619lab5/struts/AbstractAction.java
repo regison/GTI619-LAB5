@@ -25,6 +25,7 @@ import org.apache.struts.action.ActionMapping;
 import communication.DataMapping.DataProvider;
 import communication.DataObjects.Objects;
 import communication.DataObjects.Objects.User;
+import communication.DataMapping.*;
 import securityLayer.securityModule.XSSProtection.HiddenStringGenerator;
 
 public abstract class AbstractAction extends Action {
@@ -37,48 +38,33 @@ public abstract class AbstractAction extends Action {
 	
 	@Override
 	public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		DataProvider dtp = new DataProvider();
-		if(dtp.IpIsBlackListed(request.getRemoteAddr())){
-			return null;
-		}
-		
 		ActionForward action = null;
-		setSessionWithCookies(request, response, "Language");
-		//setSessionWithCookies(request, response, "UserName");
-		setPageSection();
-		if(request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
-			request.getSession().setAttribute(SessionAttributeIdentificator.LASTACTIVITY,new Date().getTime());
-		if(new Date().getTime() - (long) request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) >= 20*60*1000){
-			request.getSession().invalidate();
-			redirectPage(request, response, "Login.do");
+		try {
+			DataProvider dtp = new DataProvider();
+			if(dtp.IpIsBlackListed(request.getRemoteAddr())){
+				return null;
+			}
+			
+			action = null;
+			setSessionWithCookies(request, response, "Language");
+			//setSessionWithCookies(request, response, "UserName");
+			setPageSection();
+			if(request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
+				request.getSession().setAttribute(SessionAttributeIdentificator.LASTACTIVITY,new Date().getTime());
+			if(new Date().getTime() - (long) request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) >= 20*60*1000){
+				request.getSession().invalidate();
+				redirectPage(request, response, "Login.do");
+			}
+			else if(validatePageAccess(request, response))
+				action = directive(mapping, form, request, response);
+			else
+				redirectPage(request, response, "AccessDenied.do");
+		} catch (Exception e) {
+			ExceptionLogger.LogException(e);
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		else if(validatePageAccess(request, response))
-			action = directive(mapping, form, request, response);
-		else
-			redirectPage(request, response, "AccessDenied.do");
 		
-		
-		/*Logger logger = Logger.getLogger("MyLog");  
-	    FileHandler fh;  
-
-	    try {  
-
-	        // This block configure the logger with handler and formatter  
-	        fh = new FileHandler("C:/temp/test/MyLogFile.log");  
-	        logger.addHandler(fh);
-	        SimpleFormatter formatter = new SimpleFormatter();  
-	        fh.setFormatter(formatter);  
-
-	        // the following statement is used to log any messages  
-	        logger.info("My first log");  
-
-	    } catch (SecurityException e) {  
-	        e.printStackTrace();  
-	    } catch (IOException e) {  
-	        e.printStackTrace();  
-	    }  
-
-	    logger.info("Hi How r u?");*/
 		
 		return action;
 	}

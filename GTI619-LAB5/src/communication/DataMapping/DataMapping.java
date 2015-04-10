@@ -243,8 +243,14 @@ public class DataMapping implements IDataMapping {
 			user.salt = result.get(0).get(9).toString();
 			user.saltCounter = Integer.parseInt(result.get(0).get(10).toString());
 			user.enabled = Boolean.valueOf(result.get(0).get(11).toString());	
-			user.isAuthenticated =  Boolean.valueOf(result.get(0).get(12).toString());
-			user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
+			try {
+				user.isAuthenticated =  Boolean.valueOf(result.get(0).get(12).toString());
+				user.isLogOutNeeded =  Boolean.valueOf(result.get(0).get(13).toString());
+			} catch (Exception e) {
+				ExceptionLogger.LogException(e);
+				user.isAuthenticated =  false;
+				user.isLogOutNeeded =  false;
+			}
 			user.crypVersion = Integer.parseInt(result.get(0).get(14).toString());
 			user.changepw = Boolean.valueOf(result.get(0).get(15).toString());
 		}
