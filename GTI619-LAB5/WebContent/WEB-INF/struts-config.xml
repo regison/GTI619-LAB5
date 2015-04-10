@@ -26,7 +26,7 @@
     </global-forwards>
 
     <action-mappings>        
-        <action path="/AccessDenied" type="log619lab5.struts.general.actions.AccessDeniedAction" name="AbstractForm" scope="session">
+        <action path="/AccessDenied" type="log619lab5.struts.general.actions.AccessDeniedAction" scope="session">
         	<forward name="success" path="/WEB-INF/jsp/AccessDenied.jsp" />
         </action>
         
