@@ -112,6 +112,7 @@ public class ExecuteLoginAction extends AbstractAction {
 				handleHidden(request, SessionAttributeIdentificator.LOGINHIDDENSTRING);
 				session.setAttribute("indexes", indexes);
 				session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
+				session.setAttribute(SessionAttributeIdentificator.IDUSER, _currentUser.idUser);
 				
 				System.out.println("Second login needed");
 				System.out.println("End Login section ------------------------------------------------ ");

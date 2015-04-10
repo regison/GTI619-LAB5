@@ -62,10 +62,8 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		for(int i=0;i<in.length;i++){
 			text += _currentUser.secondFactorPW.charAt(in[i]);
 		}
-		System.out.println("Checking second password...");
-		if(password.equals("") || !password.equals(text)){
-			System.out.println("Start second login failed. password not the same.");
-			System.out.println("End second login --------------------- ");
+		
+		if(!text.equals(password)){
 			loginFailedLogic(request.getRemoteAddr());
 			pageSection = Section.GENERAL;	
 			return mapping.findForward("failure");
@@ -79,10 +77,10 @@ public class ExecuteSecondLoginAction extends AbstractAction {
 		
 		_currentUser.role = dtP.GetRole(_currentUser.roleId);			
 		_currentUser.role.roleLevel = dtP.GetRoleLevel(_currentUser.role.roleLevelId);
-
+		
 		session.removeAttribute("indexes");
 		securityModule.updateSuccessfullLoginTime(_currentUser.idUser, request.getRemoteAddr());
-		
+				
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
 		session = request.getSession(true);	
