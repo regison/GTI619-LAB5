@@ -45,8 +45,7 @@ public abstract class AbstractAction extends Action {
 				return null;
 			}
 			
-			action = null;
-			setSessionWithCookies(request, response, "Language");
+			//setSessionWithCookies(request, response, "Language");
 			//setSessionWithCookies(request, response, "UserName");
 			setPageSection();
 			if(request.getSession().getAttribute(SessionAttributeIdentificator.LASTACTIVITY) == null)
