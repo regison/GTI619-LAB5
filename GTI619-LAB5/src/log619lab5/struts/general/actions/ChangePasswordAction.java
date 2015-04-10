@@ -29,7 +29,7 @@ public class ChangePasswordAction extends AbstractAction {
 public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		request.setAttribute(SessionAttributeIdentificator.PAGE, "ChangePassword");
 
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		SecurityModulePassword sPass = new SecurityModulePassword();
 		
 		if(request.getParameter("updatePassword") != null){
@@ -54,7 +54,7 @@ public ActionForward directive(ActionMapping mapping, ActionForm form, HttpServl
 					
 					if(errors.size()==0){
 						//On va passer le id au lieu du username
-						if(sPass.updatePassword((int) request.getSession().getAttribute(SessionAttributeIdentificator.IDUSER), (String) request.getSession().getAttribute(SessionAttributeIdentificator.USERNAME), newPassword)){
+						if(sPass.updatePassword((int) request.getSession(true).getAttribute(SessionAttributeIdentificator.IDUSER), (String) request.getSession(true).getAttribute(SessionAttributeIdentificator.USERNAME), newPassword)){
 							
 							request.setAttribute("message", "ca  a marché");
 						}

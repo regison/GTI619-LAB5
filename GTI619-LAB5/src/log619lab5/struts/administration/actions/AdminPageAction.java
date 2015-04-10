@@ -26,8 +26,8 @@ public class AdminPageAction extends AbstractAdminAction {
 		
 		String randomString = generateHiddenRandomString();
 		request.setAttribute(SessionAttributeIdentificator.HIDDEN, randomString);
-		request.getSession().setAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING, randomString);
-		request.getSession().setAttribute(SessionAttributeIdentificator.FROM, "AdminPage");
+		request.getSession(true).setAttribute(SessionAttributeIdentificator.ADMINHIDDENSTRING, randomString);
+		request.getSession(true).setAttribute(SessionAttributeIdentificator.FROM, "AdminPage");
 		return mapping.findForward("success");
 	}
 }

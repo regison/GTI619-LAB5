@@ -25,7 +25,7 @@ public class CarreAction extends AbstractAction {
 
 		request.setAttribute(SessionAttributeIdentificator.PAGE, "Carre");
 
-		request.getSession().setAttribute(SessionAttributeIdentificator.FROM, "Carre");
+		request.getSession(true).setAttribute(SessionAttributeIdentificator.FROM, "Carre");
 		return mapping.findForward("success");
 	}
 

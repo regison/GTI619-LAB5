@@ -44,7 +44,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		String userName = (String) request.getParameter("username");
 		String password = (String) request.getParameter("password");
 
-		HttpSession session = request.getSession();
+		HttpSession session = request.getSession(true);
 		
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, "");
 		session.setAttribute(SessionAttributeIdentificator.ROLE, "");
@@ -128,7 +128,7 @@ public class ExecuteLoginAction extends AbstractAction {
 		
 		// Login successful, instantiate old session and create a new one
 		session.invalidate();
-		session = request.getSession();	
+		session = request.getSession(true);	
 
 		session.setAttribute(SessionAttributeIdentificator.USERNAME, _currentUser.name);
 		session.setAttribute(SessionAttributeIdentificator.ROLE, _currentUser.role.roleName);
